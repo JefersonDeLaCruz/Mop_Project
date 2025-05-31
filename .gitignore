@@ -1,9 +1,9 @@
-# Entornos virtuales
+
 venv/
 ENV/
 env/
 
-# Archivos temporales de Python
+
 __pycache__/
 *.py[cod]
 *.pyo
@@ -11,18 +11,18 @@ __pycache__/
 *.pdb
 *.log
 
-# Archivos de configuración de VSCode
+
 .vscode/
 
-# Archivos de Babel compilados
+
 *.mo
 
-# Archivos de traducción compilados
+
 app/translations/**/LC_MESSAGES/messages.mo
 
-# Archivos del sistema
+
 .DS_Store
 Thumbs.db
 
-# Archivos personales o notas
+
 guia_babel.txt
