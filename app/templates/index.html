@@ -1,0 +1,32 @@
+{% extends './base.html' %}
+
+{% block title %}Omg{% endblock %}
+
+
+{%block main %}
+
+    <ul>
+        {% for k, v in data.items() %}
+
+        <li>{{k}}: {{v}}</li>
+        {% endfor %}
+    </ul>
+
+    <div data-theme="light">
+        This is in Light Mode if the user hasn't set a preference, or if their preference is set to <code>light</code>.
+    </div>
+    
+    <div data-theme="dark">
+        {{ _("Esto es modo oscuro") }}
+    </div>
+    
+    <div class="theme-dark">
+        This is also in Dark Mode
+    </div>
+
+    <div class="button is-primary is-light" id="toggle-theme">
+        Alternar modo claro / oscuro
+    </div>
+
+
+{% endblock %}

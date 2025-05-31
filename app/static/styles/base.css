@@ -1,0 +1,12 @@
+
+
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
+
+
+/* fuente base del proyecto */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap'); 
+
+
+:root{
+    --bulma-family-primary: "Outfit", sans-serif;
+}
