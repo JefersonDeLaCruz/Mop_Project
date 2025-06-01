@@ -9,4 +9,30 @@
 
 :root{
     --bulma-family-primary: "Outfit", sans-serif;
+    
+    --bulma-info-h: 263deg;
+    --bulma-info-s: 96%;
+    --bulma-info-l: 52%;
+}
+
+body{
+    min-height: 100dvh;
+}
+
+.rows-3{
+    grid-template-rows: 150px 1fr 50px;
+}
+
+.form-login{
+
+    grid-row-start: 2;
+    /* grid-column-start: 2/; */
+   
+}
+
+@media screen and (min-width: 1024px) {
+    /* Tus estilos aquí */
+    .form-login{
+        grid-column-start: 2;
+    }
 }

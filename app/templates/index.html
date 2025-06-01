@@ -1,32 +1,44 @@
 {% extends './base.html' %}
 
-{% block title %}Omg{% endblock %}
+{% block title %}{{super()}}{% endblock %}
 
 
-{%block main %}
 
-    <ul>
-        {% for k, v in data.items() %}
 
-        <li>{{k}}: {{v}}</li>
-        {% endfor %}
-    </ul>
 
-    <div data-theme="light">
-        This is in Light Mode if the user hasn't set a preference, or if their preference is set to <code>light</code>.
-    </div>
+
+
+    {% block nav %}{{super()}}{% endblock %}
+
+
+    {% block main %}
+        <ul>
+            {% for k, v in data.items() %}
+                <li>{{k}}: {{v}}</li>
+            {% endfor %}
+        </ul>
+        
+        <div data-theme="light">
+            This is in Light Mode if the user hasn't set a preference, or if their preference is set to <code>light</code>.
+        </div>
+        
+        <div data-theme="dark">
+            {{ _("Esto es modo oscuro") }}
+        </div>
+        
+        <div class="theme-dark">
+            This is also in Dark Mode
+        </div>
+        
+        
+        <div class="button is-info is-outlined is-focused" id="">
+            Alternar modo claro / oscuro
+        </div>
+        
     
-    <div data-theme="dark">
-        {{ _("Esto es modo oscuro") }}
-    </div>
-    
-    <div class="theme-dark">
-        This is also in Dark Mode
-    </div>
+    {% endblock %}
 
-    <div class="button is-primary is-light" id="toggle-theme">
-        Alternar modo claro / oscuro
-    </div>
+    {% block script %}{{super()}}{% endblock %}
 
 
-{% endblock %}
+
