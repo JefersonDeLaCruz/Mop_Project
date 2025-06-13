@@ -37,6 +37,6 @@
 }
 .animated-gradient{
 
-    animation: gradient-x 5s ease infinite;
+    animation: gradient-x 3s ease infinite;
     background-size: 200% 200%;
 }
