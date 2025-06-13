@@ -12,27 +12,23 @@
 
 
     {% block main %}
-        <ul>
-            {% for k, v in data.items() %}
-                <li>{{k}}: {{v}}</li>
-            {% endfor %}
-        </ul>
         
-        <div data-theme="light">
-            This is in Light Mode if the user hasn't set a preference, or if their preference is set to <code>light</code>.
-        </div>
-        
-        <div data-theme="dark">
-            {{ _("Esto es modo oscuro") }}
-        </div>
-        
-        <div class="theme-dark">
-            This is also in Dark Mode
-        </div>
-        
-        
-        <div class="button is-info is-outlined is-focused" id="">
-            Alternar modo claro / oscuro
+        <div class="container is-fullhd border-red" style="height: 90dvh;">
+
+
+            <h1>{{_("Solucionador de problemas de programacion lineal")}}</h1>
+
+            <div class="fixed-grid has-1-cols border-red input--zone" >
+                <div class="grid ">
+                    avla
+                </div>
+                <div>
+                    <math-field style="display: block;">\tan(x) = \frac{\sin \theta}{\cos \theta}</math-field>
+                </div>
+            </div>
+
+
+            
         </div>
         
     

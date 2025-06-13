@@ -19,6 +19,11 @@ body{
     min-height: 100dvh;
 }
 
+.border-red{
+    border: 2px solid red;
+}
+
+/* login styles */
 .rows-3{
     grid-template-rows: 150px 1fr 50px;
 }
@@ -36,3 +41,21 @@ body{
         grid-column-start: 2;
     }
 }
+
+/* end login styles */
+
+
+
+/* index-styles */
+.input--zone{
+
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    
+}
+
+
+/* end-index styles */
+
+
+

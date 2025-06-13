@@ -4,8 +4,11 @@ main = Blueprint("main", __name__)
 
 @main.route("/")
 def index():
+<<<<<<< Updated upstream
 
     username = session.get('username')
+=======
+>>>>>>> Stashed changes
     data = {
         1: "avla que xopa",
         2: "yeah xopa",
@@ -13,6 +16,7 @@ def index():
     }
     return render_template("index.html", data=data)
 
+<<<<<<< Updated upstream
 @main.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -21,6 +25,11 @@ def login():
         session['username'] = username
         return redirect(url_for("main.index"))
 
+=======
+@main.route("/login")
+def login():
+
+>>>>>>> Stashed changes
     return render_template("login.html")
 
 
