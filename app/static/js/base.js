@@ -56,3 +56,5 @@
 //     applyTheme();
 //   });
 // }
+
+// global.js

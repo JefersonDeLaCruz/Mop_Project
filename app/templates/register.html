@@ -1,67 +1,55 @@
-{% extends './base.html' %}
-
-{% block title %}Register{% endblock %}
-
-{% block nav %}{% endblock %}
-
-{% block main %}
+{% extends './base.html' %} {% block title %}Register{% endblock %} {% block nav
+%}{% endblock %} {% block main %}
 
 <div class="login-container h-screen animated-gradient bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
   <div class="grid grid-cols-1 md:grid-cols-2">
-    <div data-theme="dark" class="login-container h-dvh bg-neutral overflow-y-hidden">
+    <div data-theme="dark" class="login-container h-dvh bg-neutral overflow-y-hidden flex flex-col items-center justify-center">
+
+
+      <div class="flex justify-center items-center place-self-center">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+
+          <div role="alert" class="alert alert-{{ category }} alert-soft my-2" style="flex-grow: 0;">
+            <span> {{ message }}</span>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+      </div>
+
+
 
       <!-- FORMULARIO DE REGISTRO -->
       <form action="{{ url_for('main.register') }}" method="post"
-        class="fields-container flex flex-col gap-2.5 place-self-center items-center h-[90%] justify-center">
+        class="fields-container flex flex-col gap-2.5 place-self-center items-center justify-center">
 
         <h1 class="text-center text-2xl mb-8">{{ _("Crear una cuenta") }}</h1>
 
-        <!-- Nombre de usuario -->
-        <label class="input validator rounded-full input-primary">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4
-              -4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4
-              v2h16v-2c0-2.66-5.33-4-8-4z" />
-          </svg>
-          <input type="text" name="username" placeholder="{{ _('Nombre de usuario') }}" required />
+
+        <label class="input input-accent">
+          <i class="fas fa-envelope opacity-50 h-[1em] w-[1em]"></i>
+          <input id="email" name="name" type="text" placeholder="Nombre" />
         </label>
 
-        <!-- Correo electrónico -->
-        <label class="input validator rounded-full input-primary">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </g>
-          </svg>
-          <input type="email" name="email" placeholder="mail@site.com" required />
+
+
+        <label class="input">
+          <i class="fas fa-user opacity-50 h-[1em] w-[1em]"></i>
+          <input id="username" name="username" type="text" placeholder="Usuario" />
         </label>
 
-        <!-- Contraseña -->
-        <label class="input validator rounded-full input-primary">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1
-                a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 
-                1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z">
-              </path>
-              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-            </g>
-          </svg>
-          <input
-            type="password"
-            name="password"
-            required
-            placeholder="{{ _('Contrasena') }}"
-            minlength="8"
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-            title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-          />
+
+
+
+
+        <label class="input">
+          <i class="fas fa-lock opacity-50 h-[1em] w-[1em]"></i>
+          <input id="password" name="password" type="password" placeholder="Contraseña" />
         </label>
-        <p class="validator-hint hidden">
-          Must be more than 8 characters, including
-          <br />At least one number <br />At least one lowercase letter <br />At least one uppercase letter
-        </p>
+
+
 
         <!-- Botón de registro -->
         <div>
@@ -76,9 +64,7 @@
             {{ _("¿Ya tienes cuenta? Inicia sesión") }}
           </a>
         </div>
-
       </form>
-
     </div>
   </div>
 </div>
