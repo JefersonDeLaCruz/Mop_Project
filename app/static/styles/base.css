@@ -1,61 +1,42 @@
 
-
-@import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
+@import "tailwindcss";
+/* @import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"; */
+@plugin "daisyui";
 
 
 /* fuente base del proyecto */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap'); 
 
+*{
 
-:root{
-    --bulma-family-primary: "Outfit", sans-serif;
-    
-    --bulma-info-h: 263deg;
-    --bulma-info-s: 96%;
-    --bulma-info-l: 52%;
+    font-family: "Outfit", sans-serif;
+    box-sizing: border-box;
 }
 
-body{
-    min-height: 100dvh;
+
+
+
+.login-container{
+
+    background-color: var();
 }
 
-.border-red{
-    border: 2px solid red;
-}
 
-/* login styles */
-.rows-3{
-    grid-template-rows: 150px 1fr 50px;
-}
+@keyframes gradient-x {
+    0%{
+        background-position: 0% 50%;
+    }
 
-.form-login{
+    50%{
+        background-position: 100% 50%;
+    }
 
-    grid-row-start: 2;
-    /* grid-column-start: 2/; */
-   
-}
-
-@media screen and (min-width: 1024px) {
-    /* Tus estilos aquí */
-    .form-login{
-        grid-column-start: 2;
+    100%{
+        background-position: 0% 50%;
     }
 }
+.animated-gradient{
 
-/* end login styles */
-
-
-
-/* index-styles */
-.input--zone{
-
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    
+    animation: gradient-x 5s ease infinite;
+    background-size: 200% 200%;
 }
-
-
-/* end-index styles */
-
-
-

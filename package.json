@@ -1,0 +1,28 @@
+{
+  "name": "mop_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "swag": "tailwindcss -i ./app/static/styles/base.css -o ./app/static/styles/tailwind.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JefersonDeLaCruz/Mop_Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JefersonDeLaCruz/Mop_Project/issues"
+  },
+  "homepage": "https://github.com/JefersonDeLaCruz/Mop_Project#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.10",
+    "tailwindcss": "^4.1.10"
+  },
+  "devDependencies": {
+    "daisyui": "^5.0.43"
+  }
+}

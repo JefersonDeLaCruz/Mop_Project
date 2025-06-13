@@ -33,6 +33,8 @@ def login():
     return render_template("login.html")
 
 
+
+#ruta para el cambio de idioma
 @main.route("/idioma/<lang_code>")
 def idioma(lang_code):
     if lang_code not in ["en", "es"]:

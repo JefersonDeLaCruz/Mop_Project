@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 
-<html lang="en" data-theme>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} Veamos {% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/tailwind.css')}}">
     <script src="https://kit.fontawesome.com/1de6e85594.js" crossorigin="anonymous"></script>
 </head>
 
@@ -95,6 +96,8 @@
     <footer></footer>
     <script type="module" src="{{ url_for('static', filename='js/base.js')}}"></script>
     <script type="module" src="{{ url_for('static', filename='js/mathInput.js')}}"></script>>
+    <!-- <script src="{{ url_for('static', filename='js/base.js')}}"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
 </body>
 
 </html>
