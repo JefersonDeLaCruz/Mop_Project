@@ -4,47 +4,100 @@
 
 
 {% block nav %}
-<section class="hero is-info">
-    <div class="hero-body">
-        <p class="title">Just Login bro</p>
-        <p class="subtitle">Yeah</p>
-    </div>
-</section>
+
 
 {% endblock %}
 
 
 
 
-    
+
 {% block main %}
-    <div class="fixed-grid has-1-cols has-3-cols-desktop">
-        <div class="grid rows-3">
-            
-            <div class="form-login">
-                <form class="box" method="post">
-                    <div class="field">
-                        <label class="label">Email</label>
-                        <div class="control">
-                            <input class="input" type="text" name="username" placeholder="e.g. username" />
-                        </div>
-                    </div>
-                
-                    <div class="field">
-                        <label class="label">Password</label>
-                        <div class="control">
-                            <input class="input" type="password" name="password" placeholder="********" />
-                        </div>
-                    </div>
-                
-                    <button class="button is-primary" type="submit">Sign in</button>
-                </form>
-            </div>
-            
+
+
+
+<div
+  class="login-container h-screen 
+  animated-gradient bg-gradient-to-r from-purple-400 via-pink-500 to-red-500
+  ">
+
+  <div class="grid grid-cols-1 md:grid-cols-2">
+
+    <div data-theme="dark" class="login-container h-dvh bg-neutral">
+
+
+      
+      <div class="fields-container flex flex-col gap-2.5 place-self-center items-center h-[90%] justify-center">
+        <h1 class="text-center text-2xl mb-8">{{_("Bienvenido de nuevo")}}</h1>
+        <!-- campo para el email -->
+        <label class="input validator rounded-full">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </g>
+          </svg>
+          <input type="email" placeholder="mail@site.com" required />
+        </label>
+        <div class="validator-hint hidden">Enter valid email address</div>
+  
+  
+        <!-- campo para la contra -->
+  
+        <label class="input validator rounded-full">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
+              ></path>
+              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            </g>
+          </svg>
+          <input
+            type="password"
+            required
+            placeholder={{_("Contrasena")}}
+            minlength="8"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+            title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+          />
+        </label>
+        <p class="validator-hint hidden">
+          Must be more than 8 characters, including
+          <br />At least one number <br />At least one lowercase letter <br />At least one uppercase letter
+        </p>
+
+        <!-- boton para acceder -->
+        <div class="">
+          <button class="btn btn-outline btn-secondary rounded-full">{{_("Iniciar sesion")}}</button>
         </div>
+      </div>
+      
+
     </div>
+
+    <div>
+
+    </div>
+
+
+    <div>
+
+    </div>
+  </div>
+
+</div>
+
 {% endblock %}
-
-
-
-
