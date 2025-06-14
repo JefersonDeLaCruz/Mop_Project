@@ -93,7 +93,7 @@ def login():
             return redirect(url_for("main.index"))
         else:
             flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
-            return redirect(url_for("main.login"))
+            # return redirect(url_for("main.login"))
 
     return render_template("login.html")
 
@@ -126,6 +126,14 @@ def register():
         return redirect(url_for("main.login"))
 
     return render_template("register.html")
+
+
+
+@main.route("/perfil")
+def perfil():
+
+    return render_template("perfil.html")
+
 
 @main.route("/idioma/<lang_code>")
 def idioma(lang_code):

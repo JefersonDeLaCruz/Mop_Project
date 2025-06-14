@@ -1,0 +1,666 @@
+{% extends './base.html' %}
+
+{% block title %}Perfil de Usuario{% endblock %}
+
+{% block nav %}
+<nav class="navbar bg-base-100 shadow-lg">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+        </svg>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a href="/">Solver</a></li>
+        <li><a href="/usuario">Perfil</a></li>
+        <li><a>Ayuda</a></li>
+      </ul>
+    </div>
+    <a href="/" class="btn btn-ghost text-xl font-bold">
+      <i class="fas fa-calculator text-primary"></i>
+      LP Solver
+    </a>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1">
+      <li><a href="/" class="hover:text-primary transition-colors">Solver</a></li>
+      <li><a href="/usuario" class="text-primary">Perfil</a></li>
+      <li><a class="hover:text-primary transition-colors">Ayuda</a></li>
+    </ul>
+  </div>
+  <div class="navbar-end">
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <i class="fas fa-user"></i>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a>Configuración</a></li>
+        <li><a>Cerrar Sesión</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block main %}
+<div class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+  <div class="container mx-auto p-6">
+    
+    <!-- Header del perfil -->
+    <div class="text-center mb-8 animate-fade-in">
+      <div class="avatar online mb-4">
+        <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+          <img src="https://via.placeholder.com/150/6366f1/ffffff?text=U" alt="Avatar" />
+        </div>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-primary mb-2">
+        Mi Perfil
+      </h1>
+      <p class="text-lg text-base-content/70">
+        Gestiona tu información y revisa tu historial
+      </p>
+    </div>
+
+    <!-- Grid principal responsivo -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
+      
+      <!-- Columna de información personal -->
+      <div class="xl:col-span-1 space-y-6">
+        
+        <!-- Card de información personal -->
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-primary/10">
+          <div class="card-body">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <i class="fas fa-user text-primary"></i>
+              </div>
+              <h2 class="card-title text-xl">Información Personal</h2>
+            </div>
+            
+            <div class="space-y-4">
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Nombre completo</span>
+                </label>
+                <input type="text" value="Juan Carlos Pérez" 
+                       class="input input-bordered input-primary w-full" readonly />
+              </div>
+              
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Correo electrónico</span>
+                </label>
+                <input type="email" value="juan.perez@email.com" 
+                       class="input input-bordered input-primary w-full" readonly />
+              </div>
+              
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Usuario</span>
+                </label>
+                <input type="text" value="jperez123" 
+                       class="input input-bordered input-primary w-full" readonly />
+              </div>
+              
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Fecha de registro</span>
+                </label>
+                <input type="text" value="15 de Marzo, 2024" 
+                       class="input input-bordered input-secondary w-full" readonly />
+              </div>
+            </div>
+            
+            <div class="card-actions justify-end mt-6">
+              <button class="btn btn-outline btn-primary">
+                <i class="fas fa-edit"></i>
+                Editar perfil
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card de estadísticas -->
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-secondary/10">
+          <div class="card-body">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+                <i class="fas fa-chart-bar text-secondary"></i>
+              </div>
+              <h2 class="card-title text-xl">Estadísticas</h2>
+            </div>
+            
+            <div class="stats stats-vertical shadow">
+              <div class="stat">
+                <div class="stat-title">Problemas resueltos</div>
+                <div class="stat-value text-primary">12</div>
+                <div class="stat-desc">En los últimos 30 días</div>
+              </div>
+              
+              <div class="stat">
+                <div class="stat-title">Tiempo total</div>
+                <div class="stat-value text-secondary">45h</div>
+                <div class="stat-desc">Tiempo invertido</div>
+              </div>
+              
+              <div class="stat">
+                <div class="stat-title">Promedio</div>
+                <div class="stat-value text-accent">3.8h</div>
+                <div class="stat-desc">Por problema</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna de problemas resueltos -->
+      <div class="xl:col-span-2 space-y-6">
+        
+        <!-- Header de problemas -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
+              <i class="fas fa-history text-success"></i>
+            </div>
+            <h2 class="text-2xl font-bold">Problemas Resueltos</h2>
+          </div>
+          <div class="flex gap-2">
+            <select class="select select-bordered select-sm">
+              <option>Todos</option>
+              <option>Maximización</option>
+              <option>Minimización</option>
+            </select>
+            <button class="btn btn-sm btn-outline">
+              <i class="fas fa-filter"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de problemas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Problema 1 -->
+          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-success/20 hover:border-success/40"
+               onclick="document.getElementById('problema_modal_1').showModal()">
+            <div class="card-body p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="badge badge-success badge-sm">Maximización</div>
+                <div class="text-xs text-base-content/60">2 días atrás</div>
+              </div>
+              <h3 class="card-title text-lg mb-2">Problema de Producción</h3>
+              <p class="text-sm text-base-content/70 mb-3">
+                Optimización de producción con 3 variables y 4 restricciones
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs">
+                  <div class="badge badge-outline badge-xs">3 variables</div>
+                  <div class="badge badge-outline badge-xs">4 restricciones</div>
+                </div>
+                <div class="text-success font-bold">Z = 450</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Problema 2 -->
+          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-info/20 hover:border-info/40"
+               onclick="document.getElementById('problema_modal_2').showModal()">
+            <div class="card-body p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="badge badge-info badge-sm">Minimización</div>
+                <div class="text-xs text-base-content/60">5 días atrás</div>
+              </div>
+              <h3 class="card-title text-lg mb-2">Problema de Transporte</h3>
+              <p class="text-sm text-base-content/70 mb-3">
+                Minimización de costos de transporte entre ciudades
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs">
+                  <div class="badge badge-outline badge-xs">2 variables</div>
+                  <div class="badge badge-outline badge-xs">3 restricciones</div>
+                </div>
+                <div class="text-info font-bold">Z = 120</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Problema 3 -->
+          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-warning/20 hover:border-warning/40"
+               onclick="document.getElementById('problema_modal_3').showModal()">
+            <div class="card-body p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="badge badge-warning badge-sm">Maximización</div>
+                <div class="text-xs text-base-content/60">1 semana atrás</div>
+              </div>
+              <h3 class="card-title text-lg mb-2">Problema de Dieta</h3>
+              <p class="text-sm text-base-content/70 mb-3">
+                Maximización de nutrientes con restricciones presupuestarias
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs">
+                  <div class="badge badge-outline badge-xs">4 variables</div>
+                  <div class="badge badge-outline badge-xs">5 restricciones</div>
+                </div>
+                <div class="text-warning font-bold">Z = 85.5</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Problema 4 -->
+          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-error/20 hover:border-error/40"
+               onclick="document.getElementById('problema_modal_4').showModal()">
+            <div class="card-body p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="badge badge-error badge-sm">Minimización</div>
+                <div class="text-xs text-base-content/60">2 semanas atrás</div>
+              </div>
+              <h3 class="card-title text-lg mb-2">Problema de Inventario</h3>
+              <p class="text-sm text-base-content/70 mb-3">
+                Minimización de costos de almacenamiento y pedidos
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs">
+                  <div class="badge badge-outline badge-xs">2 variables</div>
+                  <div class="badge badge-outline badge-xs">4 restricciones</div>
+                </div>
+                <div class="text-error font-bold">Z = 75.2</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Paginación -->
+        <div class="flex justify-center mt-8">
+          <div class="join">
+            <button class="join-item btn">«</button>
+            <button class="join-item btn btn-active">1</button>
+            <button class="join-item btn">2</button>
+            <button class="join-item btn">3</button>
+            <button class="join-item btn">»</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modales para detalles de problemas -->
+
+<!-- Modal Problema 1 -->
+<dialog id="problema_modal_1" class="modal">
+  <div class="modal-box w-11/12 max-w-4xl">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">Problema de Producción - Detalle Completo</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Definición del problema -->
+      <div>
+        <h4 class="font-semibold text-primary mb-3">Definición del Problema</h4>
+        <div class="bg-base-200 p-4 rounded-lg mb-4">
+          <p class="text-sm mb-2"><strong>Función Objetivo:</strong></p>
+          <p class="font-mono text-success">Maximizar Z = 5x₁ + 3x₂ + 4x₃</p>
+        </div>
+        
+        <div class="bg-base-200 p-4 rounded-lg">
+          <p class="text-sm mb-2"><strong>Restricciones:</strong></p>
+          <div class="font-mono text-sm space-y-1">
+            <p>2x₁ + x₂ + x₃ ≤ 100</p>
+            <p>x₁ + 2x₂ + 3x₃ ≤ 150</p>
+            <p>3x₁ + x₂ + 2x₃ ≤ 120</p>
+            <p>x₁, x₂, x₃ ≥ 0</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Solución -->
+      <div>
+        <h4 class="font-semibold text-success mb-3">Solución Óptima</h4>
+        <div class="stats stats-vertical shadow w-full mb-4">
+          <div class="stat">
+            <div class="stat-title">Valor Óptimo</div>
+            <div class="stat-value text-success">450</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Estado</div>
+            <div class="stat-value text-sm">Óptimo</div>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-sm">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Valor</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>x₁</td>
+                <td>30</td>
+                <td><div class="badge badge-success badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₂</td>
+                <td>20</td>
+                <td><div class="badge badge-success badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₃</td>
+                <td>10</td>
+                <td><div class="badge badge-success badge-xs">Básica</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-action">
+      <button class="btn btn-outline">Descargar PDF</button>
+      <button class="btn btn-primary">Resolver Similar</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Modal Problema 2 -->
+<dialog id="problema_modal_2" class="modal">
+  <div class="modal-box w-11/12 max-w-4xl">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">Problema de Transporte - Detalle Completo</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-semibold text-primary mb-3">Definición del Problema</h4>
+        <div class="bg-base-200 p-4 rounded-lg mb-4">
+          <p class="text-sm mb-2"><strong>Función Objetivo:</strong></p>
+          <p class="font-mono text-info">Minimizar Z = 2x₁ + 3x₂</p>
+        </div>
+        
+        <div class="bg-base-200 p-4 rounded-lg">
+          <p class="text-sm mb-2"><strong>Restricciones:</strong></p>
+          <div class="font-mono text-sm space-y-1">
+            <p>x₁ + 2x₂ ≥ 20</p>
+            <p>2x₁ + x₂ ≥ 30</p>
+            <p>x₁ + x₂ ≤ 40</p>
+            <p>x₁, x₂ ≥ 0</p>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 class="font-semibold text-info mb-3">Solución Óptima</h4>
+        <div class="stats stats-vertical shadow w-full mb-4">
+          <div class="stat">
+            <div class="stat-title">Valor Óptimo</div>
+            <div class="stat-value text-info">120</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Estado</div>
+            <div class="stat-value text-sm">Óptimo</div>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-sm">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Valor</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>x₁</td>
+                <td>15</td>
+                <td><div class="badge badge-info badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₂</td>
+                <td>10</td>
+                <td><div class="badge badge-info badge-xs">Básica</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-action">
+      <button class="btn btn-outline">Descargar PDF</button>
+      <button class="btn btn-primary">Resolver Similar</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Modal Problema 3 -->
+<dialog id="problema_modal_3" class="modal">
+  <div class="modal-box w-11/12 max-w-4xl">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">Problema de Dieta - Detalle Completo</h3>
+    
+    <div class="alert alert-info mb-4">
+      <i class="fas fa-info-circle"></i>
+      <span>Este problema optimiza la ingesta nutricional dentro de un presupuesto limitado.</span>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-semibold text-primary mb-3">Definición del Problema</h4>
+        <div class="bg-base-200 p-4 rounded-lg mb-4">
+          <p class="text-sm mb-2"><strong>Función Objetivo:</strong></p>
+          <p class="font-mono text-warning">Maximizar Z = 2x₁ + 1.5x₂ + 3x₃ + x₄</p>
+        </div>
+        
+        <div class="bg-base-200 p-4 rounded-lg">
+          <p class="text-sm mb-2"><strong>Restricciones:</strong></p>
+          <div class="font-mono text-sm space-y-1">
+            <p>0.5x₁ + 0.3x₂ + 0.8x₃ + 0.2x₄ ≤ 50</p>
+            <p>x₁ + 2x₂ + x₃ + x₄ ≥ 30</p>
+            <p>2x₁ + x₂ + 3x₃ + 2x₄ ≥ 40</p>
+            <p>x₁ + x₂ + x₃ + x₄ ≤ 100</p>
+            <p>x₁, x₂, x₃, x₄ ≥ 0</p>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 class="font-semibold text-warning mb-3">Solución Óptima</h4>
+        <div class="stats stats-vertical shadow w-full mb-4">
+          <div class="stat">
+            <div class="stat-title">Valor Óptimo</div>
+            <div class="stat-value text-warning">85.5</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Estado</div>
+            <div class="stat-value text-sm">Óptimo</div>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-sm">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Valor</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>x₁</td>
+                <td>12.5</td>
+                <td><div class="badge badge-warning badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₂</td>
+                <td>8.0</td>
+                <td><div class="badge badge-warning badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₃</td>
+                <td>15.0</td>
+                <td><div class="badge badge-warning badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₄</td>
+                <td>0</td>
+                <td><div class="badge badge-ghost badge-xs">No básica</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-action">
+      <button class="btn btn-outline">Descargar PDF</button>
+      <button class="btn btn-primary">Resolver Similar</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Modal Problema 4 -->
+<dialog id="problema_modal_4" class="modal">
+  <div class="modal-box w-11/12 max-w-4xl">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">Problema de Inventario - Detalle Completo</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-semibold text-primary mb-3">Definición del Problema</h4>
+        <div class="bg-base-200 p-4 rounded-lg mb-4">
+          <p class="text-sm mb-2"><strong>Función Objetivo:</strong></p>
+          <p class="font-mono text-error">Minimizar Z = 1.5x₁ + 2.2x₂</p>
+        </div>
+        
+        <div class="bg-base-200 p-4 rounded-lg">
+          <p class="text-sm mb-2"><strong>Restricciones:</strong></p>
+          <div class="font-mono text-sm space-y-1">
+            <p>x₁ + x₂ ≥ 25</p>
+            <p>2x₁ + 0.5x₂ ≤ 60</p>
+            <p>0.5x₁ + 2x₂ ≤ 50</p>
+            <p>x₁ + 3x₂ ≥ 45</p>
+            <p>x₁, x₂ ≥ 0</p>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 class="font-semibold text-error mb-3">Solución Óptima</h4>
+        <div class="stats stats-vertical shadow w-full mb-4">
+          <div class="stat">
+            <div class="stat-title">Valor Óptimo</div>
+            <div class="stat-value text-error">75.2</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Estado</div>
+            <div class="stat-value text-sm">Óptimo</div>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-sm">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Valor</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>x₁</td>
+                <td>18.4</td>
+                <td><div class="badge badge-error badge-xs">Básica</div></td>
+              </tr>
+              <tr>
+                <td>x₂</td>
+                <td>12.8</td>
+                <td><div class="badge badge-error badge-xs">Básica</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-action">
+      <button class="btn btn-outline">Descargar PDF</button>
+      <button class="btn btn-primary">Resolver Similar</button>
+    </div>
+  </div>
+</dialog>
+
+</div>
+
+<!-- Estilos adicionales para animaciones -->
+<style>
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.avatar {
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+}
+</style>
+
+<script>
+// Script para mejorar la interactividad
+document.addEventListener('DOMContentLoaded', function() {
+  // Animación de entrada escalonada para las cards
+  const cards = document.querySelectorAll('.card');
+  cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      card.style.transition = 'all 0.5s ease-out';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+
+  // Efecto hover para las cards de problemas
+  const problemCards = document.querySelectorAll('.card[onclick]');
+  problemCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-4px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+});
+</script>
+{% endblock %}
