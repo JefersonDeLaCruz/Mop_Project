@@ -1,4 +1,35 @@
 //aqui me voy a auxiliar para obtener la infor de los inputs
+//const notyf = new Notyf();
+
+// notyf.error({
+//           message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
+//           duration: 1500,
+//           icon: false,
+//           className: "alert alert-error alert-outline",
+//           position: {
+//             x: "right",
+//             y: "top"
+//           },
+//           background: "inherit"
+//         });
+const alerta = new Notyf({
+  duration: 2000,
+  position: {
+    x: "right",
+    y: "top",
+  },
+  dismissible: false,
+  types: [
+    {
+      type: "warning",
+      background: "inherit",
+    },
+    {
+      type: "error",
+      background: "inherit",
+    },
+  ],
+});
 
 console.log("hola index");
 
@@ -41,6 +72,12 @@ btnAdd.addEventListener("click", () => {
     valor++;
     input.value = valor;
     actualizarBadges(valor);
+  }else{
+    alerta.open({
+        type: "warning",
+        message: `Solo se permiten hasta 10 variables de decision`,
+        className: "alert alert-warning alert-outline",
+      });
   }
 });
 
@@ -51,6 +88,12 @@ btnRemove.addEventListener("click", () => {
     valor--;
     input.value = valor;
     actualizarBadges(valor);
+  }else{
+    alerta.open({
+        type: "warning",
+        message: `Debe haber al menos 2 variables de decision`,
+        className: "alert alert-warning alert-outline",
+      });
   }
 });
 
@@ -77,9 +120,9 @@ function crearRestriccion(numero) {
         <option>=</option>
       </select>
       <input name="valorRes_${numero}" id="valorRes_${numero}" type="number" placeholder="valor" required class="input input-sm input-bordered w-20" />
-      <button class="btn btn-sm btn-error btn-outline btnEliminar">
+      <span class="btn btn-sm btn-error btn-outline btnEliminar">
         <i class="fas fa-trash"></i>
-      </button>
+      </span>
     `;
 
   // Agregar evento al botón eliminar
@@ -90,44 +133,18 @@ function crearRestriccion(numero) {
     } else {
       //   alert(`Debe haber al menos ${MIN_RESTRICCIONES} restricciones`);
 
-        const notyf = new Notyf();
+      // alerta.warning({
+      //   message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
+      //   className: "alert alert-warning alert-outline"
+      // })
 
-        notyf.error({
-          message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
-          duration: 1500,
-          icon: false,
-          className: "alert alert-error alert-outline",
-          position: {
-            x: "right",
-            y: "top"
-          },
-          background: "inherit"
-        });
+      alerta.open({
+        type: "warning",
+        message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
+        className: "alert alert-warning alert-outline",
+      });
 
-    //   const notyf = new Notyf({
-    //     duration: 1500,
-    //     position: {
-    //       x: "right",
-    //       y: "top",
-    //     },
-    //     types: [
-    //       {
-    //         type: "warning",
-    //         background: "orange",
-    //         icon: {
-    //           className: "material-icons",
-    //           tagName: "i",
-    //           text: "warning",
-    //         },
-    //       },
-    //       {
-    //         type: "error",
-    //         background: "indianred",
-    //         duration: 2000,
-    //         dismissible: true,
-    //       },
-    //     ],
-    //   });
+      //
     }
   });
 
@@ -141,7 +158,12 @@ addResBtn.addEventListener("click", () => {
     const nueva = crearRestriccion(cantidadActual + 1);
     resWrapper.appendChild(nueva);
   } else {
-    alert(`Solo se permiten hasta ${MAX_RESTRICCIONES} restricciones`);
+    // alert(`Solo se permiten hasta ${MAX_RESTRICCIONES} restricciones`);
+    alerta.open({
+      type: "warning",
+      message: `Solo se permiten hasta ${MAX_RESTRICCIONES} restricciones`,
+      className: "alert alert-warning alert-outline",
+    })
   }
 });
 

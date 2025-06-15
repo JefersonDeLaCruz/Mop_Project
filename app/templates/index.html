@@ -2,6 +2,8 @@
 
 {% block title %}Linear Programming Solver{% endblock %}
 
+{% block tailwindcss %} {{super()}} {% endblock %}
+
 {% block nav %}
 <nav class="navbar bg-base-100 shadow-lg">
   <div class="navbar-start">
@@ -139,12 +141,12 @@
                     <div class="badge badge-secondary badge-lg">x₁</div>
                     <div class="badge badge-secondary badge-lg">x₂</div>
                   </div>
-                  <button id="btnAdd" class="btn btn-xs btn-secondary btn-outline">
+                  <span id="btnAdd" class="btn btn-xs btn-secondary btn-outline">
                     <i class="fas fa-plus"></i>
-                  </button>
-                  <button id="btnRemove" class="btn btn-xs btn-secondary btn-outline">
+                  </span>
+                  <span id="btnRemove" class="btn btn-xs btn-secondary btn-outline">
                     <i class="fas fa-minus"></i>
-                  </button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -160,10 +162,10 @@
                   </div>
                   <h2 class="card-title text-xl">Restricciones</h2>
                 </div>
-                <button id="addResBtn" class="btn btn-sm btn-accent btn-outline">
+                <span id="addResBtn" class="btn btn-sm btn-accent btn-outline">
                   <i class="fas fa-plus"></i>
                   Agregar
-                </button>
+                </span>
               </div>
 
               <div id="resWrapper" class="space-y-3">
