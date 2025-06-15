@@ -19,9 +19,12 @@
     <main class="is-size-3">{% block main %}{% endblock %}</main>
     <footer></footer>
     <script type="module" src="{{ url_for('static', filename='js/base.js')}}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/mathInput.js')}}"></script>
+    <!-- <script type="module" src="{{ url_for('static', filename='js/mathInput.js')}}"></script> -->
     <!-- <script src="{{ url_for('static', filename='js/base.js')}}"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+    {% block customScript %}
+
+    {% endblock %}
 </body>
 
 </html>

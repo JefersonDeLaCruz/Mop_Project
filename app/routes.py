@@ -60,12 +60,14 @@
 
 #     return redirect(url_for("main.index"))
     
-from flask import Blueprint, render_template, redirect, request, session, url_for, flash
+from flask import Blueprint, render_template, redirect, request, session, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 
 from .helpers import guardar_usuario, obtener_usuario_por_nombre_usuario
 
 from .models import User
+from .solver import resolver_problema_lp
+
 
 main = Blueprint("main", __name__)
 
@@ -77,8 +79,13 @@ def index():
         2: "yeah xopa",
         3: username
     }
-    return render_template("index.html", data=data)
+    resultado = {
+        "status": "error" 
+    }
 
+    return render_template("index.html", data=data, resultado=resultado)
+
+# @main.route("/login", methods=["GET", "POST"])
 @main.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -141,3 +148,20 @@ def idioma(lang_code):
         lang_code = "es"
     session["lang"] = lang_code
     return redirect(url_for("main.index"))
+
+
+@main.route("/resolver", methods=["POST"])
+def resolver():
+    
+    
+
+    data = request.get_json()
+
+    tipoOperacion = data.get("tipoOperacion")
+    funcionObjetivo = data.get("funcionObjetivo")
+    numeroVariables = int(data.get("numeroVariables"))
+    restricciones = data.get("restricciones", [])
+
+    resultado = resolver_problema_lp(tipoOperacion, funcionObjetivo, restricciones, numeroVariables)
+
+    return jsonify({"resultado": resultado})
