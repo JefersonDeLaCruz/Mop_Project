@@ -7,6 +7,7 @@
     <title>{% block title %} Veamos {% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/tailwind.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <script src="https://kit.fontawesome.com/1de6e85594.js" crossorigin="anonymous"></script>
 </head>
 
@@ -21,6 +22,7 @@
     <script type="module" src="{{ url_for('static', filename='js/base.js')}}"></script>
     <!-- <script type="module" src="{{ url_for('static', filename='js/mathInput.js')}}"></script> -->
     <!-- <script src="{{ url_for('static', filename='js/base.js')}}"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
     {% block customScript %}
 

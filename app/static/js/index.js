@@ -88,7 +88,46 @@ function crearRestriccion(numero) {
       div.remove();
       actualizarNombres();
     } else {
-      alert(`Debe haber al menos ${MIN_RESTRICCIONES} restricciones`);
+      //   alert(`Debe haber al menos ${MIN_RESTRICCIONES} restricciones`);
+
+        const notyf = new Notyf();
+
+        notyf.error({
+          message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
+          duration: 1500,
+          icon: false,
+          className: "alert alert-error alert-outline",
+          position: {
+            x: "right",
+            y: "top"
+          },
+          background: "inherit"
+        });
+
+    //   const notyf = new Notyf({
+    //     duration: 1500,
+    //     position: {
+    //       x: "right",
+    //       y: "top",
+    //     },
+    //     types: [
+    //       {
+    //         type: "warning",
+    //         background: "orange",
+    //         icon: {
+    //           className: "material-icons",
+    //           tagName: "i",
+    //           text: "warning",
+    //         },
+    //       },
+    //       {
+    //         type: "error",
+    //         background: "indianred",
+    //         duration: 2000,
+    //         dismissible: true,
+    //       },
+    //     ],
+    //   });
     }
   });
 
@@ -171,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await response.json();
 
-        mostrarSolucion(data)
+        mostrarSolucion(data);
         // Mostrar resultado (esto depende de cómo lo querés renderizar)
         // console.log("Resultado:", data);
         // // ejemplo:
@@ -182,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 });
-
 
 // Mostrar solución en el DOM
 function mostrarSolucion(data) {
@@ -196,7 +234,8 @@ function mostrarSolucion(data) {
 
   // Rellenar valores
   valorOptimoEl.textContent = solucion.optimo.toFixed(2);
-  estadoSolucionEl.textContent = solucion.status === "ok" ? "Óptimo" : solucion.status;
+  estadoSolucionEl.textContent =
+    solucion.status === "ok" ? "Óptimo" : solucion.status;
 
   // Limpiar tabla
   tablaVariablesEl.innerHTML = "";
@@ -220,5 +259,7 @@ function mostrarSolucion(data) {
   contenedorSolucion.classList.remove("hidden");
 
   // Opcional: ocultar el estado inicial
-  document.querySelector("#solution-content").previousElementSibling?.classList.add("hidden");
+  document
+    .querySelector("#solution-content")
+    .previousElementSibling?.classList.add("hidden");
 }
