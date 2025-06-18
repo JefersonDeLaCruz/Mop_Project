@@ -85,11 +85,11 @@
       <form id="formulario" action="{{ url_for('main.resolver') }}" method="post">
         <div class="space-y-6">
           <div class="flex items-center gap-3">
-            <p>Metodo</p>
-            <select name="" id="metodo" class="select select-bordered select-primary w-full">
-              <option>Simplex</option>
-              <option>General</option>
-            </select>
+            <p class="badge badge-neutral">Metodo</p>
+            <div  id="metodo" class="flex justify-around items-center w-full">
+              <span id="metodo_simplex" class="btn btn-info btn-dash">Simplex</span>
+              <span id="metodo_general" class="btn btn-dash btn-info">General</span>
+            </div>
           </div>
           <!-- Card de función objetivo -->
           <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-primary/10">
@@ -389,6 +389,6 @@
 {% block customScript %}
 <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
 <script type="module" src="{{ url_for('static', filename='js/index.js')}}"></script>
-<script type="module" src="{{ url_for('static', filename='js/simplex.js')}}"></script>
+<!-- <script type="module" src="{{ url_for('static', filename='js/simplex.js')}}"></script> -->
 
 {% endblock %}

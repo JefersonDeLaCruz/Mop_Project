@@ -1,17 +1,7 @@
 //aqui me voy a auxiliar para obtener la infor de los inputs
-//const notyf = new Notyf();
+import { resolverProblema, mostrarSolucion } from "./solver.js";
+import { resolverSimplex, mostrarResultadoSimplex } from "./simplexSolver.js";
 
-// notyf.error({
-//           message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
-//           duration: 1500,
-//           icon: false,
-//           className: "alert alert-error alert-outline",
-//           position: {
-//             x: "right",
-//             y: "top"
-//           },
-//           background: "inherit"
-//         });
 const alerta = new Notyf({
   duration: 2000,
   position: {
@@ -187,117 +177,145 @@ for (let i = 1; i <= MIN_RESTRICCIONES; i++) {
   resWrapper.appendChild(crearRestriccion(i));
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const metodo_ = document.getElementById("metodo").value.trim()
-  if (metodo === "Simplex") {
-    console.log("me fui de linprog")
+const metodoSimplexBtn = document.getElementById("metodo_simplex");
+const metodoGeneralBtn = document.getElementById("metodo_general");
+
+let metodoSelecionado;
+
+metodoGeneralBtn.addEventListener("click", () => {
+  metodoGeneralBtn.classList.remove("btn-dash");
+  metodoGeneralBtn.classList.add("btn-active");
+  metodoSimplexBtn.classList.remove("btn-active");
+  metodoSimplexBtn.classList.add("btn-dash");
+
+  metodoSelecionado = metodoGeneralBtn.innerText;
+  console.log("veamos g", metodoSelecionado);
+});
+
+metodoSimplexBtn.addEventListener("click", () => {
+  metodoSimplexBtn.classList.remove("btn-dash");
+  metodoSimplexBtn.classList.add("btn-active");
+  metodoGeneralBtn.classList.remove("btn-active");
+  metodoGeneralBtn.classList.add("btn-dash");
+
+  metodoSelecionado = metodoSimplexBtn.innerText;
+  console.log("veamos s", metodoSelecionado);
+});
+
+//AQUI ESTA LA VERDADERA SAUCEEE!!!
+document.getElementById("formulario").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!metodoSelecionado) {
+    alerta.open({
+      type: "error",
+      message: `Debe elegir un método para resolver el problema`,
+      className: "alert alert-error alert-outline",
+    });
     return;
   }
 
-  console.log("se ejecuto lingprog")
-  document
-    .getElementById("formulario")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault(); // Prevenir el envío tradicional del form
+  if (metodoSelecionado === metodoGeneralBtn.innerText) {
+    const tipoOperacion = document.getElementById("tipoOperacion").value;
+    const funcionObjetivo = document.getElementById("funcionObjetivo").value;
+    const numeroVariables = parseInt(
+      document.getElementById("numeroVariables").value
+    );
 
-      const tipoOperacion = document.getElementById("tipoOperacion").value;
-      const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-      const numeroVariables = parseInt(
-        document.getElementById("numeroVariables").value
-      );
+    const restricciones = [];
+    const wrapper = document.getElementById("resWrapper");
 
-      const restricciones = [];
-      const wrapper = document.getElementById("resWrapper");
+    Array.from(wrapper.children).forEach((div) => {
+      const expr = div.querySelector(`[name^="restriccion_"]`).value;
+      const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
+      const val = div.querySelector(`[name^="valorRes_"]`).value;
 
-      Array.from(wrapper.children).forEach((div, index) => {
-        const expr = div.querySelector(`[name^="restriccion_"]`).value;
-        const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
-        const val = div.querySelector(`[name^="valorRes_"]`).value;
-
-        restricciones.push({
-          expr: expr,
-          op: op,
-          val: val,
-        });
-      });
-
-      const payload = {
-        tipoOperacion,
-        funcionObjetivo,
-        numeroVariables,
-        restricciones,
-      };
-
-      try {
-        const response = await fetch("/resolver", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const data = await response.json();
-
-        mostrarSolucion(data);
-
-        // if (data.resultado.graficable) {
-        //   generarGrafica(
-            
-        //     data.resultado.funcion_objetivo,
-        //     data.resultado.restricciones
-        //   );
-        // }
-        // Mostrar resultado (esto depende de cómo lo querés renderizar)
-        // console.log("Resultado:", data);
-        // // ejemplo:
-        // document.getElementById("resultado").innerText =
-        //   data.resultado || "Sin solución";
-      } catch (err) {
-        console.error("Error al resolver:", err);
-      }
+      restricciones.push({ expr, op, val });
     });
+
+    const payload = {
+      tipoOperacion,
+      funcionObjetivo,
+      numeroVariables,
+      restricciones,
+    };
+
+    try {
+      const data = await resolverProblema(payload);
+      mostrarSolucion(data);
+    } catch (err) {
+      console.error("Error al resolver:", err);
+    }
+  } else if (metodoSelecionado === metodoSimplexBtn.innerText) {
+    // alerta.open({
+    //   type: "warning",
+    //   message: `El método Simplex aún no está implementado`,
+    //   className: "alert alert-warning alert-outline",
+    // });
+    // return;
+
+    const tipoOperacion = document.getElementById("tipoOperacion").value;
+    const funcionObjetivo = document.getElementById("funcionObjetivo").value;
+    const numeroVariables = parseInt(
+      document.getElementById("numeroVariables").value
+    );
+
+    const restricciones = [];
+    const wrapper = document.getElementById("resWrapper");
+
+    Array.from(wrapper.children).forEach((div) => {
+      const expr = div.querySelector(`[name^="restriccion_"]`).value;
+      const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
+      const val = div.querySelector(`[name^="valorRes_"]`).value;
+
+      restricciones.push({ expr, op, val });
+    });
+
+    const payload = {
+      tipoOperacion,
+      funcionObjetivo,
+      numeroVariables,
+      restricciones,
+    };
+
+    if (!esValidoParaSimplex(payload)) {
+      alerta.open({
+        type: "error",
+        message:
+          "Solo se permiten problemas de maximización con restricciones '≤' y coeficientes positivos.",
+        className: "alert alert-warning alert-outline"
+      });
+      return;
+    }
+
+    try {
+      console.log("payload para simplex: ", payload)
+      const data = await resolverSimplex(payload);
+      mostrarResultadoSimplex(data);
+    } catch (err) {
+      console.error("Error al resolver con Simplex:", err);
+      alerta.open({
+        type: "error",
+        message: "Error al resolver el problema con Simplex.",
+        className: "alert alert-warning alert-outline"
+      });
+    }
+  }
 });
 
-// Mostrar solución en el DOM
-function mostrarSolucion(data) {
-  const solucion = data.resultado;
+function esValidoParaSimplex(payload) {
+  const { tipoOperacion, restricciones } = payload;
 
-  // Elementos DOM
-  const valorOptimoEl = document.getElementById("valorOptimo");
-  const estadoSolucionEl = document.getElementById("estadoSolucion");
-  const tablaVariablesEl = document.getElementById("tablaVariables");
-  const contenedorSolucion = document.getElementById("solution-content");
+  console.log(tipoOperacion, restricciones, "fuck this shit")
+  if (tipoOperacion !== "Maximizar") return false;
 
-  // Rellenar valores
-  valorOptimoEl.textContent = solucion.optimo.toFixed(2);
-  estadoSolucionEl.textContent =
-    solucion.status === "ok" ? "Óptimo" : solucion.status;
+  const todasMenorIgual = restricciones.every((r) => r.op === "≤");
+  if (!todasMenorIgual) return false;
 
-  // Limpiar tabla
-  tablaVariablesEl.innerHTML = "";
-
-  // Agregar variables
-  solucion.valores.forEach((valor, i) => {
-    const tr = document.createElement("tr");
-
-    const tdVar = document.createElement("td");
-    tdVar.textContent = `x${i + 1}`;
-
-    const tdVal = document.createElement("td");
-    tdVal.textContent = valor.toFixed(2);
-
-    tr.appendChild(tdVar);
-    tr.appendChild(tdVal);
-    tablaVariablesEl.appendChild(tr);
+  const todosCoeficientesPositivos = restricciones.every((r) => {
+    const regex = /[-]/;
+    return !regex.test(r.expr);
   });
 
-  // Mostrar la sección de solución
-  contenedorSolucion.classList.remove("hidden");
-
-  // Opcional: ocultar el estado inicial
-  document
-    .querySelector("#solution-content")
-    .previousElementSibling?.classList.add("hidden");
+  return todosCoeficientesPositivos;
 }
-

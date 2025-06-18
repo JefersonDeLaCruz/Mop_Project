@@ -1,25 +1,29 @@
-{% extends './base.html' %} {% block title %}Register{% endblock %} {% block nav
-%}{% endblock %} {% block main %}
+{% extends './base.html' %} 
+{% block title %}Register{% endblock %} 
+{% block nav%}{% endblock %}
+{% block tailwindcss %} {{super()}} {% endblock %}
+{% block main %}
 
 <div class="login-container h-screen animated-gradient bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
 
   <div class="grid grid-cols-1 md:grid-cols-2">
 
     <!-- colde la izquierda form -->
-    <div data-theme="dark" class="login-container h-dvh bg-neutral overflow-y-hidden flex flex-col items-center justify-center">
+    <div data-theme="dark"
+      class="login-container h-dvh bg-neutral overflow-y-hidden flex flex-col items-center justify-center">
 
 
       <div class="flex justify-center items-center place-self-center">
-          {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          {% for category, message in messages %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
 
-          <div role="alert" class="alert alert-{{ category }} alert-soft my-2" style="flex-grow: 0;">
-            <span> {{ message }}</span>
-          </div>
-          {% endfor %}
-          {% endif %}
-          {% endwith %}
+        <div role="alert" class="alert alert-{{ category }} alert-soft my-2" style="flex-grow: 0;">
+          <span> {{ message }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
       </div>
 
 
@@ -72,12 +76,13 @@
 
     <!-- segunda col aqui  elemntos visuales-->
     <div class="hidden md:flex h-dvh relative overflow-hidden items-center justify-center">
-      
+
       <!-- Contenedor principal del contenido -->
       <div class="relative z-10 text-center text-white px-8">
         <!-- Logo/Icono principal -->
         <div class="mb-8 relative">
-          <div class="w-24 h-24 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 animate-pulse">
+          <div
+            class="w-24 h-24 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 animate-pulse">
             <i class="fas fa-chart-line text-4xl text-white"></i>
           </div>
           <h2 class="text-3xl font-bold mb-2">OptimizeFlow</h2>
@@ -121,7 +126,7 @@
         <div class="absolute bottom-32 left-16 w-20 h-20 bg-white/10 rounded-lg rotate-45 animate-float-slow"></div>
         <div class="absolute bottom-20 right-20 w-8 h-8 bg-white/20 rounded-full animate-float"></div>
         <div class="absolute top-1/2 right-8 w-6 h-6 bg-white/15 rounded-lg animate-float-delayed"></div>
-        
+
         <!-- Líneas conectoras decorativas -->
         <svg class="absolute inset-0 w-full h-full opacity-20">
           <defs>
@@ -130,16 +135,20 @@
               <stop offset="100%" style="stop-color:white;stop-opacity:0" />
             </linearGradient>
           </defs>
-          <path d="M100,200 Q300,100 500,300" stroke="url(#lineGrad)" stroke-width="2" fill="none" class="animate-pulse"/>
-          <path d="M50,400 Q250,300 450,500" stroke="url(#lineGrad)" stroke-width="2" fill="none" class="animate-pulse" style="animation-delay: 1s;"/>
+          <path d="M100,200 Q300,100 500,300" stroke="url(#lineGrad)" stroke-width="2" fill="none"
+            class="animate-pulse" />
+          <path d="M50,400 Q250,300 450,500" stroke="url(#lineGrad)" stroke-width="2" fill="none" class="animate-pulse"
+            style="animation-delay: 1s;" />
         </svg>
       </div>
 
       <!-- Partículas flotantes pequeñas -->
       <div class="absolute inset-0">
         <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-ping"></div>
-        <div class="absolute top-3/4 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-ping" style="animation-delay: 2s;"></div>
-        <div class="absolute top-1/2 left-1/3 w-1.5 h-1.5 bg-white/35 rounded-full animate-ping" style="animation-delay: 1s;"></div>
+        <div class="absolute top-3/4 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-ping"
+          style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/3 w-1.5 h-1.5 bg-white/35 rounded-full animate-ping"
+          style="animation-delay: 1s;"></div>
       </div>
     </div>
 
@@ -154,53 +163,89 @@
 </div>
 
 <style>
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(10deg); }
-}
+  @keyframes float {
 
-@keyframes float-delayed {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(-10deg); }
-}
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
 
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0px) rotate(45deg); }
-  50% { transform: translateY(-10px) rotate(55deg); }
-}
+    50% {
+      transform: translateY(-20px) rotate(10deg);
+    }
+  }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
+  @keyframes float-delayed {
 
-.animate-float-delayed {
-  animation: float-delayed 8s ease-in-out infinite 2s;
-}
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
 
-.animate-float-slow {
-  animation: float-slow 10s ease-in-out infinite 1s;
-}
+    50% {
+      transform: translateY(-15px) rotate(-10deg);
+    }
+  }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  @keyframes float-slow {
 
-.animate-fade-in {
-  animation: fade-in 1s ease-out forwards;
-  opacity: 0;
-}
+    0%,
+    100% {
+      transform: translateY(0px) rotate(45deg);
+    }
 
-.animated-gradient {
-  background-size: 300% 300%;
-  animation: gradient-shift 8s ease infinite;
-}
+    50% {
+      transform: translateY(-10px) rotate(55deg);
+    }
+  }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite 2s;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 10s ease-in-out infinite 1s;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animated-gradient {
+    background-size: 300% 300%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 </style>
 
 {% endblock %}

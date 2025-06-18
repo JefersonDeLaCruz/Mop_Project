@@ -8,5 +8,7 @@ Flask-Login==0.6.3
 itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.2
+numpy==2.3.0
 pytz==2025.2
+scipy==1.15.3
 Werkzeug==3.1.3
