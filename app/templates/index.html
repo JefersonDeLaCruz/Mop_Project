@@ -74,15 +74,23 @@
       <p class="text-lg text-base-content/70">
         Optimiza tus problemas de manera eficiente
       </p>
+
     </div>
 
     <!-- Grid principal responsivo -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 max-w-7xl mx-auto">
 
       <!-- Columna de entrada de datos -->
+
       <form id="formulario" action="{{ url_for('main.resolver') }}" method="post">
         <div class="space-y-6">
-
+          <div class="flex items-center gap-3">
+            <p>Metodo</p>
+            <select name="" id="metodo" class="select select-bordered select-primary w-full">
+              <option>Simplex</option>
+              <option>General</option>
+            </select>
+          </div>
           <!-- Card de función objetivo -->
           <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-primary/10">
             <div class="card-body">
@@ -132,7 +140,8 @@
                 <label class="label">
                   <span class="label-text font-medium">Número de variables</span>
                 </label>
-                <input name="numeroVariables" id="numeroVariables" type="number" min="2" max="10" value="2" class="input input-bordered input-secondary w-full" />
+                <input name="numeroVariables" id="numeroVariables" type="number" min="2" max="10" value="2"
+                  class="input input-bordered input-secondary w-full" />
               </div>
 
               <div class="mt-4">
@@ -286,15 +295,29 @@
               <h2 class="card-title text-xl">Visualización</h2>
             </div>
 
-            <div class="flex items-center justify-center h-64 bg-base-200 rounded-lg">
-              <div class="text-center opacity-60">
+            <label for="modal-grafico"
+              class="cursor-pointer flex items-center justify-center h-64 bg-base-200 rounded-lg overflow-auto">
+              <div id="grafico" class="w-full h-full pointer-events-none"></div>
+            </label>
+
+            <!-- <div class="flex items-center justify-center h-64 bg-base-200 rounded-lg">
+               <div class="text-center opacity-60">
                 <i class="fas fa-chart-area text-4xl text-base-content/30 mb-4"></i>
                 <p class="text-sm">El gráfico aparecerá aquí</p>
+              </div> 
+              <div class="flex items-center  justify-center h-64 bg-base-200 rounded-lg overflow-auto">
+                <div id="grafico" class="w-full h-full"></div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
+    </div>
+
+
+    <div id="resultados">
+      <!-- pasos del simplex aqui -->
+
     </div>
   </div>
 </div>
@@ -344,6 +367,28 @@
 </script>
 {% endblock %}
 
+{% block modals %}
+<!-- Modal de gráfica ampliada -->
+<input type="checkbox" id="modal-grafico" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle w-[70dvw]">
+  <div class="modal-box w-full max-w-5xl h-[90vh]">
+    <h3 class="font-bold text-lg mb-4">Gráfica completa</h3>
+    <div class="w-full h-[75vh] overflow-auto rounded-lg bg-base-200 p-2">
+      <div id="grafico-ampliado" class="w-full h-full"></div>
+    </div>
+    <div class="modal-action">
+      <label for="modal-grafico" class="btn">Cerrar</label>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
 {% block customScript %}
+<script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
 <script type="module" src="{{ url_for('static', filename='js/index.js')}}"></script>
+<script type="module" src="{{ url_for('static', filename='js/simplex.js')}}"></script>
+
 {% endblock %}

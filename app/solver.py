@@ -54,12 +54,33 @@ def resolver_problema_lp(tipo, funcion, restricciones, n_vars):
 
     res = linprog(c=c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=bounds, method="highs")
 
+    
+
     if res.success:
-        return {
+        resultado =  {
             "valores": res.x.tolist(),
             "optimo": res.fun * (-1 if tipo.lower() == "maximizar" else 1),
             "status": "ok"
         }
+
+        if n_vars == 2:
+            resultado["graficable"] = True
+            resultado["funcion_objetivo"] = {
+                "coeficientes": c,
+                "optimo": resultado["optimo"],
+                "punto": res.x.tolist()
+            }
+            resultado['restricciones'] = {
+                "A_ub": A_ub or [],
+                "b_ub": b_ub or [],
+                "A_eq": A_eq or [],
+                "b_eq": b_eq or []
+            }
+        
+        return resultado
+    
+
+
     else:
         return {
             "status": "error",

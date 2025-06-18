@@ -66,7 +66,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from .helpers import guardar_usuario, obtener_usuario_por_nombre_usuario
 
 from .models import User
-from .solver import resolver_problema_lp
+from .solver import resolver_problema_lp, extraer_coeficientes
+from .simplex import simplex_clasico_paso_a_paso
 
 
 main = Blueprint("main", __name__)
@@ -165,3 +166,33 @@ def resolver():
     resultado = resolver_problema_lp(tipoOperacion, funcionObjetivo, restricciones, numeroVariables)
 
     return jsonify({"resultado": resultado})
+
+
+
+
+@main.route("/resolver_simplex_pasos", methods=["POST"])
+def resolver_simplex_pasos():
+    data = request.get_json()
+
+    tipoOperacion = data.get("tipoOperacion")
+    funcionObjetivo = data.get("funcionObjetivo")
+    numeroVariables = int(data.get("numeroVariables"))
+    restricciones = data.get("restricciones", [])
+
+    if tipoOperacion.lower() != "maximizar":
+        return jsonify({"status": "error", "mensaje": "Solo maximizar permitido en este método."})
+
+    c = extraer_coeficientes(funcionObjetivo, numeroVariables)
+
+    coef_restricciones = []
+    for r in restricciones:
+        if r["op"] != "≤":
+            return jsonify({"status": "error", "mensaje": "Solo restricciones ≤ permitidas en este método."})
+        fila = extraer_coeficientes(r["expr"], numeroVariables)
+        coef_restricciones.append({
+            "coeficientes": fila,
+            "constante": float(r["val"])
+        })
+
+    resultado = simplex_clasico_paso_a_paso(c, coef_restricciones, numeroVariables)
+    return jsonify(resultado)

@@ -72,12 +72,12 @@ btnAdd.addEventListener("click", () => {
     valor++;
     input.value = valor;
     actualizarBadges(valor);
-  }else{
+  } else {
     alerta.open({
-        type: "warning",
-        message: `Solo se permiten hasta 10 variables de decision`,
-        className: "alert alert-warning alert-outline",
-      });
+      type: "warning",
+      message: `Solo se permiten hasta 10 variables de decision`,
+      className: "alert alert-warning alert-outline",
+    });
   }
 });
 
@@ -88,12 +88,12 @@ btnRemove.addEventListener("click", () => {
     valor--;
     input.value = valor;
     actualizarBadges(valor);
-  }else{
+  } else {
     alerta.open({
-        type: "warning",
-        message: `Debe haber al menos 2 variables de decision`,
-        className: "alert alert-warning alert-outline",
-      });
+      type: "warning",
+      message: `Debe haber al menos 2 variables de decision`,
+      className: "alert alert-warning alert-outline",
+    });
   }
 });
 
@@ -163,7 +163,7 @@ addResBtn.addEventListener("click", () => {
       type: "warning",
       message: `Solo se permiten hasta ${MAX_RESTRICCIONES} restricciones`,
       className: "alert alert-warning alert-outline",
-    })
+    });
   }
 });
 
@@ -188,6 +188,13 @@ for (let i = 1; i <= MIN_RESTRICCIONES; i++) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const metodo_ = document.getElementById("metodo").value.trim()
+  if (metodo === "Simplex") {
+    console.log("me fui de linprog")
+    return;
+  }
+
+  console.log("se ejecuto lingprog")
   document
     .getElementById("formulario")
     .addEventListener("submit", async (e) => {
@@ -233,6 +240,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
 
         mostrarSolucion(data);
+
+        // if (data.resultado.graficable) {
+        //   generarGrafica(
+            
+        //     data.resultado.funcion_objetivo,
+        //     data.resultado.restricciones
+        //   );
+        // }
         // Mostrar resultado (esto depende de cómo lo querés renderizar)
         // console.log("Resultado:", data);
         // // ejemplo:
@@ -285,3 +300,4 @@ function mostrarSolucion(data) {
     .querySelector("#solution-content")
     .previousElementSibling?.classList.add("hidden");
 }
+

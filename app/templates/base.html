@@ -21,6 +21,11 @@
 
     <main class="is-size-3">{% block main %}{% endblock %}</main>
     <footer></footer>
+
+    {% block modals %}
+
+    {% endblock %}
+
     <script src="https://kit.fontawesome.com/1de6e85594.js" crossorigin="anonymous"></script>
     <script type="module" src="{{ url_for('static', filename='js/base.js')}}"></script>
     <!-- <script type="module" src="{{ url_for('static', filename='js/mathInput.js')}}"></script> -->
@@ -30,6 +35,8 @@
     {% block customScript %}
 
     {% endblock %}
+
+
 </body>
 
 </html>
