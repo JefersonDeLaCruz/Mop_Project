@@ -43,18 +43,33 @@ export function mostrarResultadoSimplex(data) {
 
   solucion.iteraciones.forEach((iteracion, index) => {
     const divIteracion = document.createElement("div");
-    divIteracion.classList.add("mb-4", "p-2", "border", "rounded", "bg-white");
+    divIteracion.classList.add(
+      "mb-6",
+      "p-4",
+      "rounded-xl",
+      "border",
+      "shadow-md",
+      "bg-base-100",
+      "text-base-content"
+    );
 
     const titulo = document.createElement("h3");
-    titulo.classList.add("font-bold", "text-lg", "mb-2");
+    titulo.classList.add("font-bold", "text-lg", "mb-4", "text-primary");
     titulo.textContent = `Iteración ${index + 1}`;
     divIteracion.appendChild(titulo);
 
     const tabla = document.createElement("table");
-    tabla.classList.add("table-auto", "w-full", "text-sm", "border-collapse");
+    tabla.classList.add(
+      "table",
+      "table-sm",
+      "w-full",
+      "overflow-x-auto",
+      "border-collapse",
+      "text-center"
+    );
 
     const thead = document.createElement("thead");
-    thead.innerHTML = `<tr>${iteracion.encabezados.map(h => `<th class="border px-2 py-1">${h}</th>`).join("")}</tr>`;
+    thead.innerHTML = `<tr>${iteracion.encabezados.map(h => `<th class="bg-base-200 text-base-content px-2 py-1 border">${h}</th>`).join("")}</tr>`;
     tabla.appendChild(thead);
 
     const tbody = document.createElement("tbody");
@@ -73,3 +88,4 @@ export function mostrarResultadoSimplex(data) {
   document.getElementById("solution-content").classList.remove("hidden");
   document.querySelector("#solution-content").previousElementSibling?.classList.add("hidden");
 }
+
