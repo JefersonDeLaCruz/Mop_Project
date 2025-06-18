@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,10 +17,68 @@
 
 <body data-act-class="ACTIVECLASS">
     {% block nav %}
-        
+    <nav class="navbar bg-accent text-white shadow-lg fixed top-0 z-10">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-accent-content rounded-box w-52">
+                    <li><a href="{{ url_for('main.index') }}" >Nuevo Problema</a></li>
+                    <li><a href="#">Ejemplos</a></li>
+                    <li><a href="#">Ayuda</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl font-bold hover:bg-accent-content">
+                <i class="fas fa-calculator text-primary"></i>
+                LP Solver
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="{{ url_for('main.index') }}" class="hover:text-primary transition-colors">Nuevo Problema</a></li>
+                <li><a class="hover:text-primary transition-colors">Ejemplos</a></li>
+                <li><a class="hover:text-primary transition-colors">Ayuda</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+
+            <div class="flex-none">
+                <ul class="menu menu-horizontal px-1">
+                    <li>
+                        <details>
+                            <summary>Tema</summary>
+                            <ul class="rounded-t-none p-2 bg-accent-content">
+                                <li><a class="" data-set-theme="light">Claro</a></li>
+                                <li><a data-set-theme="dark">Oscuro</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle hover:bg-accent-content">
+                    <i class="fas fa-user"></i>
+                </div>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-accent-content rounded-box w-52">
+                    <li><a href="{{ url_for('main.perfil') }}">Perfil</a></li>
+                    <li><a>Configuración</a></li>
+                    <li><a>Cerrar Sesión</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
     {% endblock %}
 
-    <main class="is-size-3">{% block main %}{% endblock %}</main>
+    <main class="mt-[3rem]">{% block main %}{% endblock %}</main>
     <footer></footer>
 
     {% block modals %}

@@ -67,7 +67,7 @@ from .helpers import guardar_usuario, obtener_usuario_por_nombre_usuario
 
 from .models import User
 from .solver import resolver_problema_lp, extraer_coeficientes
-from .simplex import simplex_clasico_paso_a_paso
+
 
 
 main = Blueprint("main", __name__)
