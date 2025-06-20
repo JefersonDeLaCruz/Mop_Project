@@ -55,14 +55,12 @@ def _simplex(c, A, b):
     # Crear matriz aumentada con variables de holgura
     for i in range(num_rest):
         fila = A[i] + [0.0] * num_rest + [b[i]]
-        fila[num_vars + i] = 1.0  # variable de holgura
+        fila[num_vars + i] = 1.0
         tableau.append(fila)
 
-    # Fila de función objetivo (Z)
     z_fila = [-ci for ci in c] + [0.0] * num_rest + [0.0]
     tableau.append(z_fila)
 
-    # Iterar
     while True:
         encabezados = ["VB"] + [f"x{i+1}" for i in range(num_vars)] + [f"s{i+1}" for i in range(num_rest)] + ["RHS"]
         filas_str = []
@@ -73,25 +71,39 @@ def _simplex(c, A, b):
                 fila = ["Z"] + [round(c, 2) for c in tableau[i]]
             filas_str.append(fila)
 
-        iteraciones.append({
+        iteracion = {
             "encabezados": encabezados,
             "filas": filas_str,
             "variables_basicas": vb.copy(),
-            "detalles": None  # Se rellena luego si hay pivoteo
-        })
+            "detalles": None
+        }
 
-        # Buscar columna pivote
         z_row = tableau[-1][:-1]
         if all(v >= 0 for v in z_row):
-            break  # solución óptima encontrada
+            iteraciones.append(iteracion)
+            break
 
         col = z_row.index(min(z_row))
+        var_pivote = encabezados[col + 1]
+        valor_col = z_row[col]
+
         razones = []
+        razon_just = []
         for i in range(num_rest):
-            if tableau[i][col] > 0:
-                razones.append(tableau[i][-1] / tableau[i][col])
+            coef = tableau[i][col]
+            rhs = tableau[i][-1]
+            if coef > 0:
+                razon = rhs / coef
+                razones.append(razon)
             else:
-                razones.append(float("inf"))
+                razon = float("inf")
+                razones.append(razon)
+            razon_just.append({
+                "fila": i + 1,
+                "rhs": round(rhs, 4),
+                "coef_pivote": round(coef, 4),
+                "razon": round(razon, 4) if razon != float("inf") else "infinito"
+            })
 
         if all(r == float("inf") for r in razones):
             raise Exception("Solución no acotada")
@@ -100,33 +112,48 @@ def _simplex(c, A, b):
         pivote = tableau[fila_pivote][col]
 
         fila_antigua = tableau[fila_pivote][:]
-        tableau[fila_pivote] = [v / pivote for v in tableau[fila_pivote]]
-        fila_nueva = tableau[fila_pivote][:]
+        fila_normalizada = [v / pivote for v in fila_antigua]
+        tableau[fila_pivote] = fila_normalizada
 
-        detalles = {
-            "columna_pivote": encabezados[col + 1],
-            "fila_pivote": fila_pivote + 1,
-            "pivote": round(pivote, 4),
-            "fila_pivote_normalizada": [round(x, 4) for x in fila_nueva],
-            "transformaciones": []
-        }
-
+        transformaciones = []
         for i in range(len(tableau)):
             if i != fila_pivote:
                 factor = tableau[i][col]
-                fila_original = tableau[i][:]
-                tableau[i] = [a - factor * b for a, b in zip(tableau[i], tableau[fila_pivote])]
-                detalles["transformaciones"].append({
+                original = tableau[i][:]
+                resultado = [a - factor * b for a, b in zip(original, fila_normalizada)]
+                tableau[i] = resultado
+                transformaciones.append({
                     "fila": i + 1,
                     "factor": round(factor, 4),
-                    "original": [round(x, 4) for x in fila_original],
-                    "resultado": [round(x, 4) for x in tableau[i]]
+                    "original": [round(x, 4) for x in original],
+                    "explicacion": f"Fila nueva = Fila original - ({factor} × fila pivote normalizada)",
+                    "resultado": [round(x, 4) for x in resultado]
                 })
 
-        vb[fila_pivote] = encabezados[col + 1]
-        iteraciones[-1]["detalles"] = detalles
+        vb[fila_pivote] = var_pivote
 
-    # Resultado
+        detalles = {
+            "columna_pivote": {
+                "variable": var_pivote,
+                "explicacion": f"Se selecciona la columna pivote '{var_pivote}' porque tiene el valor más negativo en la fila Z ({round(valor_col, 4)}), lo cual indica la mayor mejora posible en la función objetivo."
+            },
+            "fila_pivote": {
+                "indice": fila_pivote + 1,
+                "razones": razon_just,
+                "explicacion": f"Se elige la fila {fila_pivote + 1} porque tiene la razón mínima entre RHS y el coeficiente pivote."
+            },
+            "normalizacion": {
+                "original": [round(x, 4) for x in fila_antigua],
+                "pivote": round(pivote, 4),
+                "resultado": [round(x, 4) for x in fila_normalizada],
+                "explicacion": f"Se divide cada elemento de la fila pivote entre el valor del pivote ({round(pivote, 4)})."
+            },
+            "transformaciones": transformaciones
+        }
+
+        iteracion["detalles"] = detalles
+        iteraciones.append(iteracion)
+
     solucion = [0.0] * num_vars
     for i in range(num_rest):
         for j in range(num_vars):
