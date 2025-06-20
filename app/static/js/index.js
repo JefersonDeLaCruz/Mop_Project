@@ -66,7 +66,7 @@ btnAdd.addEventListener("click", () => {
     alerta.open({
       type: "warning",
       message: `Solo se permiten hasta 10 variables de decision`,
-      className: "alert alert-warning alert-outline",
+      className: "alert alert-warning",
     });
   }
 });
@@ -82,7 +82,7 @@ btnRemove.addEventListener("click", () => {
     alerta.open({
       type: "warning",
       message: `Debe haber al menos 2 variables de decision`,
-      className: "alert alert-warning alert-outline",
+      className: "alert alert-warning",
     });
   }
 });
@@ -109,8 +109,8 @@ function crearRestriccion(numero) {
         <option>≥</option>
         <option>=</option>
       </select>
-      <input name="valorRes_${numero}" id="valorRes_${numero}" type="number" placeholder="valor" required class="input input-sm input-bordered w-20" />
-      <span class="btn btn-sm btn-error btn-outline btnEliminar">
+      <input name="valorRes_${numero}" id="valorRes_${numero}" type="number" placeholder="valor" required class="input input-sm input-bordered sm:w-20"/>
+      <span class="btn btn-xs sm:btn-sm btn-error btn-outline btnEliminar">
         <i class="fas fa-trash"></i>
       </span>
     `;
@@ -131,7 +131,7 @@ function crearRestriccion(numero) {
       alerta.open({
         type: "warning",
         message: `Debe haber al menos ${MIN_RESTRICCIONES} restricciones`,
-        className: "alert alert-warning alert-outline",
+        className: "alert alert-warning",
       });
 
       //
@@ -152,7 +152,7 @@ addResBtn.addEventListener("click", () => {
     alerta.open({
       type: "warning",
       message: `Solo se permiten hasta ${MAX_RESTRICCIONES} restricciones`,
-      className: "alert alert-warning alert-outline",
+      className: "alert alert-warning",
     });
   }
 });
@@ -210,7 +210,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     alerta.open({
       type: "error",
       message: `Debe elegir un método para resolver el problema`,
-      className: "alert alert-error alert-outline",
+      className: "alert alert-error",
     });
     return;
   }
@@ -283,7 +283,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         type: "error",
         message:
           "Solo se permiten problemas de maximización con restricciones '≤' y coeficientes positivos.",
-        className: "alert alert-warning alert-outline"
+        className: "alert alert-warning"
       });
       return;
     }
@@ -297,7 +297,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       alerta.open({
         type: "error",
         message: "Error al resolver el problema con Simplex.",
-        className: "alert alert-warning alert-outline"
+        className: "alert alert-warning"
       });
     }
   }
