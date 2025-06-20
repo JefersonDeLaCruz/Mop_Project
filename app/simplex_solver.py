@@ -21,11 +21,41 @@ def resolver_simplex_clasico(data):
         A.append(_parse_funcion(r["expr"], num_vars))
         b.append(float(r["val"]))
 
-    # Armar tabla inicial del método Simplex
-    resultado = _simplex(c, A, b)
+    # Generar resumen del planteamiento
+    planteamiento = {
+        "tipo": tipo,
+        "funcion_objetivo": funcion,
+        "restricciones": restricciones
+    }
 
-    return resultado
+    # Generar modelo estándar
+    modelo_estandar = {
+        # "funcion_objetivo": "Z = " + " + ".join([f"{coef}x{i+1}" for i, coef in enumerate(c)]),
+        "funcion_objetivo": _formatear_funcion_objetivo_estandar(c),
+        "restricciones": [
+            " + ".join([f"{A[i][j]}x{j+1}" for j in range(num_vars)]) + f" + s{i+1} = {b[i]}"
+            for i in range(len(A))
+        ],
+        "variables": [f"x{i+1} ≥ 0" for i in range(num_vars)] + [f"s{i+1} ≥ 0" for i in range(len(A))]
+    }
 
+    # Ejecutar el algoritmo simplex
+    resultado_simplex = _simplex(c, A, b)
+
+    # Combinar todo
+    return {
+        "planteamiento": planteamiento,
+        "modelo_estandar": modelo_estandar,
+        **resultado_simplex
+    }
+
+def _formatear_funcion_objetivo_estandar(c):
+    partes = []
+    for i, coef in enumerate(c):
+        if coef != 0:
+            signo = "-" if coef > 0 else "+"
+            partes.append(f"{signo} {abs(coef)}x{i+1}")
+    return "Z " + " ".join(partes) + " = 0"
 
 def _parse_funcion(expr, num_vars):
     import re

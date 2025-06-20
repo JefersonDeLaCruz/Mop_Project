@@ -36,16 +36,40 @@ export function mostrarResultadoSimplex(data) {
   const resultadosEl = document.getElementById("resultados");
   resultadosEl.innerHTML = "";
 
+  // 🔽 Mostrar planteamiento del problema
+  const planteamientoDiv = document.createElement("div");
+  planteamientoDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-200", "text-base-content");
+
+  const { tipo, funcion_objetivo, restricciones } = solucion.planteamiento;
+  const modelo = solucion.modelo_estandar;
+
+  const restriccionesHTML = restricciones.map((r, i) =>
+    `<li>${r.expr} ${r.op} ${r.val}</li>`).join("");
+
+  const modeloRestricciones = modelo.restricciones.map(r => `<li>${r}</li>`).join("");
+  const modeloVariables = modelo.variables.map(v => `<li>${v}</li>`).join("");
+
+  planteamientoDiv.innerHTML = `
+    <h3 class="font-bold text-lg mb-2 text-primary">Planteamiento del problema</h3>
+    <p><strong>Tipo:</strong> ${tipo}</p>
+    <p><strong>Función objetivo:</strong> ${funcion_objetivo}</p>
+    <p><strong>Restricciones:</strong></p>
+    <ul class="list-disc pl-5">${restriccionesHTML}</ul>
+
+    <h4 class="mt-4 font-bold text-base">Modelo estándar:</h4>
+    <p><strong>Función objetivo:</strong> ${modelo.funcion_objetivo}</p>
+    <p><strong>Restricciones:</strong></p>
+    <ul class="list-disc pl-5">${modeloRestricciones}</ul>
+    <p><strong>Restricciones de no negatividad:</strong></p>
+    <ul class="list-disc pl-5">${modeloVariables}</ul>
+  `;
+  resultadosEl.appendChild(planteamientoDiv);
+
+  // 🔽 Mostrar iteraciones
   solucion.iteraciones.forEach((iteracion, index) => {
     const divIteracion = document.createElement("div");
     divIteracion.classList.add(
-      "mb-6",
-      "p-4",
-      "rounded-xl",
-      "border",
-      "shadow-md",
-      "bg-base-100",
-      "text-base-content"
+      "mb-6", "p-4", "rounded-xl", "border", "shadow-md", "bg-base-100", "text-base-content", "overflow-x-auto"
     );
 
     const titulo = document.createElement("h3");
@@ -116,13 +140,33 @@ export function mostrarResultadoSimplex(data) {
         <p class="mt-2"><strong>Transformaciones de otras filas:</strong></p>
         <ul class="list-disc pl-5">${transformacionesHTML}</ul>
       `;
-
       divIteracion.appendChild(detallesDiv);
     }
 
     resultadosEl.appendChild(divIteracion);
   });
+   // 🔽 Interpretación y conclusión final
+  const interpretacionDiv = document.createElement("div");
+  interpretacionDiv.classList.add("mb-6", "p-4", "rounded", "bg-success", "bg-opacity-10", "text-success-content", "shadow");
 
+  const valorZ = solucion.optimo.toFixed(2);
+  const variablesActivas = solucion.valores
+    .map((val, i) => ({ nombre: `x${i + 1}`, valor: val }))
+    .filter(v => v.valor > 0)
+    .map(v => `${v.nombre} = ${v.valor.toFixed(2)}`)
+    .join(", ");
+
+  interpretacionDiv.innerHTML = `
+    <h3 class="font-bold text-lg mb-2 text-success">Conclusión e interpretación</h3>
+    <p>Se alcanzó una solución óptima con un valor de <strong>Z = ${valorZ}</strong>.</p>
+    <p>Las variables que contribuyen a este óptimo son: <strong>${variablesActivas || 'ninguna (todas son 0)'}</strong>.</p>
+    <p class="mt-2">
+      Esto significa que, bajo las restricciones dadas, esta combinación de variables maximiza el valor de la función objetivo.
+    </p>
+  `;
+
+  resultadosEl.appendChild(interpretacionDiv);
   document.getElementById("solution-content").classList.remove("hidden");
   document.querySelector("#solution-content").previousElementSibling?.classList.add("hidden");
 }
+
