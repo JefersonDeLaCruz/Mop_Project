@@ -299,3 +299,291 @@ def resolver_simplex():
     except Exception as e:
         print(f"Error al resolver con Simplex: {e}")
         return jsonify({"error": "No se pudo resolver el problema con Simplex."}), 400
+    
+
+
+
+# @main.route("/resolver-simplex-general", methods=["POST"])
+# def simplex_general():
+#     data = request.get_json()
+
+#     try:
+#         resultado = resolver_simplex_general(data)
+#         return jsonify({"resultado": resultado})
+#     except Exception as e:
+#         print(f"Error al resolver con Simplex General: {e}")
+#         return jsonify({"error": "No se pudo resolver el problema con Simplex General."}), 400
+
+# from .simplex_m import resolver_simplex_gran_m
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+
+
+# @main.route("/resolver-simplex-general", methods=["POST"])
+# def simplex_general():
+#     """
+#     Endpoint para resolver problemas de programación lineal usando Simplex con Gran M.
+#     Maneja cualquier tipo de problema (maximización/minimización) con cualquier tipo de restricción.
+#     """
+#     try:
+#         data = request.get_json()
+        
+#         # Validar datos de entrada
+#         if not data:
+#             return jsonify({
+#                 "error": "No se recibieron datos",
+#                 "status": "error"
+#             }), 400
+        
+#         # Validar campos requeridos
+#         campos_requeridos = ["tipoOperacion", "funcionObjetivo", "numeroVariables", "restricciones"]
+#         for campo in campos_requeridos:
+#             if campo not in data:
+#                 return jsonify({
+#                     "error": f"Campo requerido faltante: {campo}",
+#                     "status": "error"
+#                 }), 400
+        
+#         # Validar que haya al menos una restricción
+#         if not data["restricciones"] or len(data["restricciones"]) == 0:
+#             return jsonify({
+#                 "error": "Debe haber al menos una restricción",
+#                 "status": "error"
+#             }), 400
+        
+#         # Validar número de variables
+#         num_vars = data["numeroVariables"]
+#         if not isinstance(num_vars, int) or num_vars < 1 or num_vars > 20:
+#             return jsonify({
+#                 "error": "El número de variables debe ser un entero entre 1 y 20",
+#                 "status": "error"
+#             }), 400
+        
+#         # Validar tipo de operación
+#         tipo_op = data["tipoOperacion"].lower()
+#         if tipo_op not in ["max", "maximizar", "min", "minimizar"]:
+#             return jsonify({
+#                 "error": "Tipo de operación debe ser 'max', 'maximizar', 'min' o 'minimizar'",
+#                 "status": "error"
+#             }), 400
+        
+#         # Validar restricciones
+#         for i, restriccion in enumerate(data["restricciones"]):
+#             if not isinstance(restriccion, dict):
+#                 return jsonify({
+#                     "error": f"La restricción {i+1} debe ser un objeto",
+#                     "status": "error"
+#                 }), 400
+            
+#             if "expr" not in restriccion or "op" not in restriccion or "val" not in restriccion:
+#                 return jsonify({
+#                     "error": f"La restricción {i+1} debe tener campos 'expr', 'op' y 'val'",
+#                     "status": "error"
+#                 }), 400
+            
+#             # Validar operador
+#             if restriccion["op"] not in ["≤", "≥", "="]:
+#                 return jsonify({
+#                     "error": f"Operador inválido en restricción {i+1}: {restriccion['op']}",
+#                     "status": "error"
+#                 }), 400
+            
+#             # Validar que val sea convertible a float
+#             try:
+#                 float(restriccion["val"])
+#             except (ValueError, TypeError):
+#                 return jsonify({
+#                     "error": f"El valor de la restricción {i+1} debe ser un número",
+#                     "status": "error"
+#                 }), 400
+        
+#         # Validar función objetivo
+#         if not data["funcionObjetivo"] or not isinstance(data["funcionObjetivo"], str):
+#             return jsonify({
+#                 "error": "La función objetivo debe ser una cadena no vacía",
+#                 "status": "error"
+#             }), 400
+        
+#         logging.info(f"Resolviendo problema con Simplex Gran M: {data}")
+        
+#         # Resolver el problema
+#         resultado = resolver_simplex_gran_m(data)
+        
+#         # Formatear respuesta
+#         respuesta = {
+#             "status": "success",
+#             "resultado": resultado,
+#             "mensaje": "Problema resuelto exitosamente con Simplex Gran M"
+#         }
+        
+#         # Si el problema es infactible
+#         if resultado.get("status") == "infactible":
+#             respuesta["status"] = "warning"
+#             respuesta["mensaje"] = resultado.get("mensaje", "Problema infactible")
+        
+#         logging.info(f"Problema resuelto exitosamente. Valor óptimo: {resultado.get('optimo')}")
+        
+#         return jsonify(respuesta)
+        
+#     except ValueError as e:
+#         logging.error(f"Error de validación: {str(e)}")
+#         return jsonify({
+#             "error": f"Error en los datos de entrada: {str(e)}",
+#             "status": "error"
+#         }), 400
+        
+#     except Exception as e:
+#         logging.error(f"Error al resolver con Simplex Gran M: {str(e)}")
+        
+#         # Determinar el tipo de error
+#         error_msg = str(e)
+#         if "no acotada" in error_msg.lower():
+#             return jsonify({
+#                 "error": "El problema tiene solución no acotada",
+#                 "status": "error",
+#                 "tipo": "no_acotada"
+#             }), 400
+#         elif "infactible" in error_msg.lower():
+#             return jsonify({
+#                 "error": "El problema no tiene solución factible",
+#                 "status": "error", 
+#                 "tipo": "infactible"
+#             }), 400
+#         else:
+#             return jsonify({
+#                 "error": "Error interno al resolver el problema",
+#                 "status": "error",
+#                 "detalles": error_msg
+#             }), 500
+
+
+from .gran_m import resolver_simplex_gran_m
+
+@main.route("/resolver-simplex-general", methods=["POST"])
+def simplex_general():
+    """
+    Endpoint para resolver problemas de programación lineal usando Simplex con Gran M.
+    Versión adaptada que usa el algoritmo robusto con MixedValue.
+    """
+    try:
+        data = request.get_json()
+        
+        # Validar datos de entrada
+        if not data:
+            return jsonify({
+                "error": "No se recibieron datos",
+                "status": "error"
+            }), 400
+        
+        # Validar campos requeridos
+        campos_requeridos = ["tipoOperacion", "funcionObjetivo", "numeroVariables", "restricciones"]
+        for campo in campos_requeridos:
+            if campo not in data:
+                return jsonify({
+                    "error": f"Campo requerido faltante: {campo}",
+                    "status": "error"
+                }), 400
+        
+        # Validar que haya al menos una restricción
+        if not data["restricciones"] or len(data["restricciones"]) == 0:
+            return jsonify({
+                "error": "Debe haber al menos una restricción",
+                "status": "error"
+            }), 400
+        
+        # Validar número de variables
+        num_vars = data["numeroVariables"]
+        if not isinstance(num_vars, int) or num_vars < 1 or num_vars > 20:
+            return jsonify({
+                "error": "El número de variables debe ser un entero entre 1 y 20",
+                "status": "error"
+            }), 400
+        
+        # Validar tipo de operación
+        tipo_op = data["tipoOperacion"].lower()
+        if tipo_op not in ["max", "maximizar", "min", "minimizar"]:
+            return jsonify({
+                "error": "Tipo de operación debe ser 'max', 'maximizar', 'min' o 'minimizar'",
+                "status": "error"
+            }), 400
+        
+        # Validar restricciones
+        for i, restriccion in enumerate(data["restricciones"]):
+            if not isinstance(restriccion, dict):
+                return jsonify({
+                    "error": f"La restricción {i+1} debe ser un objeto",
+                    "status": "error"
+                }), 400
+            
+            if "expr" not in restriccion or "op" not in restriccion or "val" not in restriccion:
+                return jsonify({
+                    "error": f"La restricción {i+1} debe tener campos 'expr', 'op' y 'val'",
+                    "status": "error"
+                }), 400
+            
+            # Validar operadores
+            if restriccion["op"] not in ["≤", "≥", "="]:
+                return jsonify({
+                    "error": f"Operador inválido en restricción {i+1}: {restriccion['op']}",
+                    "status": "error"
+                }), 400
+            
+            # Validar que val sea convertible a float
+            try:
+                float(restriccion["val"])
+            except (ValueError, TypeError):
+                return jsonify({
+                    "error": f"El valor de la restricción {i+1} debe ser un número",
+                    "status": "error"
+                }), 400
+        
+        # Validar función objetivo
+        if not data["funcionObjetivo"] or not isinstance(data["funcionObjetivo"], str):
+            return jsonify({
+                "error": "La función objetivo debe ser una cadena no vacía",
+                "status": "error"
+            }), 400
+        
+        logging.info(f"Resolviendo problema con Simplex Gran M: {data}")
+        
+        # Resolver el problema con el nuevo algoritmo robusto
+        resultado = resolver_simplex_gran_m(data)
+        
+        # Formatear respuesta
+        respuesta = {
+            "status": "success",
+            "resultado": resultado,
+            "mensaje": "Problema resuelto exitosamente con Simplex Gran M"
+        }
+        
+        # Manejar estados especiales
+        if resultado.get("status") == "infactible":
+            respuesta["status"] = "warning"
+            respuesta["mensaje"] = resultado.get("mensaje", "Problema infactible")
+        elif resultado.get("status") == "no_acotada":
+            respuesta["status"] = "error"
+            respuesta["mensaje"] = resultado.get("mensaje", "Problema no acotado")
+        
+        logging.info(f"Resultado del problema: {resultado.get('status')}")
+        
+        return jsonify(respuesta)
+        
+    except ValueError as e:
+        logging.error(f"Error de validación: {str(e)}")
+        return jsonify({
+            "error": f"Error en los datos de entrada: {str(e)}",
+            "status": "error"
+        }), 400
+        
+    except Exception as e:
+        logging.error(f"Error al resolver con Simplex Gran M: {str(e)}", exc_info=True)
+        return jsonify({
+            "error": "Error interno al resolver el problema",
+            "status": "error",
+            "detalles": str(e)
+        }), 500
+   

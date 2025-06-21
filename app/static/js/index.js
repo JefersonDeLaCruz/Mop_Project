@@ -1,6 +1,11 @@
 //aqui me voy a auxiliar para obtener la infor de los inputs
 import { resolverProblema, mostrarSolucion } from "./solver.js";
-import { resolverSimplex, mostrarResultadoSimplex } from "./simplexSolver.js";
+import {
+  resolverSimplex,
+  mostrarResultadoSimplex,
+  resolverSimplexGeneral,
+  mostrarResultadoGranM
+} from "./simplexSolver.js";
 
 const alerta = new Notyf({
   duration: 2000,
@@ -179,27 +184,35 @@ for (let i = 1; i <= MIN_RESTRICCIONES; i++) {
 
 const metodoSimplexBtn = document.getElementById("metodo_simplex");
 const metodoGeneralBtn = document.getElementById("metodo_general");
+const metodoScipyBtn = document.getElementById("metodo_scipy");
+
 
 let metodoSelecionado;
 
-metodoGeneralBtn.addEventListener("click", () => {
-  metodoGeneralBtn.classList.remove("btn-dash");
-  metodoGeneralBtn.classList.add("btn-active");
-  metodoSimplexBtn.classList.remove("btn-active");
-  metodoSimplexBtn.classList.add("btn-dash");
+function activarBotonSeleccionado(boton) {
+  [metodoSimplexBtn, metodoGeneralBtn, metodoScipyBtn].forEach((btn) => {
+    if (btn === boton) {
+      btn.classList.remove("btn-dash");
+      btn.classList.add("btn-active");
+    } else {
+      btn.classList.remove("btn-active");
+      btn.classList.add("btn-dash");
+    }
+  });
+  metodoSelecionado = boton.innerText;
+  console.log("Método seleccionado:", metodoSelecionado);
+}
 
-  metodoSelecionado = metodoGeneralBtn.innerText;
-  console.log("veamos g", metodoSelecionado);
+metodoGeneralBtn.addEventListener("click", () => {
+  activarBotonSeleccionado(metodoGeneralBtn);
 });
 
 metodoSimplexBtn.addEventListener("click", () => {
-  metodoSimplexBtn.classList.remove("btn-dash");
-  metodoSimplexBtn.classList.add("btn-active");
-  metodoGeneralBtn.classList.remove("btn-active");
-  metodoGeneralBtn.classList.add("btn-dash");
+  activarBotonSeleccionado(metodoSimplexBtn);
+});
 
-  metodoSelecionado = metodoSimplexBtn.innerText;
-  console.log("veamos s", metodoSelecionado);
+metodoScipyBtn.addEventListener("click", () => {
+  activarBotonSeleccionado(metodoScipyBtn);
 });
 
 //AQUI ESTA LA VERDADERA SAUCEEE!!!
@@ -241,10 +254,40 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     };
 
     try {
-      const data = await resolverProblema(payload);
-      mostrarSolucion(data);
+      console.log("payload para general: ", payload);
+      const data = await resolverSimplexGeneral(payload);
+
+      // ✅ CORRECCIÓN: Verificar la estructura correcta de la respuesta
+      if (data.status !== "success" || !data.resultado?.optimo) {
+        // Manejar casos especiales
+        if (
+          data.status === "warning" &&
+          data.resultado?.status === "infactible"
+        ) {
+          throw new Error(
+            "Problema infactible: " +
+              (data.resultado.mensaje || "No tiene solución factible")
+          );
+        } else if (data.tipo === "no_acotada") {
+          throw new Error(
+            "Problema no acotado: La solución tiende al infinito"
+          );
+        } else {
+          throw new Error(
+            data.error || "El servidor no devolvió una solución válida"
+          );
+        }
+      }
+
+      // ✅ Pasar solo el resultado, no toda la respuesta del servidor
+      mostrarResultadoGranM(data.resultado);
     } catch (err) {
       console.error("Error al resolver:", err);
+      alerta.open({
+        type: "error",
+        message: "Error al resolver con Simplex General: " + err.message,
+        className: "alert alert-error",
+      });
     }
   } else if (metodoSelecionado === metodoSimplexBtn.innerText) {
     // alerta.open({
@@ -283,13 +326,13 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         type: "error",
         message:
           "Solo se permiten problemas de maximización con restricciones '≤' y coeficientes positivos.",
-        className: "alert alert-warning"
+        className: "alert alert-warning",
       });
       return;
     }
 
     try {
-      console.log("payload para simplex: ", payload)
+      console.log("payload para simplex: ", payload);
       const data = await resolverSimplex(payload);
       mostrarResultadoSimplex(data);
     } catch (err) {
@@ -297,7 +340,44 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       alerta.open({
         type: "error",
         message: "Error al resolver el problema con Simplex.",
-        className: "alert alert-warning"
+        className: "alert alert-warning",
+      });
+    }
+  } else if (metodoSelecionado === metodoScipyBtn.innerText) {
+    const tipoOperacion = document.getElementById("tipoOperacion").value;
+    const funcionObjetivo = document.getElementById("funcionObjetivo").value;
+    const numeroVariables = parseInt(
+      document.getElementById("numeroVariables").value
+    );
+
+    const restricciones = [];
+    const wrapper = document.getElementById("resWrapper");
+
+    Array.from(wrapper.children).forEach((div) => {
+      const expr = div.querySelector(`[name^="restriccion_"]`).value;
+      const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
+      const val = div.querySelector(`[name^="valorRes_"]`).value;
+
+      restricciones.push({ expr, op, val });
+    });
+
+    const payload = {
+      tipoOperacion,
+      funcionObjetivo,
+      numeroVariables,
+      restricciones,
+    };
+
+    try {
+      console.log("payload para scipy: ", payload);
+      const data = await resolverProblema(payload);
+      mostrarSolucion(data);
+    } catch (err) {
+      console.error("Error al resolver con Scipy:", err);
+      alerta.open({
+        type: "error",
+        message: "Error al resolver el problema con Scipy.",
+        className: "alert alert-warning",
       });
     }
   }
@@ -306,7 +386,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 function esValidoParaSimplex(payload) {
   const { tipoOperacion, restricciones } = payload;
 
-  console.log(tipoOperacion, restricciones, "fuck this shit")
+  console.log(tipoOperacion, restricciones, "fuck this shit");
   if (tipoOperacion !== "Maximizar") return false;
 
   const todasMenorIgual = restricciones.every((r) => r.op === "≤");
