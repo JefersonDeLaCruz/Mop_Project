@@ -587,3 +587,67 @@ def simplex_general():
             "detalles": str(e)
         }), 500
    
+
+
+from .test import GranMSimplexExtended
+@main.route("/resolver_gran_m", methods=["POST"])
+def resolver_gran_m():
+    # 1. Recibir el payload
+    data = request.get_json()
+
+    # 2. Extraer y convertir la función objetivo a coeficientes numéricos
+    def parse_funcion_objetivo(expr, n):
+        # expr: "7x1 + 2x2", n: 2
+        coefs = [0]*n
+        expr = expr.replace("-", "+-")
+        for term in expr.split("+"):
+            term = term.strip()
+            if not term:
+                continue
+            if "x" in term:
+                num, var = term.split("x")
+                idx = int(var) - 1
+                coefs[idx] = float(num.strip()) if num.strip() not in ["", "+", "-"] else (1.0 if num.strip() in ["", "+"] else -1.0)
+            else:
+                pass  # No es necesario en Simplex estándar
+        return coefs
+
+    # 3. Extraer restricciones
+    def parse_restricciones(restricciones, n):
+        coefs = []
+        tipos = []
+        for restric in restricciones:
+            expr = restric["expr"].replace("-", "+-")
+            fila = [0]*n
+            for term in expr.split("+"):
+                term = term.strip()
+                if not term:
+                    continue
+                if "x" in term:
+                    num, var = term.split("x")
+                    idx = int(var) - 1
+                    fila[idx] = float(num.strip()) if num.strip() not in ["", "+", "-"] else (1.0 if num.strip() in ["", "+"] else -1.0)
+                else:
+                    pass
+            # El lado derecho
+            fila.append(float(restric["val"]))
+            coefs.append(fila)
+            tipos.append(restric["op"].replace("≥", ">=").replace("≤", "<="))
+        return coefs, tipos
+
+    try:
+        # 4. Parsear datos
+        n = int(data["numeroVariables"])
+        funcion_objetivo = parse_funcion_objetivo(data["funcionObjetivo"], n)
+        restricciones, tipos = parse_restricciones(data["restricciones"], n)
+        minimizar = data["tipoOperacion"].lower().startswith("min")
+        print("valor de minimizar", minimizar)
+        
+        # 5. Resolver
+        solver = GranMSimplexExtended()
+        html = solver.solve(funcion_objetivo, restricciones, tipos, minimize=minimizar)
+        
+        # 6. Devolver HTML en JSON
+        return jsonify({"html": html})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

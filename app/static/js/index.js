@@ -4,7 +4,7 @@ import {
   resolverSimplex,
   mostrarResultadoSimplex,
   resolverSimplexGeneral,
-  mostrarResultadoGranM
+  mostrarResultadoGranM,
 } from "./simplexSolver.js";
 
 const alerta = new Notyf({
@@ -186,7 +186,6 @@ const metodoSimplexBtn = document.getElementById("metodo_simplex");
 const metodoGeneralBtn = document.getElementById("metodo_general");
 const metodoScipyBtn = document.getElementById("metodo_scipy");
 
-
 let metodoSelecionado;
 
 function activarBotonSeleccionado(boton) {
@@ -258,29 +257,39 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       const data = await resolverSimplexGeneral(payload);
 
       // ✅ CORRECCIÓN: Verificar la estructura correcta de la respuesta
-      if (data.status !== "success" || !data.resultado?.optimo) {
-        // Manejar casos especiales
-        if (
-          data.status === "warning" &&
-          data.resultado?.status === "infactible"
-        ) {
-          throw new Error(
-            "Problema infactible: " +
-              (data.resultado.mensaje || "No tiene solución factible")
-          );
-        } else if (data.tipo === "no_acotada") {
-          throw new Error(
-            "Problema no acotado: La solución tiende al infinito"
-          );
-        } else {
-          throw new Error(
-            data.error || "El servidor no devolvió una solución válida"
-          );
-        }
-      }
+      // if (data.status !== "success" || !data.resultado?.optimo) {
+      //   // Manejar casos especiales
+      //   if (
+      //     data.status === "warning" &&
+      //     data.resultado?.status === "infactible"
+      //   ) {
+      //     throw new Error(
+      //       "Problema infactible: " +
+      //         (data.resultado.mensaje || "No tiene solución factible")
+      //     );
+      //   } else if (data.tipo === "no_acotada") {
+      //     throw new Error(
+      //       "Problema no acotado: La solución tiende al infinito"
+      //     );
+      //   } else {
+      //     throw new Error(
+      //       data.error || "El servidor no devolvió una solución válida"
+      //     );
+      //   }
+      // }
 
-      // ✅ Pasar solo el resultado, no toda la respuesta del servidor
-      mostrarResultadoGranM(data.resultado);
+      // // ✅ Pasar solo el resultado, no toda la respuesta del servidor
+      // mostrarResultadoGranM(data.resultado);
+      fetch("/resolver_gran_m", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("avla", data)
+          document.getElementById("resultados").innerHTML = data.html;
+        });
     } catch (err) {
       console.error("Error al resolver:", err);
       alerta.open({
