@@ -287,7 +287,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("avla", data)
+          console.log("avla", data);
           document.getElementById("resultados").innerHTML = data.html;
         });
     } catch (err) {
@@ -330,15 +330,15 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       restricciones,
     };
 
-    if (!esValidoParaSimplex(payload)) {
-      alerta.open({
-        type: "error",
-        message:
-          "Solo se permiten problemas de maximización con restricciones '≤' y coeficientes positivos.",
-        className: "alert alert-warning",
-      });
-      return;
-    }
+    // if (!esValidoParaSimplex(payload)) {
+    //   alerta.open({
+    //     type: "error",
+    //     message:
+    //       "Solo se permiten problemas de maximización con restricciones '≤' y coeficientes positivos.",
+    //     className: "alert alert-warning",
+    //   });
+    //   return;
+    // }
 
     try {
       console.log("payload para simplex: ", payload);
@@ -380,12 +380,22 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     try {
       console.log("payload para scipy: ", payload);
       const data = await resolverProblema(payload);
-      mostrarSolucion(data);
+      console.log("respuesta de scipy:", data);
+      if (data.resultado.status == "ok") {
+        mostrarSolucion(data);
+      } else {
+        alerta.open({
+          type: "error",
+          message: data.resultado.mensaje,
+          className: "alert alert-warning",
+        });
+      }
     } catch (err) {
       console.error("Error al resolver con Scipy:", err);
       alerta.open({
         type: "error",
-        message: "Error al resolver el problema con Scipy.",
+        message:
+          "Error al resolver el problema con Scipy. El problema no tiene una region factible",
         className: "alert alert-warning",
       });
     }
