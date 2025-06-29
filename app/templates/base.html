@@ -68,9 +68,36 @@
                 </div>
                 <ul tabindex="0"
                     class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-accent-content rounded-box w-52">
-                    <li><a href="{{ url_for('main.perfil') }}">Perfil</a></li>
-                    <li><a>Configuración</a></li>
-                    <li><a>Cerrar Sesión</a></li>
+                    {% if current_user.is_authenticated %}
+                        <!-- Usuario autenticado -->
+                        <li class="menu-title">
+                            <span class="text-primary font-semibold">{{ current_user.name }}</span>
+                        </li>
+                        <div class="divider my-1"></div>
+                        <li><a href="{{ url_for('main.perfil') }}">
+                            <i class="fas fa-user-circle"></i>
+                            Perfil
+                        </a></li>
+                        <li><a>
+                            <i class="fas fa-cog"></i>
+                            Configuración
+                        </a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="{{ url_for('main.logout') }}" class="text-error hover:bg-error hover:text-error-content">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </a></li>
+                    {% else %}
+                        <!-- Usuario no autenticado -->
+                        <li><a href="{{ url_for('main.login') }}">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Iniciar Sesión
+                        </a></li>
+                        <li><a href="{{ url_for('main.register') }}">
+                            <i class="fas fa-user-plus"></i>
+                            Registrarse
+                        </a></li>
+                    {% endif %}
                 </ul>
 
             </div>
@@ -78,7 +105,7 @@
     </nav>
     {% endblock %}
 
-    <main class="mt-[3rem]">{% block main %}{% endblock %}</main>
+    <main class="{% if request.endpoint not in ['main.login', 'main.register'] %}mt-[3rem]{% endif %}">{% block main %}{% endblock %}</main>
     <footer></footer>
 
     {% block modals %}

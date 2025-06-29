@@ -1,6 +1,4 @@
-
-    
-from flask import Blueprint, render_template, redirect, request, session, url_for, flash, jsonify
+from flask import Blueprint, render_template, redirect, request, session, url_for, flash, jsonify, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user
 
 from .helpers import guardar_usuario, obtener_usuario_por_nombre_usuario
@@ -26,7 +24,6 @@ def index():
 
     return render_template("index.html", data=data, resultado=resultado)
 
-# @main.route("/login", methods=["GET", "POST"])
 @main.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -38,10 +35,15 @@ def login():
             user = User(user_data["id"], user_data["username"], user_data["name"], user_data["password"])
             login_user(user)
             flash("¡Inicio de sesión exitoso!", "success")
-            return redirect(url_for("main.index"))
+            # En lugar de redirigir inmediatamente, renderizar login.html con una flag
+            return render_template("login.html", login_success=True)
         else:
             flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
             # return redirect(url_for("main.login"))
+    else:
+        # Limpiar mensajes flash antiguos cuando se accede a login por GET
+        # Esto evita que se acumulen mensajes de sesiones anteriores
+        get_flashed_messages()
 
     return render_template("login.html")
 
@@ -71,16 +73,109 @@ def register():
 
         guardar_usuario(new_user, "./data/usuarios.json")
         flash("Registro exitoso. Ahora inicia sesión.", "success")
-        return redirect(url_for("main.login"))
+        # En lugar de redirigir inmediatamente, renderizar register.html con una flag
+        return render_template("register.html", register_success=True)
+    else:
+        # Limpiar mensajes flash antiguos cuando se accede a register por GET
+        get_flashed_messages()
 
     return render_template("register.html")
 
 
 
 @main.route("/perfil")
+@login_required
 def perfil():
+    # Pasar la información del usuario actual al template
+    user_info = {
+        'id': current_user.id,
+        'username': current_user.username,
+        'name': current_user.name
+    }
+    return render_template("perfil.html", user=user_info)
 
-    return render_template("perfil.html")
+
+@main.route("/actualizar_perfil", methods=["POST"])
+@login_required
+def actualizar_perfil():
+    import json
+    import os
+    
+    # Obtener datos del formulario
+    new_name = request.form.get("name", "").strip()
+    new_username = request.form.get("username", "").strip()
+    current_password = request.form.get("current_password", "")
+    new_password = request.form.get("new_password", "").strip()
+    confirm_password = request.form.get("confirm_password", "").strip()
+    
+    # Validaciones básicas
+    if not new_name or not new_username or not current_password:
+        flash("Por favor, completa todos los campos obligatorios (nombre, usuario y contraseña actual).", "error")
+        return redirect(url_for("main.perfil"))
+    
+    # Verificar contraseña actual
+    user_data = obtener_usuario_por_nombre_usuario(current_user.username, "./data/usuarios.json")
+    if not user_data or user_data["password"] != current_password:
+        flash("La contraseña actual que ingresaste es incorrecta. Verifica e intenta de nuevo.", "error")
+        return redirect(url_for("main.perfil"))
+    
+    # Verificar que el username no esté en uso por otro usuario
+    if new_username != current_user.username:
+        existing_user = obtener_usuario_por_nombre_usuario(new_username, "./data/usuarios.json")
+        if existing_user:
+            flash(f"El nombre de usuario '{new_username}' ya está en uso. Por favor, elige otro.", "warning")
+            return redirect(url_for("main.perfil"))
+    
+    # Validar nueva contraseña si se proporciona
+    if new_password:
+        if len(new_password) < 4:
+            flash("La nueva contraseña debe tener al menos 4 caracteres.", "error")
+            return redirect(url_for("main.perfil"))
+        if new_password != confirm_password:
+            flash("Las contraseñas nuevas no coinciden. Verifica que hayas escrito la misma contraseña en ambos campos.", "error")
+            return redirect(url_for("main.perfil"))
+    
+    # Actualizar en el archivo JSON
+    try:
+        # Cargar todos los usuarios
+        if os.path.exists("./data/usuarios.json"):
+            with open("./data/usuarios.json", "r", encoding="utf-8") as archivo:
+                usuarios = json.load(archivo)
+        else:
+            flash("Error al acceder a los datos de usuarios.", "error")
+            return redirect(url_for("main.perfil"))
+        
+        # Encontrar y actualizar el usuario actual
+        for usuario in usuarios:
+            if usuario["id"] == current_user.id:
+                usuario["name"] = new_name
+                usuario["username"] = new_username
+                if new_password:  # Solo actualizar si se proporciona nueva contraseña
+                    usuario["password"] = new_password
+                break
+        
+        # Guardar cambios
+        with open("./data/usuarios.json", "w", encoding="utf-8") as archivo:
+            json.dump(usuarios, archivo, ensure_ascii=False, indent=4)
+        
+        # Actualizar el objeto current_user para la sesión actual
+        current_user.name = new_name
+        current_user.username = new_username
+        
+        # Mensaje de éxito más detallado
+        success_msg = f"¡Perfil actualizado correctamente! "
+        if new_password:
+            success_msg += "Tu contraseña también ha sido cambiada."
+        else:
+            success_msg += "Tus datos personales han sido actualizados."
+        
+        flash(success_msg, "success")
+        
+    except Exception as e:
+        flash("Ocurrió un error inesperado al actualizar tu perfil. Por favor, inténtalo de nuevo.", "error")
+        print(f"Error al actualizar perfil: {e}")
+    
+    return redirect(url_for("main.perfil"))
 
 
 @main.route("/idioma/<lang_code>")

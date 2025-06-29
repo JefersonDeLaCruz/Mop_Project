@@ -5,24 +5,8 @@ import {
   mostrarResultadoSimplex,
 } from "./simplexSolver.js";
 
-const alerta = new Notyf({
-  duration: 2000,
-  position: {
-    x: "right",
-    y: "top",
-  },
-  dismissible: false,
-  types: [
-    {
-      type: "warning",
-      background: "inherit",
-    },
-    {
-      type: "error",
-      background: "inherit",
-    },
-  ],
-});
+// Usar la instancia global de Notyf definida en base.js
+// La variable 'alerta' estará disponible globalmente
 
 console.log("hola index");
 

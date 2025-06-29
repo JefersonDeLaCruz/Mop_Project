@@ -13,19 +13,17 @@
     
     <!-- Header del perfil -->
     <div class="text-center mb-8 animate-fade-in">
-      <div class="avatar online mb-4">
-        <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-          <img src="https://via.placeholder.com/150/6366f1/ffffff?text=U" alt="Avatar" />
-        </div>
-      </div>
       <h1 class="text-4xl md:text-5xl font-bold text-primary mb-2">
-        Mi Perfil
+        {% if user %}
+          ¡Hola, {{ user.name }}!
+        {% else %}
+          Mi Perfil
+        {% endif %}
       </h1>
       <p class="text-lg text-base-content/70">
         Gestiona tu información y revisa tu historial
       </p>
     </div>
-    <p>TEST: {{ url_for('main.index') }}</p>
     <!-- Grid principal responsivo -->
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
       
@@ -47,40 +45,40 @@
                 <label class="label">
                   <span class="label-text font-medium">Nombre completo</span>
                 </label>
-                <input type="text" value="Juan Carlos Pérez" 
+                <input type="text" value="{{ user.name if user else 'No disponible' }}" 
                        class="input input-bordered input-primary w-full" readonly />
               </div>
               
-              <div class="form-control">
+              <!-- <div class="form-control">
                 <label class="label">
                   <span class="label-text font-medium">Correo electrónico</span>
                 </label>
                 <input type="email" value="juan.perez@email.com" 
                        class="input input-bordered input-primary w-full" readonly />
-              </div>
+              </div> -->
               
               <div class="form-control">
                 <label class="label">
                   <span class="label-text font-medium">Usuario</span>
                 </label>
-                <input type="text" value="jperez123" 
+                <input type="text" value="{{ user.username if user else 'No disponible' }}" 
                        class="input input-bordered input-primary w-full" readonly />
               </div>
               
-              <div class="form-control">
+              <!-- <div class="form-control">
                 <label class="label">
                   <span class="label-text font-medium">Fecha de registro</span>
                 </label>
                 <input type="text" value="15 de Marzo, 2024" 
                        class="input input-bordered input-secondary w-full" readonly />
-              </div>
+              </div> -->
             </div>
             
             <div class="card-actions justify-end mt-6">
-              <button class="btn btn-outline btn-primary">
+              <label for="edit_profile_modal" class="btn btn-outline btn-primary cursor-pointer">
                 <i class="fas fa-edit"></i>
                 Editar perfil
-              </button>
+              </label>
             </div>
           </div>
         </div>
@@ -102,17 +100,18 @@
                 <div class="stat-desc">En los últimos 30 días</div>
               </div>
               
-              <div class="stat">
+              <!-- <div class="stat">
                 <div class="stat-title">Tiempo total</div>
                 <div class="stat-value text-secondary">45h</div>
                 <div class="stat-desc">Tiempo invertido</div>
-              </div>
+              </div> -->
               
-              <div class="stat">
+              <!-- <div class="stat">
                 <div class="stat-title">Promedio</div>
                 <div class="stat-value text-accent">3.8h</div>
                 <div class="stat-desc">Por problema</div>
-              </div>
+              </div> -->
+
             </div>
           </div>
         </div>
@@ -246,6 +245,95 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal para editar perfil -->
+<input type="checkbox" id="edit_profile_modal" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <label for="edit_profile_modal" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+    
+    <h3 class="font-bold text-lg mb-6">
+      <i class="fas fa-user-edit text-primary mr-2"></i>
+      Editar Perfil
+    </h3>
+    
+    <form action="{{ url_for('main.actualizar_perfil') }}" method="POST" class="space-y-4">
+      <!-- Campo para nombre completo -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Nombre completo</span>
+        </label>
+        <input type="text" name="name" value="{{ user.name if user else '' }}" 
+               class="input input-bordered input-primary w-full" 
+               required maxlength="100"
+               placeholder="Ingresa tu nombre completo" />
+      </div>
+      
+      <!-- Campo para username -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Nombre de usuario</span>
+          <span class="label-text-alt text-warning">Debe ser único</span>
+        </label>
+        <input type="text" name="username" value="{{ user.username if user else '' }}" 
+               class="input input-bordered input-primary w-full" 
+               required maxlength="50" pattern="[a-zA-Z0-9_]+"
+               placeholder="Nombre de usuario único" />
+        <label class="label">
+          <span class="label-text-alt text-base-content/60">Solo letras, números y guiones bajos</span>
+        </label>
+      </div>
+      
+      <!-- Campo para contraseña actual (requerido para seguridad) -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Contraseña actual</span>
+          <span class="label-text-alt text-error">Requerida por seguridad</span>
+        </label>
+        <input type="password" name="current_password" 
+               class="input input-bordered input-secondary w-full" 
+               required placeholder="Confirma tu contraseña actual" />
+      </div>
+      
+      <!-- Opcional: Campo para nueva contraseña -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Nueva contraseña</span>
+          <span class="label-text-alt text-base-content/60">Opcional - déjalo vacío para mantener la actual</span>
+        </label>
+        <input type="password" name="new_password" 
+               class="input input-bordered input-accent w-full" 
+               minlength="4" placeholder="Nueva contraseña (opcional)" />
+      </div>
+      
+      <!-- Confirmación de nueva contraseña -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Confirmar nueva contraseña</span>
+        </label>
+        <input type="password" name="confirm_password" 
+               class="input input-bordered input-accent w-full" 
+               placeholder="Confirma la nueva contraseña" />
+      </div>
+      
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <span class="text-sm">
+          Confirma tu contraseña actual para actualizar tu perfil. 
+          La nueva contraseña es opcional.
+        </span>
+      </div>
+      
+      <div class="modal-action">
+        <label for="edit_profile_modal" class="btn btn-ghost">Cancelar</label>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save mr-2"></i>
+          Actualizar perfil
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -600,6 +688,34 @@
 </style>
 
 <script>
+// Configurar Notyf para alertas (mismo que index.js)
+const alerta = new Notyf({
+  duration: 4000, // Un poco más de tiempo para leer mensajes de perfil
+  position: {
+    x: "right",
+    y: "top",
+  },
+  dismissible: true,
+  types: [
+    {
+      type: "warning",
+      background: "inherit",
+    },
+    {
+      type: "error", 
+      background: "inherit",
+    },
+    {
+      type: "success",
+      background: "inherit",
+    },
+    {
+      type: "info",
+      background: "inherit",
+    },
+  ],
+});
+
 // Script para mejorar la interactividad
 document.addEventListener('DOMContentLoaded', function() {
   // Animación de entrada escalonada para las cards
@@ -625,6 +741,136 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.transform = 'translateY(0) scale(1)';
     });
   });
+
+  // Validación simple de contraseñas en el modal de edición
+  const newPasswordInput = document.querySelector('input[name="new_password"]');
+  const confirmPasswordInput = document.querySelector('input[name="confirm_password"]');
+  
+  if (newPasswordInput && confirmPasswordInput) {
+    function validatePasswords() {
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      
+      if (newPassword && confirmPassword) {
+        if (newPassword !== confirmPassword) {
+          confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
+        } else {
+          confirmPasswordInput.setCustomValidity('');
+        }
+      } else {
+        confirmPasswordInput.setCustomValidity('');
+      }
+    }
+    
+    newPasswordInput.addEventListener('input', validatePasswords);
+    confirmPasswordInput.addEventListener('input', validatePasswords);
+  }
+
+  // Validación adicional en el formulario antes de enviar
+  const editForm = document.querySelector('form[action*="actualizar_perfil"]');
+  if (editForm) {
+    editForm.addEventListener('submit', function(e) {
+      const currentPassword = document.querySelector('input[name="current_password"]').value;
+      const newPassword = document.querySelector('input[name="new_password"]').value;
+      const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
+      const name = document.querySelector('input[name="name"]').value.trim();
+      const username = document.querySelector('input[name="username"]').value.trim();
+      
+      // Validación básica antes de enviar
+      if (!name || !username || !currentPassword) {
+        e.preventDefault();
+        // Usar window.alerta si está disponible, sino mostrar alert
+        if (window.alerta) {
+          window.alerta.open({
+            type: "warning",
+            message: "Por favor, completa todos los campos obligatorios"
+          });
+        } else {
+          alert("Por favor, completa todos los campos obligatorios");
+        }
+        return;
+      }
+      
+      // Validar contraseñas si se está cambiando
+      if (newPassword && newPassword !== confirmPassword) {
+        e.preventDefault();
+        if (window.alerta) {
+          window.alerta.open({
+            type: "error",
+            message: "Las contraseñas nuevas no coinciden"
+          });
+        } else {
+          alert("Las contraseñas nuevas no coinciden");
+        }
+        return;
+      }
+      
+      // Validar longitud de nueva contraseña
+      if (newPassword && newPassword.length < 4) {
+        e.preventDefault();
+        if (window.alerta) {
+          window.alerta.open({
+            type: "error", 
+            message: "La nueva contraseña debe tener al menos 4 caracteres"
+          });
+        } else {
+          alert("La nueva contraseña debe tener al menos 4 caracteres");
+        }
+        return;
+      }
+    });
+  }
 });
 </script>
+
+<!-- Script separado para manejar mensajes flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Función para esperar a que alerta esté disponible
+        function waitForAlerta(callback) {
+          if (typeof window.alerta !== 'undefined') {
+            callback();
+          } else {
+            setTimeout(() => waitForAlerta(callback), 50);
+          }
+        }
+        
+        // Esperar a que alerta esté disponible antes de mostrar mensajes
+        waitForAlerta(function() {
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              window.alerta.open({
+                type: "error",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'success' %}
+              window.alerta.open({
+                type: "success", 
+                message: `{{ message | safe }}`
+              });
+              // Cerrar modal de edición si hay mensaje de éxito
+              const editModal = document.getElementById('edit_profile_modal');
+              if (editModal) {
+                editModal.checked = false;
+              }
+            {% elif category == 'warning' %}
+              window.alerta.open({
+                type: "warning",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'info' %}
+              window.alerta.open({
+                type: "info",
+                message: `{{ message | safe }}`
+              });
+            {% endif %}
+          {% endfor %}
+        });
+      });
+    </script>
+  {% endif %}
+{% endwith %}
 {% endblock %}
+

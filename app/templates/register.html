@@ -12,22 +12,6 @@
     <div data-theme="dark"
       class="login-container h-dvh bg-neutral overflow-y-hidden flex flex-col items-center justify-center">
 
-
-      <div class="flex justify-center items-center place-self-center">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-
-        <div role="alert" class="alert alert-{{ category }} alert-soft my-2" style="flex-grow: 0;">
-          <span> {{ message }}</span>
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-      </div>
-
-
-
       <!-- FORMULARIO DE REGISTRO -->
       <form action="{{ url_for('main.register') }}" method="post"
         class="fields-container flex flex-col gap-2.5 place-self-center items-center justify-center">
@@ -247,5 +231,62 @@
     }
   }
 </style>
+
+<!-- Script para mostrar mensajes flash con Notyf -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Función para esperar a que alerta esté disponible
+        function waitForAlerta(callback) {
+          if (typeof window.alerta !== 'undefined') {
+            callback();
+          } else {
+            setTimeout(() => waitForAlerta(callback), 50);
+          }
+        }
+        
+        // Esperar a que alerta esté disponible antes de mostrar mensajes
+        waitForAlerta(function() {
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              window.alerta.open({
+                type: "error",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'success' %}
+              window.alerta.open({
+                type: "success", 
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'warning' %}
+              window.alerta.open({
+                type: "warning",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'info' %}
+              window.alerta.open({
+                type: "info",
+                message: `{{ message | safe }}`
+              });
+            {% endif %}
+          {% endfor %}
+        });
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
+{% if register_success %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Esperar 2.5 segundos para que el usuario vea el mensaje de éxito
+    // antes de redirigir al login
+    setTimeout(function() {
+      window.location.href = "{{ url_for('main.login') }}";
+    }, 2500);
+  });
+</script>
+{% endif %}
 
 {% endblock %}
