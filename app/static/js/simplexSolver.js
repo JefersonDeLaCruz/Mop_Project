@@ -65,6 +65,24 @@ export function mostrarResultadoSimplex(data) {
   const resultadosEl = document.getElementById("resultados");
   resultadosEl.innerHTML = "";
 
+  // 🔽 Agregar información del método usado
+  const metodoDiv = document.createElement("div");
+  metodoDiv.classList.add(
+    "mb-6",
+    "p-4",
+    "rounded",
+    "bg-primary",
+    "bg-opacity-10",
+    "text-primary-content",
+    "border-l-4",
+    "border-primary"
+  );
+  
+  metodoDiv.innerHTML = `
+    <h3 class="font-bold text-lg mb-2 text-primary">Método Utilizado: Simplex Clásico</h3>
+  `;
+  resultadosEl.appendChild(metodoDiv);
+
   // 🔽 Mostrar planteamiento del problema
   const planteamientoDiv = document.createElement("div");
   planteamientoDiv.classList.add(
@@ -103,6 +121,37 @@ export function mostrarResultadoSimplex(data) {
   `;
   resultadosEl.appendChild(planteamientoDiv);
 
+  // 🔽 Agregar detalles del modelo extendido (como en test.py)
+  const modeloExtendidoDiv = document.createElement("div");
+  modeloExtendidoDiv.classList.add(
+    "mb-6",
+    "p-4",
+    "rounded",
+    "bg-warning",
+    "bg-opacity-10",
+    "text-warning-content"
+  );
+  
+  modeloExtendidoDiv.innerHTML = `
+    <h3 class="font-bold text-lg mb-3 text-warning">Construcción del Modelo Estándar</h3>
+    <div class="space-y-3">
+      <div class="bg-base-100 p-3 rounded">
+        <h4 class="font-bold text-base mb-2">Pasos de transformación:</h4>
+        <ol class="list-decimal pl-5 text-sm space-y-1">
+          <li><strong>Variables originales:</strong> Se mantienen tal como están en el problema</li>
+          <li><strong>Variables de holgura (s):</strong> Se agregan para restricciones ≤ (coeficiente +1)</li>
+          <li><strong>Variables de exceso (H):</strong> Se agregan para restricciones ≥ (coeficiente -1)</li>
+          <li><strong>Variables artificiales (a):</strong> Se agregan para restricciones ≥ y = (coeficiente +1)</li>
+          <li><strong>Función objetivo:</strong> Se modifica para incluir penalización M a variables artificiales</li>
+        </ol>
+      </div>
+      <div class="bg-info bg-opacity-20 p-3 rounded">
+        <p class="text-sm"><strong>Objetivo:</strong> Convertir el problema a la forma estándar para poder aplicar el algoritmo simplex.</p>
+      </div>
+    </div>
+  `;
+  resultadosEl.appendChild(modeloExtendidoDiv);
+
   // 🔽 Mostrar iteraciones
   solucion.iteraciones.forEach((iteracion, index) => {
     const divIteracion = document.createElement("div");
@@ -119,8 +168,24 @@ export function mostrarResultadoSimplex(data) {
 
     const titulo = document.createElement("h3");
     titulo.classList.add("font-bold", "text-lg", "mb-4", "text-primary");
-    titulo.textContent = `Iteración ${index + 1}`;
+    titulo.textContent = `Iteración ${index}`;
     divIteracion.appendChild(titulo);
+
+    // Agregar criterio de optimalidad antes de la tabla
+    if (index > 0) { // No mostrar para la iteración 0 (tabla inicial)
+      const criterioDiv = document.createElement("div");
+      criterioDiv.classList.add("mb-4", "p-3", "rounded", "bg-accent", "bg-opacity-10", "text-accent-content");
+      criterioDiv.innerHTML = `
+        <h4 class="font-bold text-base mb-2 text-accent">Criterio de Optimalidad:</h4>
+        <p class="text-sm">Se revisa la fila Z en busca de coeficientes negativos:</p>
+        <ul class="list-disc pl-5 text-sm mt-2">
+          <li>Si hay coeficientes negativos, la solución actual NO es óptima</li>
+          <li>Se selecciona la variable con el coeficiente más negativo para entrar a la base</li>
+          <li>Si todos los coeficientes son no negativos, se ha alcanzado la solución óptima</li>
+        </ul>
+      `;
+      divIteracion.appendChild(criterioDiv);
+    }
 
     const tabla = document.createElement("table");
     tabla.classList.add(
@@ -154,11 +219,30 @@ export function mostrarResultadoSimplex(data) {
 
       // const filaHTML = fila.map(celda => `<td class="border px-2 py-1">${celda}</td>`); solucion al problema de desbordamiento de filas
       const filaHTML = fila.map(
-        (celda, idx) =>
-          `<td class="border px-2 py-1 ${
-            idx === 0 ? "font-bold" : ""
-          }">${celda}</td>`
-      );//forma alternativa para evitar desbordamiento + agregando estilo a la primera cell VB
+        (celda, idx) => {
+          let cssClass = "border px-2 py-1";
+          
+          // Resaltar elemento pivote, fila pivote y columna pivote si están disponibles
+          if (iteracion.pivot_info) {
+            const pivotRow = iteracion.pivot_info.fila;
+            const pivotCol = iteracion.pivot_info.columna;
+            
+            if (i === pivotRow && idx === pivotCol + 1) { // +1 porque la primera columna es VB
+              cssClass += " bg-error text-error-content font-bold"; // Elemento pivote
+            } else if (i === pivotRow) {
+              cssClass += " bg-warning bg-opacity-30"; // Fila pivote
+            } else if (idx === pivotCol + 1) {
+              cssClass += " bg-warning bg-opacity-30"; // Columna pivote
+            }
+          }
+          
+          if (idx === 0) {
+            cssClass += " font-bold";
+          }
+          
+          return `<td class="${cssClass}">${celda}</td>`;
+        }
+      );//forma alternativa para evitar desbordamiento + agregando estilo a la primera cell VB + resaltado de pivotes
 
       tr.innerHTML = filaHTML.join("");
       tbody.appendChild(tr);
@@ -168,56 +252,275 @@ export function mostrarResultadoSimplex(data) {
 
     if (iteracion.detalles) {
       const d = iteracion.detalles;
+      
+      // Detalles del pivoteo con diseño mejorado
       const detallesDiv = document.createElement("div");
-      detallesDiv.classList.add(
-        "mt-4",
-        "text-sm",
-        "bg-base-200",
-        "p-3",
-        "rounded",
-        "text-left"
-      );
+      detallesDiv.classList.add("mt-4", "space-y-4");
 
-      const razonesHTML = d.fila_pivote.razones
-        .map(
-          (r) =>
-            `<li>Fila ${r.fila}: RHS = ${r.rhs}, coef = ${r.coef_pivote} → razón = ${r.razon}</li>`
-        )
-        .join("");
-
-      const transformacionesHTML = d.transformaciones
-        .map(
-          (t) =>
-            `<li>
-          Fila ${t.fila}: 
-          <br>↳ <strong>original:</strong> [${t.original.join(", ")}] 
-          <br>↳ <strong>factor:</strong> ${t.factor}
-          <br>↳ <strong>explicación:</strong> ${t.explicacion}
-          <br>↳ <strong>resultado:</strong> [${t.resultado.join(", ")}]
-        </li>`
-        )
-        .join("");
-
-      detallesDiv.innerHTML = `
-        <p><strong>Justificación de la columna pivote:</strong><br>
-        ${d.columna_pivote.explicacion}</p>
-
-        <p class="mt-2"><strong>Justificación de la fila pivote:</strong><br>
-        ${d.fila_pivote.explicacion}</p>
-
-        <p><strong>Cálculo de razones:</strong></p>
-        <ul class="list-disc pl-5">${razonesHTML}</ul>
-
-        <p class="mt-2"><strong>Normalización de la fila pivote:</strong><br>
-        ${d.normalizacion.explicacion}<br>
-        Fila original: [${d.normalizacion.original.join(", ")}], 
-        pivote = ${d.normalizacion.pivote}, 
-        resultado = [${d.normalizacion.resultado.join(", ")}]
-        </p>
-
-        <p class="mt-2"><strong>Transformaciones de otras filas:</strong></p>
-        <ul class="list-disc pl-5">${transformacionesHTML}</ul>
+      // Encabezado de análisis de la iteración
+      const analisisDiv = document.createElement("div");
+      analisisDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-300", "text-base-content");
+      analisisDiv.innerHTML = `
+        <h4 class="font-bold text-lg mb-3 text-primary">Análisis de la Iteración ${index}</h4>
+        <p class="text-sm mb-2">En esta iteración se realizan los siguientes pasos:</p>
+        <ol class="list-decimal pl-5 text-sm space-y-1">
+          <li><strong>Verificar optimalidad:</strong> Revisar si existen coeficientes negativos en la fila Z</li>
+          <li><strong>Seleccionar variable entrante:</strong> Elegir la variable con el coeficiente más negativo</li>
+          <li><strong>Seleccionar variable saliente:</strong> Aplicar la prueba de la razón mínima</li>
+          <li><strong>Realizar pivoteo:</strong> Normalizar fila pivote y transformar las demás filas</li>
+          <li><strong>Actualizar base:</strong> Cambiar la variable básica en la posición correspondiente</li>
+        </ol>
       `;
+
+      // Identificación del pivoteo
+      const pivoteoDiv = document.createElement("div");
+      pivoteoDiv.classList.add("mb-6", "p-4", "rounded", "bg-info", "bg-opacity-10", "text-info-content");
+      pivoteoDiv.innerHTML = `
+        <h4 class="font-bold text-lg mb-3 text-info">Detalles del Pivoteo</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div class="bg-base-100 p-3 rounded">
+            <p class="font-bold text-sm mb-1">Variable Entrante</p>
+            <span class="badge badge-success text-lg">${d.columna_pivote.variable || 'N/A'}</span>
+            <p class="text-xs mt-1">Mejora la función objetivo</p>
+          </div>
+          <div class="bg-base-100 p-3 rounded">
+            <p class="font-bold text-sm mb-1">Variable Saliente</p>
+            <span class="badge badge-error text-lg">${d.fila_pivote.variable_sale || d.fila_pivote.variable || 'Variable saliente'}</span>
+            <p class="text-xs mt-1">Abandona la base</p>
+          </div>
+          <div class="bg-base-100 p-3 rounded">
+            <p class="font-bold text-sm mb-1">Elemento Pivote</p>
+            <span class="badge badge-warning text-lg">${d.normalizacion?.pivote || 'N/A'}</span>
+            <p class="text-xs mt-1">Punto de intersección</p>
+          </div>
+        </div>
+      `;
+
+      // Justificación de la columna pivote con más detalles
+      const colPivoteDiv = document.createElement("div");
+      colPivoteDiv.classList.add("mb-4", "p-3", "rounded", "bg-accent", "bg-opacity-10", "text-accent-content");
+      colPivoteDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-2 text-accent">Paso 1: Selección de la Variable Entrante (Columna Pivote)</h5>
+        <div class="bg-base-100 p-3 rounded mb-3">
+          <p class="text-sm mb-2"><strong>Criterio:</strong> Se busca el coeficiente más negativo en la fila Z.</p>
+          <p class="text-sm mb-2"><strong>Justificación matemática:</strong> Un coeficiente negativo en la fila Z indica que incrementar esa variable mejorará el valor de la función objetivo.</p>
+          <p class="text-sm"><strong>Resultado:</strong> ${d.columna_pivote.explicacion}</p>
+        </div>
+        <div class="bg-warning bg-opacity-20 p-2 rounded">
+          <p class="text-xs"><strong>Nota:</strong> Si no hay coeficientes negativos, la solución actual es óptima.</p>
+        </div>
+      `;
+
+      // Cálculo de razones con tabla detallada y explicaciones matemáticas
+      const razonesDiv = document.createElement("div");
+      razonesDiv.classList.add("mb-4", "p-3", "rounded", "bg-warning", "bg-opacity-10", "text-warning-content");
+      
+      const razonesHTML = d.fila_pivote.razones
+        .map((r) => {
+          const esMinima = r.fila === d.fila_pivote.fila_seleccionada;
+          const cssClass = esMinima ? "bg-success bg-opacity-20 font-bold" : "";
+          const factibilidad = r.razon !== '∞' && r.razon >= 0;
+          return `
+            <tr class="${cssClass}">
+              <td class="px-2 py-1 border">${r.variable_basica || `F${r.fila}`}</td>
+              <td class="px-2 py-1 border">${r.rhs}</td>
+              <td class="px-2 py-1 border">${r.coef_pivote}</td>
+              <td class="px-2 py-1 border">${r.razon}</td>
+              <td class="px-2 py-1 border">
+                <span class="badge ${factibilidad ? 'badge-success' : 'badge-error'} badge-sm">
+                  ${factibilidad ? 'Sí' : 'No'}
+                </span>
+              </td>
+              <td class="px-2 py-1 border text-xs">${esMinima ? '← Seleccionada' : ''}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      razonesDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-2 text-warning">Paso 2: Prueba de la Razón Mínima (Selección de Variable Saliente)</h5>
+        <div class="bg-base-100 p-3 rounded mb-3">
+          <p class="text-sm mb-2"><strong>Objetivo:</strong> Determinar cuál variable básica debe salir de la base para mantener la factibilidad.</p>
+          <p class="text-sm mb-2"><strong>Fórmula:</strong> Razón = bj / Coeficiente de la columna pivote (solo si coeficiente > 0)</p>
+          <p class="text-sm mb-2"><strong>Criterio:</strong> Se selecciona la fila con la menor razón positiva.</p>
+          <p class="text-sm">${d.fila_pivote.explicacion}</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="table table-sm w-full text-center text-xs border-collapse">
+            <thead>
+              <tr>
+                <th class="bg-base-200 px-2 py-1 border">Variable Básica</th>
+                <th class="bg-base-200 px-2 py-1 border">bj</th>
+                <th class="bg-base-200 px-2 py-1 border">Coef. Pivote</th>
+                <th class="bg-base-200 px-2 py-1 border">Razón</th>
+                <th class="bg-base-200 px-2 py-1 border">Factible</th>
+                <th class="bg-base-200 px-2 py-1 border">Selección</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${razonesHTML}
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-info bg-opacity-20 p-2 rounded mt-3">
+          <p class="text-xs"><strong>Interpretación:</strong> La variable básica seleccionada será la primera en alcanzar cero cuando se incremente la variable entrante, garantizando que no se violen las restricciones de no negatividad.</p>
+        </div>
+      `;
+
+      // Normalización de la fila pivote con más detalles
+      const normalizacionDiv = document.createElement("div");
+      normalizacionDiv.classList.add("mb-4", "p-3", "rounded", "bg-secondary", "bg-opacity-10", "text-secondary-content");
+      
+      if (d.normalizacion) {
+        const normTablaHTML = d.normalizacion.original
+          .map((val, idx) => {
+            // Los encabezados están disponibles desde iteracion.encabezados
+            // Excluir VB (primera columna) para obtener solo variables
+            const variableHeaders = encabezados.slice(1); // Quitar VB
+            const variableName = idx < variableHeaders.length ? variableHeaders[idx] : 'bj';
+            return `
+            <tr>
+              <td class="px-2 py-1 border font-bold">${variableName}</td>
+              <td class="px-2 py-1 border">${val}</td>
+              <td class="px-2 py-1 border text-warning">÷</td>
+              <td class="px-2 py-1 border bg-warning bg-opacity-30 font-bold">${d.normalizacion.pivote}</td>
+              <td class="px-2 py-1 border text-success">=</td>
+              <td class="px-2 py-1 border bg-success bg-opacity-30 font-bold">${d.normalizacion.resultado[idx]}</td>
+            </tr>
+          `})
+          .join("");
+
+        normalizacionDiv.innerHTML = `
+          <h5 class="font-bold text-base mb-2 text-secondary">Paso 3: Normalización de la Fila Pivote</h5>
+          <div class="bg-base-100 p-3 rounded mb-3">
+            <p class="text-sm mb-2"><strong>Objetivo:</strong> Convertir el elemento pivote en 1 dividiendo toda la fila por su valor.</p>
+            <p class="text-sm mb-2"><strong>Operación:</strong> Nueva_Fila_Pivote = Fila_Pivote ÷ Elemento_Pivote</p>
+            <p class="text-sm"><strong>Resultado:</strong> ${d.normalizacion.explicacion}</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="table table-sm w-full text-center text-xs border-collapse">
+              <thead>
+                <tr>
+                  <th class="bg-base-200 px-2 py-1 border">Variable</th>
+                  <th class="bg-base-200 px-2 py-1 border">Valor Original</th>
+                  <th class="bg-base-200 px-2 py-1 border">Operación</th>
+                  <th class="bg-base-200 px-2 py-1 border">Pivote</th>
+                  <th class="bg-base-200 px-2 py-1 border"></th>
+                  <th class="bg-base-200 px-2 py-1 border">Nuevo Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${normTablaHTML}
+              </tbody>
+            </table>
+          </div>
+          <div class="bg-success bg-opacity-20 p-2 rounded mt-3">
+            <p class="text-xs"><strong>Verificación:</strong> El elemento pivote ahora tiene valor 1, lo que permite eliminar la variable correspondiente de las otras ecuaciones.</p>
+          </div>
+        `;
+      }
+
+      // Transformaciones de otras filas con más detalles
+      const transformacionesDiv = document.createElement("div");
+      transformacionesDiv.classList.add("mb-4", "p-3", "rounded", "bg-primary", "bg-opacity-10", "text-primary-content");
+      
+      const transformacionesHTML = d.transformaciones
+        .map((t) => {
+          const filaTablaHTML = t.original
+            .map((val, idx) => {
+              const factor = t.factor;
+              const pivoteVal = d.normalizacion ? d.normalizacion.resultado[idx] : 0;
+              const producto = `${factor} × ${pivoteVal}`;
+              const operacion = factor >= 0 ? '-' : '+';
+              const factorAbs = Math.abs(factor);
+              // Usar nombres reales de variables
+              const variableHeaders = encabezados.slice(1); // Quitar VB
+              const variableName = idx < variableHeaders.length ? variableHeaders[idx] : 'bj';
+              return `
+                <tr>
+                  <td class="px-1 py-1 border font-bold">${variableName}</td>
+                  <td class="px-1 py-1 border">${val}</td>
+                  <td class="px-1 py-1 border text-warning">${operacion}</td>
+                  <td class="px-1 py-1 border text-xs">(${factorAbs} × ${pivoteVal})</td>
+                  <td class="px-1 py-1 border text-success">=</td>
+                  <td class="px-1 py-1 border bg-success bg-opacity-30 font-bold">${t.resultado[idx]}</td>
+                </tr>
+              `;
+            })
+            .join("");
+
+          return `
+            <div class="mb-4 p-3 bg-base-100 rounded border-l-4 border-primary">
+              <h6 class="font-bold text-sm mb-2 text-primary">Transformación de la Fila ${t.fila}:</h6>
+              <p class="text-xs mb-2">${t.explicacion}</p>
+              <div class="overflow-x-auto">
+                <table class="table table-sm w-full text-center text-xs border-collapse">
+                  <thead>
+                    <tr>
+                      <th class="bg-base-200 px-1 py-1 border">Variable</th>
+                      <th class="bg-base-200 px-1 py-1 border">Valor Original</th>
+                      <th class="bg-base-200 px-1 py-1 border">Op</th>
+                      <th class="bg-base-200 px-1 py-1 border">Factor × Pivote</th>
+                      <th class="bg-base-200 px-1 py-1 border"></th>
+                      <th class="bg-base-200 px-1 py-1 border">Nuevo Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${filaTablaHTML}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+
+      transformacionesDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-3 text-primary">Paso 4: Eliminación Gaussiana (Transformación de Otras Filas)</h5>
+        <div class="bg-base-100 p-3 rounded mb-3">
+          <p class="text-sm mb-2"><strong>Objetivo:</strong> Hacer cero todos los elementos de la columna pivote excepto el elemento normalizado.</p>
+          <p class="text-sm mb-2"><strong>Fórmula:</strong> Nueva_Fila_i = Fila_i - (Elemento_Columna_Pivote_i × Fila_Pivote_Normalizada)</p>
+          <p class="text-sm">Para cada fila i ≠ fila pivote:</p>
+        </div>
+        ${transformacionesHTML}
+        <div class="bg-info bg-opacity-20 p-2 rounded mt-3">
+          <p class="text-xs"><strong>Resultado:</strong> Ahora la columna de la variable entrante tiene 1 en la posición de la variable básica y 0 en todas las demás posiciones.</p>
+        </div>
+      `;
+
+      // Actualización de la base con más detalle
+      const baseDiv = document.createElement("div");
+      baseDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-300", "text-base-content");
+      baseDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-3">Paso 5: Actualización de la Base</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-error bg-opacity-10 p-3 rounded">
+            <p class="font-bold text-sm mb-1 text-error">Variable Saliente:</p>
+            <span class="badge badge-error">${d.fila_pivote.variable_sale || 'Variable saliente'}</span>
+            <p class="text-xs mt-2">Esta variable deja de ser básica y se vuelve no básica (valor = 0)</p>
+          </div>
+          <div class="bg-success bg-opacity-10 p-3 rounded">
+            <p class="font-bold text-sm mb-1 text-success">Variable Entrante:</p>
+            <span class="badge badge-success">${d.columna_pivote.variable || 'Variable entrante'}</span>
+            <p class="text-xs mt-2">Esta variable se vuelve básica y tendrá un valor positivo</p>
+          </div>
+        </div>
+        <div class="bg-info bg-opacity-20 p-2 rounded mt-3">
+          <p class="text-xs"><strong>Resultado:</strong> La nueva base está formada por las variables que tienen exactamente un coeficiente 1 en su columna y 0 en todas las demás filas.</p>
+        </div>
+      `;
+
+      // Ensamblar todos los elementos con encabezado
+      detallesDiv.appendChild(analisisDiv);
+      detallesDiv.appendChild(pivoteoDiv);
+      detallesDiv.appendChild(colPivoteDiv);
+      detallesDiv.appendChild(razonesDiv);
+      if (d.normalizacion) {
+        detallesDiv.appendChild(normalizacionDiv);
+      }
+      detallesDiv.appendChild(transformacionesDiv);
+      detallesDiv.appendChild(baseDiv);
+      
       divIteracion.appendChild(detallesDiv);
     }
 
@@ -287,6 +590,24 @@ export function mostrarResultadoGranM(solucion) {
   const resultadosEl = document.getElementById("resultados");
   resultadosEl.innerHTML = "";
 
+  // 🔽 Agregar información del método Gran M usado
+  const metodoDiv = document.createElement("div");
+  metodoDiv.classList.add(
+    "mb-6",
+    "p-4",
+    "rounded",
+    "bg-error",
+    "bg-opacity-10",
+    "text-error-content",
+    "border-l-4",
+    "border-error"
+  );
+  
+  metodoDiv.innerHTML = `
+    <h3 class="font-bold text-lg mb-2 text-error">Método Utilizado: Gran M (Big M)</h3>
+  `;
+  resultadosEl.appendChild(metodoDiv);
+
   // 🔽 Mostrar planteamiento del problema
   const planteamientoDiv = document.createElement("div");
   planteamientoDiv.classList.add(
@@ -325,6 +646,38 @@ export function mostrarResultadoGranM(solucion) {
   `;
   resultadosEl.appendChild(planteamientoDiv);
 
+  // 🔽 Agregar detalles del modelo extendido para Gran M (como en test.py)
+  const modeloExtendidoDiv = document.createElement("div");
+  modeloExtendidoDiv.classList.add(
+    "mb-6",
+    "p-4",
+    "rounded",
+    "bg-warning",
+    "bg-opacity-10",
+    "text-warning-content"
+  );
+  
+  modeloExtendidoDiv.innerHTML = `
+    <h3 class="font-bold text-lg mb-3 text-warning">Construcción del Modelo Extendido (Gran M)</h3>
+    <div class="space-y-3">
+      <div class="bg-base-100 p-3 rounded">
+        <h4 class="font-bold text-base mb-2">Pasos de transformación para Gran M:</h4>
+        <ol class="list-decimal pl-5 text-sm space-y-1">
+          <li><strong>Variables originales:</strong> Se mantienen tal como están en el problema</li>
+          <li><strong>Variables de holgura (s):</strong> Se agregan para restricciones ≤ (coeficiente +1)</li>
+          <li><strong>Variables de exceso (H):</strong> Se agregan para restricciones ≥ (coeficiente -1)</li>
+          <li><strong class="text-error">Variables artificiales (a):</strong> Se agregan para restricciones ≥ y = (coeficiente +1)</li>
+          <li><strong class="text-error">Penalización M:</strong> Se modifica la función objetivo con coeficiente M para variables artificiales</li>
+          <li><strong>Eliminación inicial:</strong> Se eliminan las variables artificiales de la fila Z mediante operaciones elementales</li>
+        </ol>
+      </div>
+      <div class="bg-error bg-opacity-20 p-3 rounded">
+        <p class="text-sm"><strong>Objetivo del Gran M:</strong> Las variables artificiales deben salir de la base. Si alguna permanece con valor > 0 en la solución final, el problema es infactible.</p>
+      </div>
+    </div>
+  `;
+  resultadosEl.appendChild(modeloExtendidoDiv);
+
   // 🔽 Mostrar iteraciones
   solucion.iteraciones.forEach((iteracion, index) => {
     const divIteracion = document.createElement("div");
@@ -341,8 +694,25 @@ export function mostrarResultadoGranM(solucion) {
 
     const titulo = document.createElement("h3");
     titulo.classList.add("font-bold", "text-lg", "mb-4", "text-primary");
-    titulo.textContent = `Iteración ${index + 1}`;
+    titulo.textContent = `Iteración ${index}`;
     divIteracion.appendChild(titulo);
+
+    // Agregar criterio de optimalidad antes de la tabla para Gran M
+    if (index > 0) { // No mostrar para la iteración 0 (tabla inicial)
+      const criterioDiv = document.createElement("div");
+      criterioDiv.classList.add("mb-4", "p-3", "rounded", "bg-accent", "bg-opacity-10", "text-accent-content");
+      criterioDiv.innerHTML = `
+        <h4 class="font-bold text-base mb-2 text-accent">Criterio de Optimalidad (Gran M):</h4>
+        <p class="text-sm">Se revisa la fila Z considerando que M es un valor muy grande:</p>
+        <ul class="list-disc pl-5 text-sm mt-2">
+          <li>Los términos con M tienen mayor prioridad que los términos constantes</li>
+          <li>Un coeficiente negativo indica que la variable puede mejorar la función objetivo</li>
+          <li>Si todos los coeficientes son no negativos, se ha alcanzado el óptimo</li>
+          <li>Si quedan variables artificiales en la base final con valor > 0, el problema es infactible</li>
+        </ul>
+      `;
+      divIteracion.appendChild(criterioDiv);
+    }
 
     const tabla = document.createElement("table");
     tabla.classList.add(
@@ -365,13 +735,32 @@ export function mostrarResultadoGranM(solucion) {
     tabla.appendChild(thead);
 
     const tbody = document.createElement("tbody");
-    iteracion.filas.forEach((fila) => {
+    iteracion.filas.forEach((fila, i) => {
       const tr = document.createElement("tr");
       const filaHTML = fila.map(
-        (celda, idx) =>
-          `<td class="border px-2 py-1 ${
-            idx === 0 ? "font-bold" : ""
-          }">${celda}</td>`
+        (celda, idx) => {
+          let cssClass = "border px-2 py-1";
+          
+          // Resaltar elemento pivote, fila pivote y columna pivote si están disponibles para Gran M
+          if (iteracion.pivot_info) {
+            const pivotRow = iteracion.pivot_info.fila;
+            const pivotCol = iteracion.pivot_info.columna;
+            
+            if (i === pivotRow && idx === pivotCol + 1) { // +1 porque la primera columna es VB
+              cssClass += " bg-error text-error-content font-bold"; // Elemento pivote
+            } else if (i === pivotRow) {
+              cssClass += " bg-warning bg-opacity-30"; // Fila pivote
+            } else if (idx === pivotCol + 1) {
+              cssClass += " bg-warning bg-opacity-30"; // Columna pivote
+            }
+          }
+          
+          if (idx === 0) {
+            cssClass += " font-bold";
+          }
+          
+          return `<td class="${cssClass}">${celda}</td>`;
+        }
       );
       tr.innerHTML = filaHTML.join("");
       tbody.appendChild(tr);
@@ -381,56 +770,253 @@ export function mostrarResultadoGranM(solucion) {
 
     if (iteracion.detalles) {
       const d = iteracion.detalles;
+      
+      // Detalles del pivoteo con diseño mejorado para Gran M
       const detallesDiv = document.createElement("div");
-      detallesDiv.classList.add(
-        "mt-4",
-        "text-sm",
-        "bg-base-200",
-        "p-3",
-        "rounded",
-        "text-left"
-      );
+      detallesDiv.classList.add("mt-4", "space-y-4");
 
-      const razonesHTML = d.fila_pivote.razones
-        .map(
-          (r) =>
-            `<li>Fila ${r.fila}: RHS = ${r.rhs}, coef = ${r.coef_pivote} → razón = ${r.razon}</li>`
-        )
-        .join("");
-
-      const transformacionesHTML = d.transformaciones
-        .map(
-          (t) =>
-            `<li>
-          Fila ${t.fila}: 
-          <br>↳ <strong>original:</strong> [${t.original.join(", ")}] 
-          <br>↳ <strong>factor:</strong> ${t.factor}
-          <br>↳ <strong>explicación:</strong> ${t.explicacion}
-          <br>↳ <strong>resultado:</strong> [${t.resultado.join(", ")}]
-        </li>`
-        )
-        .join("");
-
-      detallesDiv.innerHTML = `
-        <p><strong>Justificación de la columna pivote:</strong><br>
-        ${d.columna_pivote.explicacion}</p>
-
-        <p class="mt-2"><strong>Justificación de la fila pivote:</strong><br>
-        ${d.fila_pivote.explicacion}</p>
-
-        <p><strong>Cálculo de razones:</strong></p>
-        <ul class="list-disc pl-5">${razonesHTML}</ul>
-
-        <p class="mt-2"><strong>Normalización de la fila pivote:</strong><br>
-        ${d.normalizacion.explicacion}<br>
-        Fila original: [${d.normalizacion.original.join(", ")}], 
-        pivote = ${d.normalizacion.pivote}, 
-        resultado = [${d.normalizacion.resultado.join(", ")}]
-        </p>
-
-        <p class="mt-2"><strong>Transformaciones de otras filas:</strong></p>
-        <ul class="list-disc pl-5">${transformacionesHTML}</ul>
+      // Encabezado de análisis de la iteración para Gran M
+      const analisisDiv = document.createElement("div");
+      analisisDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-300", "text-base-content");
+      analisisDiv.innerHTML = `
+        <h4 class="font-bold text-lg mb-3 text-primary">Análisis de la Iteración ${index} (Método Gran M)</h4>
+        <p class="text-sm mb-2">En esta iteración del método Gran M se realizan los siguientes pasos:</p>
+        <ol class="list-decimal pl-5 text-sm space-y-1">
+          <li><strong>Verificar optimalidad:</strong> Revisar coeficientes en la fila Z considerando términos con M</li>
+          <li><strong>Seleccionar variable entrante:</strong> Elegir la variable con el coeficiente más negativo (M tiene prioridad)</li>
+          <li><strong>Seleccionar variable saliente:</strong> Aplicar la prueba de la razón mínima</li>
+          <li><strong>Realizar pivoteo:</strong> Normalizar fila pivote y transformar las demás filas</li>
+          <li><strong>Actualizar base:</strong> Cambiar la variable básica y verificar factibilidad</li>
+        </ol>
+        <div class="bg-warning bg-opacity-20 p-2 rounded mt-3">
+          <p class="text-xs"><strong>Nota Gran M:</strong> Las variables artificiales deben salir de la base para obtener una solución factible.</p>
+        </div>
       `;
+
+      // Identificación del pivoteo
+      const pivoteoDiv = document.createElement("div");
+      pivoteoDiv.classList.add("mb-6", "p-4", "rounded", "bg-info", "bg-opacity-10", "text-info-content");
+      pivoteoDiv.innerHTML = `
+        <h4 class="font-bold text-lg mb-3 text-info">Detalles del Pivoteo (Gran M)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div class="bg-base-100 p-3 rounded">
+            <p class="font-bold text-sm mb-1">Variable Entrante</p>
+            <span class="badge badge-success text-lg">${d.columna_pivote.variable || 'N/A'}</span>
+            <p class="text-xs mt-1">Mejora la función objetivo</p>
+          </div>
+          <div class="bg-base-100 p-3 rounded">
+            <p class="font-bold text-sm mb-1">Variable Saliente</p>
+            <span class="badge badge-error text-lg">${d.fila_pivote.variable_sale || d.fila_pivote.variable || 'Variable saliente'}</span>
+            <p class="text-xs mt-1">Abandona la base</p>
+          </div>
+          <div class="bg-base-100 p-3 rounded">
+            <p class="font-bold text-sm mb-1">Elemento Pivote</p>
+            <span class="badge badge-warning text-lg">${d.normalizacion?.pivote || 'N/A'}</span>
+            <p class="text-xs mt-1">Punto de intersección</p>
+          </div>
+        </div>
+      `;
+
+      // Criterio de optimalidad para Gran M
+      const criterioDiv = document.createElement("div");
+      criterioDiv.classList.add("mb-4", "p-3", "rounded", "bg-accent", "bg-opacity-10", "text-accent-content");
+      criterioDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-2 text-accent">Criterio de Optimalidad (Gran M):</h5>
+        <p class="text-sm mb-2">Se busca el coeficiente más negativo en la fila Z, considerando que:</p>
+        <ul class="list-disc pl-5 text-sm">
+          <li>Los términos con M tienen mayor prioridad que los términos constantes</li>
+          <li>Un coeficiente negativo indica que la variable puede mejorar la función objetivo</li>
+          <li>Si todos los coeficientes son no negativos, se ha alcanzado el óptimo</li>
+        </ul>
+        <p class="text-sm mt-2">${d.columna_pivote.explicacion}</p>
+      `;
+
+      // Cálculo de razones con tabla detallada
+      const razonesDiv = document.createElement("div");
+      razonesDiv.classList.add("mb-4", "p-3", "rounded", "bg-warning", "bg-opacity-10", "text-warning-content");
+      
+      const razonesHTML = d.fila_pivote.razones
+        .map((r) => {
+          const esMinima = r.fila === d.fila_pivote.fila_seleccionada;
+          const cssClass = esMinima ? "bg-success bg-opacity-20 font-bold" : "";
+          return `
+            <tr class="${cssClass}">
+              <td class="px-2 py-1 border">F${r.fila}</td>
+              <td class="px-2 py-1 border">${r.rhs}</td>
+              <td class="px-2 py-1 border">${r.coef_pivote}</td>
+              <td class="px-2 py-1 border">${r.razon}</td>
+              <td class="px-2 py-1 border">${r.razon !== '∞' && r.razon >= 0 ? 'Sí' : 'No'}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      razonesDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-2 text-warning">Cálculo de Razones para Selección de Fila Pivote:</h5>
+        <p class="text-sm mb-3">${d.fila_pivote.explicacion}</p>
+        <div class="overflow-x-auto">
+          <table class="table table-sm w-full text-center text-xs border-collapse">
+            <thead>
+              <tr>
+                <th class="bg-base-200 px-2 py-1 border">Fila</th>
+                <th class="bg-base-200 px-2 py-1 border">bj</th>
+                <th class="bg-base-200 px-2 py-1 border">Coef. Pivote</th>
+                <th class="bg-base-200 px-2 py-1 border">Razón</th>
+                <th class="bg-base-200 px-2 py-1 border">Factible</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${razonesHTML}
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-2 text-sm">Se selecciona la fila con la menor razón positiva para mantener la factibilidad.</p>
+      `;
+
+      // Normalización de la fila pivote
+      const normalizacionDiv = document.createElement("div");
+      normalizacionDiv.classList.add("mb-4", "p-3", "rounded", "bg-secondary", "bg-opacity-10", "text-secondary-content");
+      
+      if (d.normalizacion) {
+        const normTablaHTML = d.normalizacion.original
+          .map((val, idx) => {
+            // Los encabezados están disponibles desde iteracion.encabezados
+            // Excluir VB (primera columna) para obtener solo variables
+            const variableHeaders = encabezados.slice(1); // Quitar VB
+            const variableName = idx < variableHeaders.length ? variableHeaders[idx] : 'bj';
+            return `
+            <tr>
+              <td class="px-2 py-1 border font-bold">${variableName}</td>
+              <td class="px-2 py-1 border">${val}</td>
+              <td class="px-2 py-1 border">÷</td>
+              <td class="px-2 py-1 border">${d.normalizacion.pivote}</td>
+              <td class="px-2 py-1 border">=</td>
+              <td class="px-2 py-1 border bg-success bg-opacity-20">${d.normalizacion.resultado[idx]}</td>
+            </tr>
+          `})
+          .join("");
+
+        normalizacionDiv.innerHTML = `
+          <h5 class="font-bold text-base mb-2 text-secondary">Paso 1: Normalización de la Fila Pivote</h5>
+          <p class="text-sm mb-3">${d.normalizacion.explicacion}</p>
+          <div class="overflow-x-auto">
+            <table class="table table-sm w-full text-center text-xs border-collapse">
+              <thead>
+                <tr>
+                  <th class="bg-base-200 px-2 py-1 border">Variable</th>
+                  <th class="bg-base-200 px-2 py-1 border">Original</th>
+                  <th class="bg-base-200 px-2 py-1 border"></th>
+                  <th class="bg-base-200 px-2 py-1 border">Pivote</th>
+                  <th class="bg-base-200 px-2 py-1 border"></th>
+                  <th class="bg-base-200 px-2 py-1 border">Resultado</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${normTablaHTML}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // Transformaciones de otras filas
+      const transformacionesDiv = document.createElement("div");
+      transformacionesDiv.classList.add("mb-4", "p-3", "rounded", "bg-primary", "bg-opacity-10", "text-primary-content");
+      
+      const transformacionesHTML = d.transformaciones
+        .map((t) => {
+          const filaTablaHTML = t.original
+            .map((val, idx) => {
+              const factor = t.factor;
+              const pivoteVal = d.normalizacion ? d.normalizacion.resultado[idx] : 0;
+              const producto = `${factor} × ${pivoteVal}`;
+              // Usar nombres reales de variables
+              const variableHeaders = encabezados.slice(1); // Quitar VB
+              const variableName = idx < variableHeaders.length ? variableHeaders[idx] : 'bj';
+              return `
+                <tr>
+                  <td class="px-1 py-1 border font-bold">${variableName}</td>
+                  <td class="px-1 py-1 border">${val}</td>
+                  <td class="px-1 py-1 border">-</td>
+                  <td class="px-1 py-1 border">(${producto})</td>
+                  <td class="px-1 py-1 border">=</td>
+                  <td class="px-1 py-1 border bg-success bg-opacity-20">${t.resultado[idx]}</td>
+                </tr>
+              `;
+            })
+            .join("");
+
+          return `
+            <div class="mb-4 p-2 bg-base-100 rounded">
+              <h6 class="font-bold text-sm mb-2">Fila ${t.fila}: ${t.explicacion}</h6>
+              <div class="overflow-x-auto">
+                <table class="table table-sm w-full text-center text-xs border-collapse">
+                  <thead>
+                    <tr>
+                      <th class="bg-base-200 px-1 py-1 border">Variable</th>
+                      <th class="bg-base-200 px-1 py-1 border">Original</th>
+                      <th class="bg-base-200 px-1 py-1 border"></th>
+                      <th class="bg-base-200 px-1 py-1 border">Factor × Pivote</th>
+                      <th class="bg-base-200 px-1 py-1 border"></th>
+                      <th class="bg-base-200 px-1 py-1 border">Resultado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${filaTablaHTML}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+
+      transformacionesDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-3 text-primary">Paso 2: Transformación de Otras Filas</h5>
+        <p class="text-sm mb-3">Para cada fila i ≠ fila pivote: Nueva_Fila_i = Fila_i - (Factor × Fila_Pivote_Normalizada)</p>
+        <p class="text-sm mb-3 text-warning"><strong>Nota:</strong> Las operaciones con términos M deben manejarse cuidadosamente.</p>
+        ${transformacionesHTML}
+      `;
+
+      // Actualización de la base con más detalle para Gran M
+      const baseDiv = document.createElement("div");
+      baseDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-300", "text-base-content");
+      
+      const esVariableArtificial = d.columna_pivote.variable && d.columna_pivote.variable.startsWith('a');
+      const saleVariableArtificial = d.fila_pivote.variable_sale && d.fila_pivote.variable_sale.startsWith('a');
+      
+      baseDiv.innerHTML = `
+        <h5 class="font-bold text-base mb-3">Paso 5: Actualización de la Base (Gran M)</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-error bg-opacity-10 p-3 rounded">
+            <p class="font-bold text-sm mb-1 text-error">Variable Saliente:</p>
+            <span class="badge badge-error">${d.fila_pivote.variable_sale || 'Variable saliente'}</span>
+            <p class="text-xs mt-2">Esta variable deja de ser básica y se vuelve no básica (valor = 0)</p>
+            ${saleVariableArtificial ? '<p class="text-xs mt-1 text-success">✓ Bueno: Variable artificial sale de la base</p>' : ''}
+          </div>
+          <div class="bg-success bg-opacity-10 p-3 rounded">
+            <p class="font-bold text-sm mb-1 text-success">Variable Entrante:</p>
+            <span class="badge badge-success">${d.columna_pivote.variable || 'Variable entrante'}</span>
+            <p class="text-xs mt-2">Esta variable se vuelve básica y tendrá un valor positivo</p>
+            ${esVariableArtificial ? '<p class="text-xs mt-1 text-error">⚠️ Atención: Variable artificial entra a la base</p>' : ''}
+          </div>
+        </div>
+        ${esVariableArtificial ? 
+          '<div class="bg-error bg-opacity-20 p-2 rounded mt-3"><p class="text-xs text-error"><strong>⚠️ Advertencia:</strong> Una variable artificial está entrando a la base. Esto puede indicar infactibilidad si no sale en iteraciones posteriores.</p></div>' : 
+          '<div class="bg-info bg-opacity-20 p-2 rounded mt-3"><p class="text-xs"><strong>Resultado:</strong> La nueva base está formada por las variables que tienen exactamente un coeficiente 1 en su columna y 0 en todas las demás filas.</p></div>'}
+      `;
+
+      // Ensamblar todos los elementos con encabezado
+      detallesDiv.appendChild(analisisDiv);
+      detallesDiv.appendChild(pivoteoDiv);
+      detallesDiv.appendChild(criterioDiv);
+      detallesDiv.appendChild(razonesDiv);
+      if (d.normalizacion) {
+        detallesDiv.appendChild(normalizacionDiv);
+      }
+      detallesDiv.appendChild(transformacionesDiv);
+      detallesDiv.appendChild(baseDiv);
+      
       divIteracion.appendChild(detallesDiv);
     }
 

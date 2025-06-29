@@ -172,13 +172,13 @@ class GranMSimplexExtended:
         surplus_vars = []
         artificial_vars = []
         
-        html = '<div class="extended-model">'
-        html += '<h2>Modelo Extendido con Variables de Holgura y Artificiales</h2>'
+        html = '<div class="mb-6 p-4 rounded bg-base-200 text-base-content">'
+        html += '<h2 class="font-bold text-lg mb-4 text-primary">Modelo Extendido con Variables de Holgura y Artificiales</h2>'
         
         # Analizar cada restricción
-        html += '<h3>Análisis de Restricciones:</h3><ul>'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Análisis de Restricciones:</h3><ul class="list-disc pl-5">'
         for i, (constraint, constraint_type) in enumerate(zip(constraints, constraint_types)):
-            html += f'<li><strong>Restricción {i+1}:</strong> '
+            html += f'<li class="mb-2"><strong>Restricción {i+1}:</strong> '
             
             # Mostrar restricción original
             constraint_str = ""
@@ -201,14 +201,14 @@ class GranMSimplexExtended:
             else:
                 constraint_str += f" {constraint_type} {rhs_frac.numerator}/{rhs_frac.denominator}"
             
-            html += constraint_str
+            html += f'<span class="font-mono bg-base-300 px-2 py-1 rounded text-sm">{constraint_str}</span>'
             
             # Explicar qué variables se agregan
             if constraint_type in ['<=', '<']:
                 slack_count += 1
                 slack_var = f"s{slack_count}"
                 slack_vars.append(slack_var)
-                html += f'<br>&nbsp;&nbsp;&nbsp;&nbsp;→ Se agrega variable de holgura <strong>{slack_var}</strong> ≥ 0'
+                html += f'<br>↳ <span class="text-info">Agregar variable de holgura <strong>{slack_var}</strong> ≥ 0</span>'
                 
             elif constraint_type in ['>=', '>']:
                 surplus_count += 1
@@ -217,21 +217,21 @@ class GranMSimplexExtended:
                 artificial_var = f"a{artificial_count}"
                 surplus_vars.append(surplus_var)
                 artificial_vars.append(artificial_var)
-                html += f'<br>&nbsp;&nbsp;&nbsp;&nbsp;→ Se agrega variable de exceso <strong>{surplus_var}</strong> ≥ 0'
-                html += f'<br>&nbsp;&nbsp;&nbsp;&nbsp;→ Se agrega variable artificial <strong>{artificial_var}</strong> ≥ 0'
+                html += f'<br>↳ <span class="text-warning">Agregar variable de exceso <strong>{surplus_var}</strong> ≥ 0</span>'
+                html += f'<br>↳ <span class="text-error">Agregar variable artificial <strong>{artificial_var}</strong> ≥ 0</span>'
                 
             elif constraint_type == '=':
                 artificial_count += 1
                 artificial_var = f"a{artificial_count}"
                 artificial_vars.append(artificial_var)
-                html += f'<br>&nbsp;&nbsp;&nbsp;&nbsp;→ Se agrega variable artificial <strong>{artificial_var}</strong> ≥ 0'
+                html += f'<br>↳ <span class="text-error">Agregar variable artificial <strong>{artificial_var}</strong> ≥ 0</span>'
             
             html += '</li>'
         
         html += '</ul>'
         
         # Modelo extendido completo
-        html += '<h3>Modelo Extendido Completo:</h3>'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary mt-6">Modelo Extendido Completo:</h3>'
         
         # Función objetivo extendida
         obj_str = "Minimizar " if minimize else "Maximizar "
@@ -266,10 +266,10 @@ class GranMSimplexExtended:
             else:
                 obj_str += f" - M{artificial_var}"
         
-        html += f'<p><strong>{obj_str}</strong></p>'
+        html += f'<p class="mb-4 font-mono bg-base-300 px-3 py-2 rounded"><strong>{obj_str}</strong></p>'
         
         # Restricciones extendidas
-        html += '<p><strong>Sujeto a:</strong></p><ul>'
+        html += '<p class="mb-2"><strong>Sujeto a:</strong></p><ul class="list-disc pl-5">'
         
         slack_idx = 0
         surplus_idx = 0
@@ -295,16 +295,16 @@ class GranMSimplexExtended:
             # Variables auxiliares
             if constraint_type in ['<=', '<']:
                 slack_idx += 1
-                constraint_str += f" + s<sub>{slack_idx}</sub>"
+                constraint_str += f" + <span class='text-info'>s<sub>{slack_idx}</sub></span>"
                 
             elif constraint_type in ['>=', '>']:
                 surplus_idx += 1
                 artificial_idx += 1
-                constraint_str += f" - H<sub>{surplus_idx}</sub> + a<sub>{artificial_idx}</sub>"
+                constraint_str += f" - <span class='text-warning'>H<sub>{surplus_idx}</sub></span> + <span class='text-error'>a<sub>{artificial_idx}</sub></span>"
                 
             elif constraint_type == '=':
                 artificial_idx += 1
-                constraint_str += f" + a<sub>{artificial_idx}</sub>"
+                constraint_str += f" + <span class='text-error'>a<sub>{artificial_idx}</sub></span>"
             
             # RHS
             rhs_frac = Fraction(constraint[-1]).limit_denominator()
@@ -313,15 +313,15 @@ class GranMSimplexExtended:
             else:
                 constraint_str += f" = {rhs_frac.numerator}/{rhs_frac.denominator}"
             
-            html += f'<li>{constraint_str}</li>'
+            html += f'<li class="mb-1 font-mono text-sm">{constraint_str}</li>'
         
         # Restricciones de no negatividad
         all_vars = [f"x<sub>{i+1}</sub>" for i in range(num_vars)]
-        all_vars.extend([f"s<sub>{i+1}</sub>" for i in range(len(slack_vars))])
-        all_vars.extend([f"H<sub>{i+1}</sub>" for i in range(len(surplus_vars))])
-        all_vars.extend([f"a<sub>{i+1}</sub>" for i in range(len(artificial_vars))])
+        all_vars.extend([f"<span class='text-info'>s<sub>{i+1}</sub></span>" for i in range(len(slack_vars))])
+        all_vars.extend([f"<span class='text-warning'>H<sub>{i+1}</sub></span>" for i in range(len(surplus_vars))])
+        all_vars.extend([f"<span class='text-error'>a<sub>{i+1}</sub></span>" for i in range(len(artificial_vars))])
         
-        html += f'<li>{", ".join(all_vars)} ≥ 0</li>'
+        html += f'<li class="mb-1 font-mono text-sm">{", ".join(all_vars)} ≥ 0</li>'
         html += '</ul></div>'
         
         return html
@@ -329,54 +329,54 @@ class GranMSimplexExtended:
     def generate_initial_table_steps(self, objective: List[float], constraints: List[List[float]], 
                                    constraint_types: List[str], minimize: bool = True) -> str:
         """Genera los pasos detallados para construir la tabla inicial"""
-        html = '<div class="initial-steps">'
-        html += '<h2>Pasos para Construir la Tabla Inicial (Iteración 0)</h2>'
+        html = '<div class="mb-6 p-4 rounded bg-warning bg-opacity-10 text-warning-content">'
+        html += '<h2 class="font-bold text-lg mb-4 text-warning">Pasos para Construir la Tabla Inicial (Iteración 0)</h2>'
         
         num_vars = len(objective)
         num_constraints = len(constraints)
         
         # Paso 1: Identificar variables
-        html += '<h3>Paso 1: Identificación de Variables</h3>'
-        html += f'<p>Variables originales: x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>{num_vars}</sub></p>'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 1: Identificación de Variables</h3>'
+        html += f'<p class="mb-2">Variables originales: x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>{num_vars}</sub></p>'
         
         slack_count = sum(1 for ct in constraint_types if ct in ['<=', '<'])
         surplus_count = sum(1 for ct in constraint_types if ct in ['>=', '>'])
         artificial_count = sum(1 for ct in constraint_types if ct in ['>=', '>', '='])
         
         if slack_count > 0:
-            html += f'<p>Variables de holgura: s<sub>1</sub>, s<sub>2</sub>, ..., s<sub>{slack_count}</sub></p>'
+            html += f'<p class="mb-2">Variables de holgura: <span class="text-info">s<sub>1</sub>, s<sub>2</sub>, ..., s<sub>{slack_count}</sub></span></p>'
         if surplus_count > 0:
-            html += f'<p>Variables de exceso: H<sub>1</sub>, H<sub>2</sub>, ..., H<sub>{surplus_count}</sub></p>'
+            html += f'<p class="mb-2">Variables de exceso: <span class="text-warning">H<sub>1</sub>, H<sub>2</sub>, ..., H<sub>{surplus_count}</sub></span></p>'
         if artificial_count > 0:
-            html += f'<p>Variables artificiales: a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>{artificial_count}</sub></p>'
+            html += f'<p class="mb-2">Variables artificiales: <span class="text-error">a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>{artificial_count}</sub></span></p>'
         
         total_vars = num_vars + slack_count + surplus_count + artificial_count
-        html += f'<p><strong>Total de variables: {total_vars}</strong></p>'
+        html += f'<p class="mb-4 font-bold">Total de variables: {total_vars}</p>'
         
         # Paso 2: Matriz de coeficientes
-        html += '<h3>Paso 2: Construcción de la Matriz de Coeficientes</h3>'
-        html += '<p>La matriz se construye columna por columna:</p><ul>'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 2: Construcción de la Matriz de Coeficientes</h3>'
+        html += '<p class="mb-2">La matriz se construye columna por columna:</p><ul class="list-disc pl-5">'
         
         # Variables originales
-        html += '<li><strong>Variables originales (x<sub>1</sub>, x<sub>2</sub>, ...):</strong> Se copian directamente los coeficientes de las restricciones</li>'
+        html += '<li class="mb-1"><strong>Variables originales (x<sub>1</sub>, x<sub>2</sub>, ...):</strong> Se copian directamente los coeficientes de las restricciones</li>'
         
         # Variables de holgura
         if slack_count > 0:
-            html += '<li><strong>Variables de holgura (s<sub>i</sub>):</strong> Coeficiente +1 en su restricción correspondiente, 0 en las demás</li>'
+            html += '<li class="mb-1"><strong>Variables de holgura (s<sub>i</sub>):</strong> Coeficiente +1 en su restricción correspondiente, 0 en las demás</li>'
         
         # Variables de exceso
         if surplus_count > 0:
-            html += '<li><strong>Variables de exceso (H<sub>i</sub>):</strong> Coeficiente -1 en su restricción correspondiente, 0 en las demás</li>'
+            html += '<li class="mb-1"><strong>Variables de exceso (H<sub>i</sub>):</strong> Coeficiente -1 en su restricción correspondiente, 0 en las demás</li>'
         
         # Variables artificiales
         if artificial_count > 0:
-            html += '<li><strong>Variables artificiales (a<sub>i</sub>):</strong> Coeficiente +1 en su restricción correspondiente, 0 en las demás</li>'
+            html += '<li class="mb-1"><strong>Variables artificiales (a<sub>i</sub>):</strong> Coeficiente +1 en su restricción correspondiente, 0 en las demás</li>'
         
         html += '</ul>'
         
         # Paso 3: Base inicial
-        html += '<h3>Paso 3: Identificación de la Base Inicial</h3>'
-        html += '<p>La base inicial está formada por las variables que tienen coeficiente 1 en exactamente una restricción y 0 en las demás:</p><ul>'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 3: Identificación de la Base Inicial</h3>'
+        html += '<p class="mb-2">La base inicial está formada por las variables que tienen coeficiente 1 en exactamente una restricción y 0 en las demás:</p><ul class="list-disc pl-5">'
         
         basis_vars = []
         slack_idx = 0
@@ -387,39 +387,41 @@ class GranMSimplexExtended:
             if constraint_type in ['<=', '<']:
                 slack_idx += 1
                 basis_vars.append(f"s<sub>{slack_idx}</sub>")
-                html += f'<li>Restricción {i+1}: Variable básica s<sub>{slack_idx}</sub></li>'
+                html += f'<li class="mb-1">Restricción {i+1}: Variable básica <span class="text-info font-bold">s<sub>{slack_idx}</sub></span></li>'
             elif constraint_type in ['>=', '>']:
                 artificial_idx += 1
                 basis_vars.append(f"a<sub>{artificial_idx}</sub>")
-                html += f'<li>Restricción {i+1}: Variable básica a<sub>{artificial_idx}</sub></li>'
+                html += f'<li class="mb-1">Restricción {i+1}: Variable básica <span class="text-error font-bold">a<sub>{artificial_idx}</sub></span></li>'
             elif constraint_type == '=':
                 artificial_idx += 1
                 basis_vars.append(f"a<sub>{artificial_idx}</sub>")
-                html += f'<li>Restricción {i+1}: Variable básica a<sub>{artificial_idx}</sub></li>'
+                html += f'<li class="mb-1">Restricción {i+1}: Variable básica <span class="text-error font-bold">a<sub>{artificial_idx}</sub></span></li>'
         
         html += '</ul>'
-        html += f'<p><strong>Base inicial: {{{", ".join(basis_vars)}}}</strong></p>'
+        html += f'<p class="mb-4 font-bold">Base inicial: {{{", ".join(basis_vars)}}}</p>'
         
         # Paso 4: Fila Z
-        html += '<h3>Paso 4: Construcción de la Fila Z</h3>'
-        html += '<p>La fila Z se construye de la siguiente manera:</p><ol>'
-        html += '<li><strong>Variables originales:</strong> Se copian los coeficientes de la función objetivo</li>'
-        html += '<li><strong>Variables de holgura y exceso:</strong> Coeficiente 0</li>'
-        html += '<li><strong>Variables artificiales:</strong> Coeficiente M (para minimización) o -M (para maximización)</li>'
-        html += '<li><strong>Término independiente:</strong> Inicialmente 0</li>'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 4: Construcción de la Fila Z</h3>'
+        html += '<p class="mb-2">La fila Z se construye de la siguiente manera:</p><ol class="list-decimal pl-5">'
+        html += '<li class="mb-1"><strong>Variables originales:</strong> Se copian los coeficientes de la función objetivo</li>'
+        html += '<li class="mb-1"><strong>Variables de holgura y exceso:</strong> Coeficiente 0</li>'
+        html += '<li class="mb-1"><strong>Variables artificiales:</strong> Coeficiente M (para minimización) o -M (para maximización)</li>'
+        html += '<li class="mb-1"><strong>Término independiente:</strong> Inicialmente 0</li>'
         html += '</ol>'
         
         # Paso 5: Eliminación de variables artificiales
         if artificial_count > 0:
-            html += '<h3>Paso 5: Eliminación de Variables Artificiales de la Fila Z</h3>'
-            html += '<p>Como las variables artificiales están en la base inicial con coeficiente M ≠ 0 en la fila Z, '
+            html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 5: Eliminación de Variables Artificiales de la Fila Z</h3>'
+            html += '<div class="bg-error bg-opacity-10 p-3 rounded mb-4">'
+            html += '<p class="mb-2 text-error-content">Como las variables artificiales están en la base inicial con coeficiente M ≠ 0 en la fila Z, '
             html += 'debemos eliminarlas usando operaciones elementales:</p>'
-            html += '<p><strong>Para cada variable artificial a<sub>i</sub> en la base:</strong></p><ol>'
-            html += '<li>Identificar la fila donde a<sub>i</sub> es variable básica (coeficiente = 1)</li>'
-            html += '<li>Multiplicar esa fila por -M (o +M según el caso)</li>'
-            html += '<li>Sumar el resultado a la fila Z</li>'
+            html += '<p class="mb-2 font-bold text-error-content">Para cada variable artificial a<sub>i</sub> en la base:</p><ol class="list-decimal pl-5 text-error-content">'
+            html += '<li class="mb-1">Identificar la fila donde a<sub>i</sub> es variable básica (coeficiente = 1)</li>'
+            html += '<li class="mb-1">Multiplicar esa fila por -M (o +M según el caso)</li>'
+            html += '<li class="mb-1">Sumar el resultado a la fila Z</li>'
             html += '</ol>'
-            html += '<p>Esto garantiza que las variables artificiales tengan coeficiente 0 en la fila Z.</p>'
+            html += '<p class="text-error-content">Esto garantiza que las variables artificiales tengan coeficiente 0 en la fila Z.</p>'
+            html += '</div>'
         
         html += '</div>'
         return html
@@ -520,24 +522,80 @@ class GranMSimplexExtended:
         return extended_matrix, all_var_names, basis_vars
 
     def eliminate_artificial_from_z(self, matrix: List[List], basis_vars: List[str], all_var_names: List[str]) -> List[List]:
-        """Elimina variables artificiales de la fila Z"""
+        """Elimina variables artificiales de la fila Z con explicación detallada"""
         artificial_indices = [i for i, var in enumerate(all_var_names[:-1]) if var.startswith('a')]
         
+        if not artificial_indices:
+            return matrix
+            
+        self.html_output += '<div class="mb-6 p-4 rounded bg-error bg-opacity-10 text-error-content">'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-error">Eliminación de Variables Artificiales de la Fila Z</h2>'
+        self.html_output += '<p class="mb-3">Las variables artificiales en la base inicial deben tener coeficiente 0 en la fila Z. '
+        self.html_output += 'Aplicamos operaciones elementales para eliminarlas:</p>'
+        
         for art_idx in artificial_indices:
-            if matrix[-1][art_idx].M_coefficient != 0 or matrix[-1][art_idx].coefficient != 0:
+            art_var = all_var_names[art_idx]
+            z_coef = matrix[-1][art_idx]
+            
+            if z_coef.M_coefficient != 0 or z_coef.coefficient != 0:
+                self.html_output += f'<h3 class="font-bold text-base mb-2">Eliminando {art_var} (coeficiente actual: {self.mixed_value_to_html(z_coef, True)})</h3>'
+                
                 # Encontrar fila donde está la variable artificial
                 for i, basis_var in enumerate(basis_vars):
-                    if basis_var == all_var_names[art_idx] and i < len(matrix) - 1:
+                    if basis_var == art_var and i < len(matrix) - 1:
                         multiplier = matrix[-1][art_idx]
+                        
+                        self.html_output += f'<p class="mb-2">• {art_var} está en la fila F{i+1} como variable básica</p>'
+                        self.html_output += f'<p class="mb-2">• Operación: Fila_Z = Fila_Z - ({self.mixed_value_to_html(multiplier)}) × F{i+1}</p>'
+                        
+                        self.html_output += '<div class="overflow-x-auto mb-3"><table class="table table-sm w-full text-center text-xs">'
+                        self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Variable</th><th class="bg-base-200 px-1 py-1">Z Original</th><th class="bg-base-200 px-1 py-1">-</th><th class="bg-base-200 px-1 py-1">Factor × F{i+1}</th><th class="bg-base-200 px-1 py-1">=</th><th class="bg-base-200 px-1 py-1">Z Nueva</th></tr></thead><tbody>'
+                        
                         for j in range(len(matrix[0])):
+                            old_z_val = matrix[-1][j]
+                            factor_times_row = multiplier * matrix[i][j]
                             matrix[-1][j] = matrix[-1][j] - multiplier * matrix[i][j]
+                            var_name = all_var_names[j] if j < len(all_var_names) else 'RHS'
+                            
+                            css_class = "bg-success bg-opacity-20" if j == art_idx else ""
+                            self.html_output += f'<tr class="{css_class}"><td class="px-1 py-1 font-bold">{var_name}</td>'
+                            self.html_output += f'<td class="px-1 py-1">{self.mixed_value_to_html(old_z_val, True)}</td>'
+                            self.html_output += f'<td class="px-1 py-1">-</td>'
+                            self.html_output += f'<td class="px-1 py-1">{self.mixed_value_to_html(factor_times_row)}</td>'
+                            self.html_output += f'<td class="px-1 py-1">=</td>'
+                            self.html_output += f'<td class="px-1 py-1">{self.mixed_value_to_html(matrix[-1][j], True)}</td></tr>'
+                        
+                        self.html_output += '</tbody></table></div>'
                         break
+                        
+        self.html_output += '<p class="mt-3 font-bold text-success">✅ Variables artificiales eliminadas de la fila Z. El coeficiente de cada variable artificial es ahora 0.</p>'
+        self.html_output += '</div>'
         
         return matrix
 
     def find_pivot(self, matrix: List[List]) -> Tuple[int, int]:
-        """Encuentra el elemento pivote"""
+        """Encuentra el elemento pivote con explicación detallada"""
         z_row = matrix[-1][:-1]
+        
+        # Agregar explicación del criterio de optimalidad
+        self.html_output += '<div class="mb-6 p-4 rounded bg-accent bg-opacity-10 text-accent-content">'
+        self.html_output += '<h3 class="font-bold text-lg mb-3 text-accent">Criterio de Optimalidad</h3>'
+        self.html_output += '<p class="mb-3">Analizando la fila Z para determinar si se ha alcanzado la solución óptima o si se requiere otra iteración:</p>'
+        
+        # Mostrar valores de la fila Z
+        self.html_output += '<div class="overflow-x-auto"><table class="table table-sm w-full text-center text-xs">'
+        self.html_output += '<thead><tr>'
+        for i, val in enumerate(z_row):
+            var_name = f"x{i+1}" if i < len(z_row) else "Variable"
+            self.html_output += f'<th class="bg-base-200 px-1 py-1">{var_name}</th>'
+        self.html_output += '</tr></thead><tbody><tr>'
+        
+        for val in z_row:
+            css_class = ""
+            if val.is_negative():
+                css_class = "bg-error bg-opacity-30 font-bold"
+            self.html_output += f'<td class="px-1 py-1 {css_class}">{self.mixed_value_to_html(val, True)}</td>'
+        self.html_output += '</tr></tbody></table></div>'
         
         # Encontrar el más negativo
         most_negative_idx = -1
@@ -550,9 +608,15 @@ class GranMSimplexExtended:
                     most_negative_idx = i
         
         if most_negative_idx == -1:
+            self.html_output += '<p class="mt-3 font-bold text-success">✅ Todos los coeficientes de la fila Z son no negativos. Se ha alcanzado la solución óptima.</p>'
+            self.html_output += '</div>'
             return -1, -1  # Óptimo encontrado
         
         pivot_col = most_negative_idx
+        self.html_output += f'<p class="mt-3">El coeficiente más negativo es <strong>{self.mixed_value_to_html(most_negative_val, True)}</strong> '
+        self.html_output += f'en la columna {pivot_col + 1} (variable x{pivot_col + 1}).</p>'
+        self.html_output += f'<p class="font-bold text-warning">→ Variable que entra: x{pivot_col + 1}</p>'
+        self.html_output += '</div>'
         
         # Prueba de la razón
         ratios = []
@@ -576,6 +640,9 @@ class GranMSimplexExtended:
         
         valid_ratios = [(r, i) for r, i in ratios if r != float('inf')]
         if not valid_ratios:
+            self.html_output += '<div class="mb-4 p-3 rounded bg-error text-error-content">'
+            self.html_output += '<p class="font-bold">❌ El problema no tiene solución acotada (es no acotado).</p>'
+            self.html_output += '</div>'
             return -1, -1  # No acotado
         
         min_ratio, pivot_row = min(valid_ratios)
@@ -592,113 +659,160 @@ class GranMSimplexExtended:
 
     def pivot_operation(self, matrix: List[List], pivot_row: int, pivot_col: int, 
                        basis_vars: List[str], all_var_names: List[str]) -> List[List]:
-        """Realiza operación de pivoteo con fracciones"""
+        """Realiza operación de pivoteo con fracciones y explicación detallada"""
         pivot_element = matrix[pivot_row][pivot_col]
         
-        # HTML para pivoteo
-        self.html_output += f"<p>Variable que entra: <strong>{all_var_names[pivot_col]}</strong> | "
-        self.html_output += f"Variable que sale: <strong>{basis_vars[pivot_row]}</strong></p>"
-        self.html_output += f"<p>Elemento pivote: <strong>{self.mixed_value_to_html(pivot_element)}</strong></p>"
+        # HTML para identificación del pivoteo
+        self.html_output += '<div class="mb-6 p-4 rounded bg-info bg-opacity-10 text-info-content">'
+        self.html_output += '<h3 class="font-bold text-lg mb-3 text-info">Detalles del Pivoteo</h3>'
+        self.html_output += f"<p class='mb-2'><strong>Variable que entra:</strong> <span class='badge badge-success'>{all_var_names[pivot_col]}</span></p>"
+        self.html_output += f"<p class='mb-2'><strong>Variable que sale:</strong> <span class='badge badge-error'>{basis_vars[pivot_row]}</span></p>"
+        self.html_output += f"<p class='mb-4'><strong>Elemento pivote:</strong> <span class='badge badge-warning'>{self.mixed_value_to_html(pivot_element)}</span></p>"
+        
+        # Justificación de selección de columna pivote
+        self.html_output += '<h4 class="font-bold text-base mb-2 text-secondary">Justificación de la Columna Pivote:</h4>'
+        self.html_output += f'<p class="mb-3 text-sm">Se selecciona la columna {pivot_col + 1} (variable {all_var_names[pivot_col]}) porque tiene el coeficiente más negativo en la fila Z, '
+        self.html_output += 'indicando que es la variable que más puede mejorar la función objetivo.</p>'
+        
+        # Cálculo de razones para selección de fila pivote
+        self.html_output += '<h4 class="font-bold text-base mb-2 text-secondary">Cálculo de Razones para Selección de Fila Pivote:</h4>'
+        self.html_output += '<div class="overflow-x-auto"><table class="table table-sm w-full text-center text-xs">'
+        self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Fila</th><th class="bg-base-200 px-1 py-1">RHS</th><th class="bg-base-200 px-1 py-1">Coef. Pivote</th><th class="bg-base-200 px-1 py-1">Razón</th><th class="bg-base-200 px-1 py-1">Factible</th></tr></thead><tbody>'
+        
+        for i in range(len(matrix) - 1):  # Excluir fila Z
+            rhs = matrix[i][-1]
+            coef_pivote = matrix[i][pivot_col]
+            
+            if coef_pivote.coefficient > 0 and coef_pivote.M_coefficient == 0:
+                ratio = rhs.coefficient / coef_pivote.coefficient
+                factible = "Sí" if ratio >= 0 else "No"
+                css_class = "bg-success bg-opacity-20" if i == pivot_row else ""
+                self.html_output += f'<tr class="{css_class}"><td class="px-1 py-1">F{i+1}</td><td class="px-1 py-1">{self.mixed_value_to_html(rhs)}</td><td class="px-1 py-1">{self.mixed_value_to_html(coef_pivote)}</td><td class="px-1 py-1">{ratio:.3f}</td><td class="px-1 py-1">{factible}</td></tr>'
+            else:
+                self.html_output += f'<tr><td class="px-1 py-1">F{i+1}</td><td class="px-1 py-1">{self.mixed_value_to_html(rhs)}</td><td class="px-1 py-1">{self.mixed_value_to_html(coef_pivote)}</td><td class="px-1 py-1">N/A</td><td class="px-1 py-1">No</td></tr>'
+        
+        self.html_output += '</tbody></table></div>'
+        self.html_output += f'<p class="mt-2 text-sm">Se selecciona la fila {pivot_row + 1} porque tiene la menor razón positiva.</p>'
+        self.html_output += '</div>'
         
         # Normalizar fila pivote
-        self.html_output += f"<h3>Normalización de la fila pivote F{pivot_row+1}:</h3><ul>"
+        self.html_output += '<div class="mb-6 p-4 rounded bg-warning bg-opacity-10 text-warning-content">'
+        self.html_output += f"<h3 class='font-bold text-lg mb-3 text-warning'>Paso 1: Normalización de la Fila Pivote F{pivot_row+1}</h3>"
+        self.html_output += f"<p class='mb-3'>Dividir toda la fila F{pivot_row+1} entre el elemento pivote ({self.mixed_value_to_html(pivot_element)}) para que el elemento pivote sea 1:</p>"
+        self.html_output += '<div class="overflow-x-auto"><table class="table table-sm w-full text-center text-xs">'
+        self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Variable</th><th class="bg-base-200 px-1 py-1">Valor Original</th><th class="bg-base-200 px-1 py-1">÷</th><th class="bg-base-200 px-1 py-1">Pivote</th><th class="bg-base-200 px-1 py-1">=</th><th class="bg-base-200 px-1 py-1">Nuevo Valor</th></tr></thead><tbody>'
+        
         for j in range(len(matrix[0])):
             old_val = matrix[pivot_row][j]
             matrix[pivot_row][j] = matrix[pivot_row][j] / pivot_element
             var_name = all_var_names[j] if j < len(all_var_names) else 'RHS'
-            self.html_output += f"<li>{var_name}: {self.mixed_value_to_html(old_val)} ÷ {self.mixed_value_to_html(pivot_element)} = {self.mixed_value_to_html(matrix[pivot_row][j])}</li>"
-        self.html_output += "</ul>"
+            
+            self.html_output += f'<tr><td class="px-1 py-1 font-bold">{var_name}</td>'
+            self.html_output += f'<td class="px-1 py-1">{self.mixed_value_to_html(old_val)}</td>'
+            self.html_output += f'<td class="px-1 py-1">÷</td>'
+            self.html_output += f'<td class="px-1 py-1">{self.mixed_value_to_html(pivot_element)}</td>'
+            self.html_output += f'<td class="px-1 py-1">=</td>'
+            self.html_output += f'<td class="px-1 py-1 bg-success bg-opacity-20">{self.mixed_value_to_html(matrix[pivot_row][j])}</td></tr>'
+        
+        self.html_output += '</tbody></table></div></div>'
         
         # Actualizar otras filas
-        self.html_output += f"<h3>Actualización de las otras filas:</h3>"
+        self.html_output += '<div class="mb-6 p-4 rounded bg-secondary bg-opacity-10 text-secondary-content">'
+        self.html_output += f"<h3 class='font-bold text-lg mb-3 text-secondary'>Paso 2: Actualización de las Otras Filas</h3>"
+        self.html_output += "<p class='mb-3'>Para cada fila i ≠ fila pivote: Nueva_Fila_i = Fila_i - (Factor × Fila_Pivote_Normalizada)</p>"
+        
         for i in range(len(matrix)):
             if i != pivot_row:
                 factor = matrix[i][pivot_col]
                 if factor.coefficient != 0 or factor.M_coefficient != 0:
-                    self.html_output += f"<h4>F{i+1} = F{i+1} - ({self.mixed_value_to_html(factor)}) × F{pivot_row+1}</h4><ul>"
+                    fila_name = f"F{i+1}" if i < len(matrix) - 1 else "Fila Z"
+                    self.html_output += f"<h4 class='font-bold text-base mb-2 mt-4'>{fila_name} = {fila_name} - ({self.mixed_value_to_html(factor)}) × F{pivot_row+1}_normalizada</h4>"
+                    
+                    self.html_output += '<div class="overflow-x-auto"><table class="table table-sm w-full text-center text-xs">'
+                    self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Variable</th><th class="bg-base-200 px-1 py-1">Original</th><th class="bg-base-200 px-1 py-1">-</th><th class="bg-base-200 px-1 py-1">Factor × Pivote</th><th class="bg-base-200 px-1 py-1">=</th><th class="bg-base-200 px-1 py-1">Nuevo</th></tr></thead><tbody>'
+                    
                     for j in range(len(matrix[0])):
                         old_val = matrix[i][j]
                         pivot_val = matrix[pivot_row][j]
+                        producto = factor * pivot_val
                         matrix[i][j] = matrix[i][j] - factor * pivot_val
                         var_name = all_var_names[j] if j < len(all_var_names) else 'RHS'
                         is_z_row = (i == len(matrix) - 1)
-                        self.html_output += f"<li>{var_name}: {self.mixed_value_to_html(old_val, is_z_row)} - ({self.mixed_value_to_html(factor)} × {self.mixed_value_to_html(pivot_val)}) = {self.mixed_value_to_html(matrix[i][j], is_z_row)}</li>"
-                    self.html_output += "</ul>"
+                        
+                        self.html_output += f'<tr><td class="px-1 py-1 font-bold">{var_name}</td>'
+                        self.html_output += f'<td class="px-1 py-1">{self.mixed_value_to_html(old_val, is_z_row)}</td>'
+                        self.html_output += f'<td class="px-1 py-1">-</td>'
+                        self.html_output += f'<td class="px-1 py-1">({self.mixed_value_to_html(factor)} × {self.mixed_value_to_html(pivot_val)}) = {self.mixed_value_to_html(producto)}</td>'
+                        self.html_output += f'<td class="px-1 py-1">=</td>'
+                        self.html_output += f'<td class="px-1 py-1 bg-success bg-opacity-20">{self.mixed_value_to_html(matrix[i][j], is_z_row)}</td></tr>'
+                    
+                    self.html_output += '</tbody></table></div>'
+        
+        self.html_output += '</div>'
         
         # Actualizar base
+        old_basic_var = basis_vars[pivot_row]
         basis_vars[pivot_row] = all_var_names[pivot_col]
+        
+        self.html_output += '<div class="mb-4 p-3 rounded bg-base-200 text-base-content">'
+        self.html_output += f'<p class="font-bold">Actualización de la Base:</p>'
+        self.html_output += f'<p>La variable <span class="badge badge-error">{old_basic_var}</span> sale de la base y entra <span class="badge badge-success">{all_var_names[pivot_col]}</span>.</p>'
+        self.html_output += '</div>'
         
         return matrix
 
     def create_table_html(self, matrix: List[List], all_var_names: List[str], 
                          basis_vars: List[str], pivot_row: int = -1, pivot_col: int = -1) -> str:
-        """Crea tabla HTML con fracciones"""
-        html = f'<div class="iteration-title">Iteración {self.iteration}</div>'
-        html += '<table><thead><tr><th>Base</th>'
+        """Crea tabla HTML con fracciones usando clases CSS modernas"""
+        html = '<div class="mb-6 p-4 rounded-xl border shadow-md bg-base-100 text-base-content overflow-x-auto">'
+        html += f'<h3 class="font-bold text-lg mb-4 text-primary">Iteración {self.iteration}</h3>'
+        
+        html += '<table class="table table-sm w-full overflow-x-auto border-collapse text-center">'
+        html += '<thead><tr><th class="bg-base-200 text-base-content px-2 py-1 border font-bold">Base</th>'
         
         for var_name in all_var_names:
-            html += f'<th>{var_name}</th>'
+            html += f'<th class="bg-base-200 text-base-content px-2 py-1 border font-bold">{var_name}</th>'
         html += '</tr></thead><tbody>'
         
         for i in range(len(matrix)):
             html += '<tr>'
             if i < len(basis_vars):
-                html += f'<td>{basis_vars[i]}</td>'
+                html += f'<td class="border px-2 py-1 font-bold">{basis_vars[i]}</td>'
             else:
-                html += '<td>Z</td>'
+                html += '<td class="border px-2 py-1 font-bold">Z</td>'
             
             is_z_row = (i == len(matrix) - 1)
             
             for j in range(len(matrix[0])):
-                css_class = ""
+                css_class = "border px-2 py-1"
                 if i == pivot_row and j == pivot_col:
-                    css_class = ' class="pivot"'
-                elif i == pivot_row or j == pivot_col:
-                    css_class = ' class="pivot-highlight"'
+                    css_class += " bg-error text-error-content font-bold"  # Elemento pivote
+                elif i == pivot_row:
+                    css_class += " bg-warning bg-opacity-30"  # Fila pivote
+                elif j == pivot_col:
+                    css_class += " bg-warning bg-opacity-30"  # Columna pivote
                 
-                html += f'<td{css_class}>{self.mixed_value_to_html(matrix[i][j], is_z_row)}</td>'
+                html += f'<td class="{css_class}">{self.mixed_value_to_html(matrix[i][j], is_z_row)}</td>'
             html += '</tr>'
         
-        html += '</tbody></table>'
+        html += '</tbody></table></div>'
         return html
 
     def solve(self, objective: List[float], constraints: List[List[float]], 
               constraint_types: List[str], minimize: bool = True) -> str:
         """Resuelve usando fracciones exactas con modelo extendido y pasos detallados"""
         
-        # HTML inicial
+        # HTML inicial con clases CSS modernas
         self.html_output = """
-        <html>
-        <head>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-                h1, h2, h3 { color: #003366; }
-                h1 { border-bottom: 3px solid #003366; padding-bottom: 10px; }
-                h2 { border-bottom: 2px solid #666; padding-bottom: 5px; margin-top: 30px; }
-                h3 { color: #0066cc; margin-top: 20px; }
-                table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-                th, td { border: 1px solid #999; padding: 8px; text-align: center; }
-                th { background-color: #f2f2f2; font-weight: bold; }
-                .pivot { background-color: #ffcccc; font-weight: bold; }
-                .pivot-highlight { background-color: #ffffcc; }
-                .iteration-title { background-color: #003366; color: white; padding: 8px; margin-top: 20px; font-weight: bold; }
-                .model { background-color: #f9f9f9; padding: 15px; border-left: 4px solid #003366; margin: 20px 0; }
-                .extended-model { background-color: #e6f3ff; padding: 15px; border-left: 4px solid #0066cc; margin: 20px 0; }
-                .initial-steps { background-color: #fff2e6; padding: 15px; border-left: 4px solid #ff9900; margin: 20px 0; }
-                ul, ol { text-align: left; }
-                li { margin-bottom: 5px; }
-                sup { font-size: 0.8em; }
-                sub { font-size: 0.8em; }
-                .formula { background-color: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
-            </style>
-        </head>
-        <body>
-            <h1>Método de la Gran M - Análisis Completo con Variables Auxiliares</h1>
+        <div class="w-full max-w-none">
+            <h1 class="text-3xl font-bold text-primary mb-6 border-b-2 border-primary pb-3">
+                Método de la Gran M - Análisis Completo con Variables Auxiliares
+            </h1>
         """
         
         # Modelo original
-        self.html_output += '<div class="model">'
-        self.html_output += '<h2>Modelo Matemático Original</h2>'
+        self.html_output += '<div class="mb-6 p-4 rounded bg-base-200 text-base-content">'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-primary">Modelo Matemático Original</h2>'
         
         obj_str = "Minimizar " if minimize else "Maximizar "
         obj_str += "Z = "
@@ -715,10 +829,10 @@ class GranMSimplexExtended:
             else:
                 obj_str += f"({frac.numerator}/{frac.denominator})x<sub>{i+1}</sub>"
         
-        self.html_output += f'<p><strong>{obj_str}</strong></p>'
+        self.html_output += f'<p class="mb-3"><strong>{obj_str}</strong></p>'
         
         # Restricciones
-        self.html_output += '<p><strong>Sujeto a:</strong></p><ul>'
+        self.html_output += '<p class="mb-2"><strong>Sujeto a:</strong></p><ul class="list-disc pl-5">'
         for i, (constraint, constraint_type) in enumerate(zip(constraints, constraint_types)):
             constraint_str = ""
             for j, coef in enumerate(constraint[:-1]):
@@ -740,10 +854,10 @@ class GranMSimplexExtended:
             else:
                 constraint_str += f" {constraint_type} {rhs_frac.numerator}/{rhs_frac.denominator}"
             
-            self.html_output += f'<li>{constraint_str}</li>'
+            self.html_output += f'<li class="mb-1">{constraint_str}</li>'
         
         var_list = ", ".join([f"x<sub>{i+1}</sub>" for i in range(len(objective))])
-        self.html_output += f'<li>{var_list} ≥ 0</li>'
+        self.html_output += f'<li class="mb-1">{var_list} ≥ 0</li>'
         self.html_output += '</ul></div>'
         
         # Modelo extendido
@@ -755,7 +869,9 @@ class GranMSimplexExtended:
         # Configurar y resolver
         matrix, all_var_names, basis_vars = self.setup_problem(objective, constraints, constraint_types, minimize)
         
-        self.html_output += '<h2>Proceso de Solución con Fracciones Exactas</h2>'
+        self.html_output += '<div class="mb-6 p-4 rounded bg-base-200 text-base-content">'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-primary">Proceso de Solución con Fracciones Exactas</h2>'
+        self.html_output += '</div>'
         
         # Eliminar artificiales de Z
         matrix = self.eliminate_artificial_from_z(matrix, basis_vars, all_var_names)
@@ -769,14 +885,17 @@ class GranMSimplexExtended:
             self.html_output += self.create_table_html(matrix, all_var_names, basis_vars, pivot_row, pivot_col)
             
             if pivot_row == -1:
-                self.html_output += '<p><strong>Solución óptima encontrada.</strong></p>'
+                self.html_output += '<div class="mb-4 p-3 rounded bg-success bg-opacity-10 text-success-content">'
+                self.html_output += '<p class="font-bold">✅ Solución óptima encontrada.</p>'
+                self.html_output += '</div>'
                 break
             
             matrix = self.pivot_operation(matrix, pivot_row, pivot_col, basis_vars, all_var_names)
             self.iteration += 1
         
         # Solución final
-        self.html_output += '<h2>Solución Final</h2>'
+        self.html_output += '<div class="mb-6 p-4 rounded bg-success bg-opacity-10 text-success-content shadow">'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-success">Solución Final</h2>'
         
         # Verificar factibilidad
         artificial_in_basis = False
@@ -786,7 +905,7 @@ class GranMSimplexExtended:
                 break
         
         if artificial_in_basis:
-            self.html_output += '<p><strong>El problema no tiene solución factible.</strong></p>'
+            self.html_output += '<p class="font-bold text-error">❌ El problema no tiene solución factible.</p>'
         else:
             # Extraer solución
             solution = {}
@@ -803,17 +922,33 @@ class GranMSimplexExtended:
             if not minimize:
                 z_value_display = MixedValue(-z_value_display.coefficient, -z_value_display.M_coefficient)
             
-            self.html_output += f'<p><strong>Valor {"mínimo" if minimize else "máximo"} de la función objetivo: {self.mixed_value_to_html(z_value_display)}</strong></p>'
-            self.html_output += '<p><strong>Valores de las variables:</strong></p><ul>'
+            self.html_output += f'<p class="mb-3">Se alcanzó una solución óptima con un valor <strong>{"mínimo" if minimize else "máximo"} de Z = {self.mixed_value_to_html(z_value_display)}</strong>.</p>'
+            self.html_output += '<p class="mb-2"><strong>Valores de las variables:</strong></p><ul class="list-disc pl-5">'
             
             for i in range(len(objective)):
                 var_name = f"x{i+1}"
                 value = solution.get(var_name, MixedValue(0, 0))
-                self.html_output += f'<li>{var_name} = {self.mixed_value_to_html(value)}</li>'
+                self.html_output += f'<li class="mb-1">{var_name} = {self.mixed_value_to_html(value)}</li>'
             
             self.html_output += '</ul>'
+            
+            # Interpretación adicional
+            active_vars = []
+            for i in range(len(objective)):
+                var_name = f"x{i+1}"
+                value = solution.get(var_name, MixedValue(0, 0))
+                if value.coefficient > 0 and value.M_coefficient == 0:
+                    active_vars.append(f"{var_name} = {self.mixed_value_to_html(value)}")
+            
+            if active_vars:
+                self.html_output += f'<p class="mt-3">Las variables que contribuyen a este óptimo son: <strong>{", ".join(active_vars)}</strong>.</p>'
+            else:
+                self.html_output += '<p class="mt-3">Todas las variables tienen valor cero en esta solución óptima.</p>'
+            
+            self.html_output += '<p class="mt-2">Esto significa que, bajo las restricciones dadas, esta combinación de variables optimiza el valor de la función objetivo.</p>'
         
-        self.html_output += '</body></html>'
+        self.html_output += '</div>'
+        self.html_output += '</div>'  # Cerrar el contenedor principal
         return self.html_output
 
 # Función de prueba

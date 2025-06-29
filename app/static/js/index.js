@@ -246,18 +246,59 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     // MÉTODO SIMPLEX: varía el endpoint según el tipo de operación
     
     if (tipoOperacion === "Maximizar") {
-      // Simplex clásico para maximización
-      try {
-        console.log("payload para simplex clásico (maximizar): ", payload);
-        const data = await resolverSimplex(payload);
-        mostrarResultadoSimplex(data);
-      } catch (err) {
-        console.error("Error al resolver con Simplex clásico:", err);
-        alerta.open({
-          type: "error",
-          message: "Error al resolver el problema con Simplex clásico.",
-          className: "alert alert-warning",
-        });
+      // Verificar si hay restricciones mixtas (no solo ≤)
+      const tieneRestriccionesMixtas = restricciones.some(r => r.op === "≥" || r.op === "=");
+      
+      if (tieneRestriccionesMixtas) {
+        // Usar Gran M para restricciones mixtas en maximización
+        try {
+          console.log("payload para simplex Gran M (maximizar con restricciones mixtas): ", payload);
+          
+          // Llamada paralela: Gran M para pasos detallados y SciPy para la tarjeta
+          const [granMResponse, scipyData] = await Promise.all([
+            fetch("/resolver_gran_m", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            }).then(res => res.json()),
+            resolverProblema(payload)  // SciPy para llenar la tarjeta
+          ]);
+          
+          console.log("Respuesta Gran M (maximizar):", granMResponse);
+          console.log("Respuesta SciPy para tarjeta:", scipyData);
+          
+          // Mostrar el HTML detallado del Gran M
+          document.getElementById("resultados").innerHTML = granMResponse.html;
+          
+          // Llenar la tarjeta de solución con los datos de SciPy
+          if (scipyData.resultado.status === "ok") {
+            mostrarSolucion(scipyData);
+          } else {
+            console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
+          }
+          
+        } catch (err) {
+          console.error("Error al resolver con Gran M (maximizar):", err);
+          alerta.open({
+            type: "error",
+            message: "Error al resolver con Simplex Gran M: " + err.message,
+            className: "alert alert-error",
+          });
+        }
+      } else {
+        // Simplex clásico para maximización con solo restricciones ≤
+        try {
+          console.log("payload para simplex clásico (maximizar solo ≤): ", payload);
+          const data = await resolverSimplex(payload);
+          mostrarResultadoSimplex(data);
+        } catch (err) {
+          console.error("Error al resolver con Simplex clásico:", err);
+          alerta.open({
+            type: "error",
+            message: "Error al resolver el problema con Simplex clásico.",
+            className: "alert alert-warning",
+          });
+        }
       }
       
     } else if (tipoOperacion === "Minimizar") {
