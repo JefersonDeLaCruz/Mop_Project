@@ -181,7 +181,7 @@ def _simplex(c, A, b):
     # Bucle principal del método simplex
     while True:
         # Encabezados para mostrar la tabla
-        encabezados = ["VB"] + [f"x{i+1}" for i in range(num_vars)] + [f"s{i+1}" for i in range(num_rest)] + ["RHS"]
+        encabezados = ["VB"] + [f"x{i+1}" for i in range(num_vars)] + [f"s{i+1}" for i in range(num_rest)] + ["bj"]
         filas_str = []
         for i in range(len(tableau)):
             if i < len(vb):
@@ -269,7 +269,7 @@ def _simplex(c, A, b):
             "fila_pivote": {
                 "indice": fila_pivote + 1,
                 "razones": razon_just,
-                "explicacion": f"Se elige la fila {fila_pivote + 1} porque tiene la razón mínima entre RHS y el coeficiente pivote."
+                "explicacion": f"Se elige la fila {fila_pivote + 1} porque tiene la razón mínima entre bj y el coeficiente pivote."
             },
             "normalizacion": {
                 "original": [round(x, 4) for x in fila_antigua],

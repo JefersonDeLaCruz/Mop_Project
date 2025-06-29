@@ -306,7 +306,7 @@ class GranMSimplexExtended:
                 artificial_idx += 1
                 constraint_str += f" + <span class='text-error'>a<sub>{artificial_idx}</sub></span>"
             
-            # RHS
+            # bj (lado derecho)
             rhs_frac = Fraction(constraint[-1]).limit_denominator()
             if rhs_frac.denominator == 1:
                 constraint_str += f" = {rhs_frac.numerator}"
@@ -464,7 +464,7 @@ class GranMSimplexExtended:
             for j in range(num_vars):
                 row[j] = MixedValue(Fraction(constraint[j]).limit_denominator(), 0)
             
-            # RHS
+            # bj (lado derecho)
             row[-1] = MixedValue(Fraction(constraint[-1]).limit_denominator(), 0)
             
             if constraint_type in ['<=', '<']:
@@ -555,7 +555,7 @@ class GranMSimplexExtended:
                             old_z_val = matrix[-1][j]
                             factor_times_row = multiplier * matrix[i][j]
                             matrix[-1][j] = matrix[-1][j] - multiplier * matrix[i][j]
-                            var_name = all_var_names[j] if j < len(all_var_names) else 'RHS'
+                            var_name = all_var_names[j] if j < len(all_var_names) else 'bj'
                             
                             css_class = "bg-success bg-opacity-20" if j == art_idx else ""
                             self.html_output += f'<tr class="{css_class}"><td class="px-1 py-1 font-bold">{var_name}</td>'
@@ -622,13 +622,13 @@ class GranMSimplexExtended:
         ratios = []
         for i in range(len(matrix) - 1):
             if matrix[i][pivot_col].coefficient > 0 or matrix[i][pivot_col].M_coefficient > 0:
-                # Calcular razón RHS / elemento_columna
+                # Calcular razón bj / elemento_columna
                 rhs = matrix[i][-1]
                 divisor = matrix[i][pivot_col]
                 
                 # Solo consideramos casos donde el divisor es positivo y sin M
                 if divisor.M_coefficient == 0 and divisor.coefficient > 0:
-                    if rhs.M_coefficient == 0:  # RHS sin M
+                    if rhs.M_coefficient == 0:  # bj sin M
                         ratio = rhs.coefficient / divisor.coefficient
                         ratios.append((ratio, i))
                     else:
@@ -677,7 +677,7 @@ class GranMSimplexExtended:
         # Cálculo de razones para selección de fila pivote
         self.html_output += '<h4 class="font-bold text-base mb-2 text-secondary">Cálculo de Razones para Selección de Fila Pivote:</h4>'
         self.html_output += '<div class="overflow-x-auto"><table class="table table-sm w-full text-center text-xs">'
-        self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Fila</th><th class="bg-base-200 px-1 py-1">RHS</th><th class="bg-base-200 px-1 py-1">Coef. Pivote</th><th class="bg-base-200 px-1 py-1">Razón</th><th class="bg-base-200 px-1 py-1">Factible</th></tr></thead><tbody>'
+        self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Fila</th><th class="bg-base-200 px-1 py-1">bj</th><th class="bg-base-200 px-1 py-1">Coef. Pivote</th><th class="bg-base-200 px-1 py-1">Razón</th><th class="bg-base-200 px-1 py-1">Factible</th></tr></thead><tbody>'
         
         for i in range(len(matrix) - 1):  # Excluir fila Z
             rhs = matrix[i][-1]

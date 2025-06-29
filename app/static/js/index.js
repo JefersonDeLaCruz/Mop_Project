@@ -3,8 +3,6 @@ import { resolverProblema, mostrarSolucion } from "./solver.js";
 import {
   resolverSimplex,
   mostrarResultadoSimplex,
-  resolverSimplexGeneral,
-  mostrarResultadoGranM,
 } from "./simplexSolver.js";
 
 const alerta = new Notyf({

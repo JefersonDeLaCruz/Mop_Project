@@ -26,7 +26,8 @@ def extraer_numero_variables(expresiones):
 def extraer_coeficientes(expr, n_vars):
     expr = expr.replace(" ", "")
     coeficientes = [0] * n_vars
-    patrones = re.findall(r'([+-]?\d*?)([a-zA-Z])(\d+)', expr)
+    # Cambiamos la regex para capturar números decimales: \d*\.?\d*
+    patrones = re.findall(r'([+-]?\d*\.?\d*)([a-zA-Z])(\d+)', expr)
     for coef, var, idx in patrones:
         idx = int(idx) - 1
         if coef in ("", "+"):
@@ -34,7 +35,7 @@ def extraer_coeficientes(expr, n_vars):
         elif coef == "-":
             coef = -1
         else:
-            coef = int(coef)
+            coef = float(coef)  # Cambiar de int() a float() para manejar decimales
         coeficientes[idx] = coef
     return coeficientes
 
