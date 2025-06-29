@@ -61,46 +61,46 @@ function subIndice(num) {
 }
 
 // Manejar botón +
-btnAdd.addEventListener("click", () => {
-  let valor = parseInt(input.value);
-  if (valor < 10) {
-    valor++;
-    input.value = valor;
-    actualizarBadges(valor);
-  } else {
-    alerta.open({
-      type: "warning",
-      message: `Solo se permiten hasta 10 variables de decision`,
-      className: "alert alert-warning",
-    });
-  }
-});
+// btnAdd.addEventListener("click", () => {
+//   let valor = parseInt(input.value);
+//   if (valor < 10) {
+//     valor++;
+//     input.value = valor;
+//     actualizarBadges(valor);
+//   } else {
+//     alerta.open({
+//       type: "warning",
+//       message: `Solo se permiten hasta 10 variables de decision`,
+//       className: "alert alert-warning",
+//     });
+//   }
+// });
 
 // Manejar botón -
-btnRemove.addEventListener("click", () => {
-  let valor = parseInt(input.value);
-  if (valor > 2) {
-    valor--;
-    input.value = valor;
-    actualizarBadges(valor);
-  } else {
-    alerta.open({
-      type: "warning",
-      message: `Debe haber al menos 2 variables de decision`,
-      className: "alert alert-warning",
-    });
-  }
-});
+// btnRemove.addEventListener("click", () => {
+//   let valor = parseInt(input.value);
+//   if (valor > 2) {
+//     valor--;
+//     input.value = valor;
+//     actualizarBadges(valor);
+//   } else {
+//     alerta.open({
+//       type: "warning",
+//       message: `Debe haber al menos 2 variables de decision`,
+//       className: "alert alert-warning",
+//     });
+//   }
+// });
 
 // Cambios en el input manualmente
-input.addEventListener("input", () => {
-  let valor = parseInt(input.value);
-  if (isNaN(valor)) valor = 2;
-  if (valor < 2) valor = 2;
-  if (valor > 10) valor = 10;
-  input.value = valor;
-  actualizarBadges(valor);
-});
+// input.addEventListener("input", () => {
+//   let valor = parseInt(input.value);
+//   if (isNaN(valor)) valor = 2;
+//   if (valor < 2) valor = 2;
+//   if (valor > 10) valor = 10;
+//   input.value = valor;
+//   actualizarBadges(valor);
+// });
 
 // Crear una restricción (con número de orden)
 function crearRestriccion(numero) {
@@ -230,9 +230,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
   if (metodoSelecionado === metodoGeneralBtn.innerText) {
     const tipoOperacion = document.getElementById("tipoOperacion").value;
     const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-    const numeroVariables = parseInt(
-      document.getElementById("numeroVariables").value
-    );
+    // const numeroVariables = parseInt(
+    //   document.getElementById("numeroVariables").value
+    // );
 
     const restricciones = [];
     const wrapper = document.getElementById("resWrapper");
@@ -248,13 +248,13 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const payload = {
       tipoOperacion,
       funcionObjetivo,
-      numeroVariables,
+      // numeroVariables,
       restricciones,
     };
 
     try {
       console.log("payload para general: ", payload);
-      const data = await resolverSimplexGeneral(payload);
+      // const data = await resolverSimplexGeneral(payload);
 
       // ✅ CORRECCIÓN: Verificar la estructura correcta de la respuesta
       // if (data.status !== "success" || !data.resultado?.optimo) {
@@ -308,9 +308,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 
     const tipoOperacion = document.getElementById("tipoOperacion").value;
     const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-    const numeroVariables = parseInt(
-      document.getElementById("numeroVariables").value
-    );
+    // const numeroVariables = parseInt(
+    //   document.getElementById("numeroVariables").value
+    // );
 
     const restricciones = [];
     const wrapper = document.getElementById("resWrapper");
@@ -326,7 +326,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const payload = {
       tipoOperacion,
       funcionObjetivo,
-      numeroVariables,
+      // numeroVariables,
       restricciones,
     };
 
@@ -355,9 +355,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
   } else if (metodoSelecionado === metodoScipyBtn.innerText) {
     const tipoOperacion = document.getElementById("tipoOperacion").value;
     const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-    const numeroVariables = parseInt(
-      document.getElementById("numeroVariables").value
-    );
+    // const numeroVariables = parseInt(
+    //   document.getElementById("numeroVariables").value
+    // );
 
     const restricciones = [];
     const wrapper = document.getElementById("resWrapper");
@@ -373,7 +373,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const payload = {
       tipoOperacion,
       funcionObjetivo,
-      numeroVariables,
+      // numeroVariables,
       restricciones,
     };
 

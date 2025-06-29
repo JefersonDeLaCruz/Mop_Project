@@ -153,15 +153,16 @@ def idioma(lang_code):
 
 @main.route("/resolver", methods=["POST"])
 def resolver():
-    
-    
-
     data = request.get_json()
 
     tipoOperacion = data.get("tipoOperacion")
     funcionObjetivo = data.get("funcionObjetivo")
-    numeroVariables = int(data.get("numeroVariables"))
     restricciones = data.get("restricciones", [])
+    
+    # El número de variables ahora es opcional
+    numeroVariables = data.get("numeroVariables")
+    if numeroVariables is not None:
+        numeroVariables = int(numeroVariables)
 
     resultado = resolver_problema_lp(tipoOperacion, funcionObjetivo, restricciones, numeroVariables)
 
@@ -589,13 +590,38 @@ def simplex_general():
    
 
 
+import re
 from .test import GranMSimplexExtended
+
 @main.route("/resolver_gran_m", methods=["POST"])
 def resolver_gran_m():
     # 1. Recibir el payload
     data = request.get_json()
 
-    # 2. Extraer y convertir la función objetivo a coeficientes numéricos
+    # 2. Función para extraer automáticamente el número de variables
+    def extraer_numero_variables(expresiones):
+        """
+        Extrae automáticamente el número de variables de decisión analizando las expresiones.
+        
+        Parámetros:
+            expresiones (list): Lista de expresiones (función objetivo + restricciones)
+        
+        Retorna:
+            int: Número máximo de variables encontradas
+        """
+        max_var = 0
+        
+        for expr in expresiones:
+            # Buscar todos los patrones de variables (x1, x2, x3, etc.)
+            matches = re.findall(r'x(\d+)', expr)
+            if matches:
+                # Convertir a enteros y encontrar el máximo
+                variables_en_expr = [int(m) for m in matches]
+                max_var = max(max_var, max(variables_en_expr))
+        
+        return max_var
+
+    # 3. Extraer y convertir la función objetivo a coeficientes numéricos
     def parse_funcion_objetivo(expr, n):
         # expr: "7x1 + 2x2", n: 2
         coefs = [0]*n
@@ -612,7 +638,7 @@ def resolver_gran_m():
                 pass  # No es necesario en Simplex estándar
         return coefs
 
-    # 3. Extraer restricciones
+    # 4. Extraer restricciones
     def parse_restricciones(restricciones, n):
         coefs = []
         tipos = []
@@ -636,18 +662,29 @@ def resolver_gran_m():
         return coefs, tipos
 
     try:
-        # 4. Parsear datos
-        n = int(data["numeroVariables"])
+        # 5. Extraer número de variables automáticamente si no se proporciona
+        if "numeroVariables" in data and data["numeroVariables"]:
+            n = int(data["numeroVariables"])
+        else:
+            # Crear lista de todas las expresiones para analizarlas
+            expresiones = [data["funcionObjetivo"]] + [r["expr"] for r in data["restricciones"]]
+            n = extraer_numero_variables(expresiones)
+            
+            if n == 0:
+                return jsonify({"error": "No se pudieron detectar variables en la función objetivo o restricciones"}), 400
+
+        # 6. Parsear datos
         funcion_objetivo = parse_funcion_objetivo(data["funcionObjetivo"], n)
         restricciones, tipos = parse_restricciones(data["restricciones"], n)
         minimizar = data["tipoOperacion"].lower().startswith("min")
         print("valor de minimizar", minimizar)
+        print(f"Número de variables detectadas automáticamente: {n}")
         
-        # 5. Resolver
+        # 7. Resolver
         solver = GranMSimplexExtended()
         html = solver.solve(funcion_objetivo, restricciones, tipos, minimize=minimizar)
         
-        # 6. Devolver HTML en JSON
+        # 8. Devolver HTML en JSON
         return jsonify({"html": html})
     except Exception as e:
         return jsonify({"error": str(e)}), 400

@@ -8,6 +8,29 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
+def _extraer_numero_variables(expresiones):
+    """
+    Extrae automáticamente el número de variables de decisión analizando las expresiones.
+    
+    Parámetros:
+        expresiones (list): Lista de expresiones (función objetivo + restricciones)
+    
+    Retorna:
+        int: Número máximo de variables encontradas
+    """
+    import re
+    max_var = 0
+    
+    for expr in expresiones:
+        # Buscar todos los patrones de variables (x1, x2, x3, etc.)
+        matches = re.findall(r'x(\d+)', expr)
+        if matches:
+            # Convertir a enteros y encontrar el máximo
+            variables_en_expr = [int(m) for m in matches]
+            max_var = max(max_var, max(variables_en_expr))
+    
+    return max_var
+
 def resolver_simplex_clasico(data):
     """
     Resuelve un problema de programación lineal de maximización usando el método simplex clásico.
@@ -16,7 +39,8 @@ def resolver_simplex_clasico(data):
         data (dict): Diccionario con la siguiente estructura:
             - tipoOperacion: "max" o "maximizar"
             - funcionObjetivo: str, por ejemplo "3x1 + 2x2"
-            - numeroVariables: int, número de variables de decisión
+            - numeroVariables: int (opcional), número de variables de decisión. 
+                              Si no se proporciona, se extrae automáticamente de la función objetivo.
             - restricciones: lista de dicts, cada uno con:
                 - expr: str, expresión de la restricción, ej. "2x1 + 3x2"
                 - val: valor del lado derecho de la restricción (float o str convertible a float)
@@ -26,8 +50,18 @@ def resolver_simplex_clasico(data):
     """
     tipo = data["tipoOperacion"]
     funcion = data["funcionObjetivo"]
-    num_vars = data["numeroVariables"]
     restricciones = data["restricciones"]
+    
+    # Extraer número de variables automáticamente si no se proporciona
+    if "numeroVariables" in data and data["numeroVariables"]:
+        num_vars = data["numeroVariables"]
+    else:
+        # Crear lista de todas las expresiones para analizarlas
+        expresiones = [funcion] + [r["expr"] for r in restricciones]
+        num_vars = _extraer_numero_variables(expresiones)
+        
+        if num_vars == 0:
+            raise ValueError("No se pudieron detectar variables en la función objetivo o restricciones")
 
     # Solo se permite maximización
     if tipo.lower() not in ["max", "maximizar"]:

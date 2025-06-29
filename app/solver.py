@@ -1,6 +1,28 @@
 from scipy.optimize import linprog
 import re
 
+def extraer_numero_variables(expresiones):
+    """
+    Extrae automáticamente el número de variables de decisión analizando las expresiones.
+    
+    Parámetros:
+        expresiones (list): Lista de expresiones (función objetivo + restricciones)
+    
+    Retorna:
+        int: Número máximo de variables encontradas
+    """
+    max_var = 0
+    
+    for expr in expresiones:
+        # Buscar todos los patrones de variables (x1, x2, x3, etc.)
+        matches = re.findall(r'x(\d+)', expr)
+        if matches:
+            # Convertir a enteros y encontrar el máximo
+            variables_en_expr = [int(m) for m in matches]
+            max_var = max(max_var, max(variables_en_expr))
+    
+    return max_var
+
 def extraer_coeficientes(expr, n_vars):
     expr = expr.replace(" ", "")
     coeficientes = [0] * n_vars
@@ -47,7 +69,19 @@ def armar_matrices(restricciones, n_vars):
             b_eq.append(b)
     return A_ub or None, b_ub or None, A_eq or None, b_eq or None
 
-def resolver_problema_lp(tipo, funcion, restricciones, n_vars):
+def resolver_problema_lp(tipo, funcion, restricciones, n_vars=None):
+    # Extraer número de variables automáticamente si no se proporciona
+    if n_vars is None:
+        # Crear lista de todas las expresiones para analizarlas
+        expresiones = [funcion] + [r["expr"] for r in restricciones]
+        n_vars = extraer_numero_variables(expresiones)
+        
+        if n_vars == 0:
+            return {
+                "status": "error",
+                "mensaje": "No se pudieron detectar variables en la función objetivo o restricciones"
+            }
+    
     c = procesar_funcion_objetivo(funcion, tipo, n_vars)
     A_ub, b_ub, A_eq, b_eq = armar_matrices(restricciones, n_vars)
     bounds = [(0, None)] * n_vars
