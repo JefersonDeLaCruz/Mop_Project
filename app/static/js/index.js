@@ -183,13 +183,12 @@ for (let i = 1; i <= MIN_RESTRICCIONES; i++) {
 }
 
 const metodoSimplexBtn = document.getElementById("metodo_simplex");
-const metodoGeneralBtn = document.getElementById("metodo_general");
 const metodoScipyBtn = document.getElementById("metodo_scipy");
 
 let metodoSelecionado;
 
 function activarBotonSeleccionado(boton) {
-  [metodoSimplexBtn, metodoGeneralBtn, metodoScipyBtn].forEach((btn) => {
+  [metodoSimplexBtn, metodoScipyBtn].forEach((btn) => {
     if (btn === boton) {
       btn.classList.remove("btn-dash");
       btn.classList.add("btn-active");
@@ -201,10 +200,6 @@ function activarBotonSeleccionado(boton) {
   metodoSelecionado = boton.innerText;
   console.log("Método seleccionado:", metodoSelecionado);
 }
-
-metodoGeneralBtn.addEventListener("click", () => {
-  activarBotonSeleccionado(metodoGeneralBtn);
-});
 
 metodoSimplexBtn.addEventListener("click", () => {
   activarBotonSeleccionado(metodoSimplexBtn);
@@ -227,156 +222,84 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     return;
   }
 
-  if (metodoSelecionado === metodoGeneralBtn.innerText) {
-    const tipoOperacion = document.getElementById("tipoOperacion").value;
-    const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-    // const numeroVariables = parseInt(
-    //   document.getElementById("numeroVariables").value
-    // );
+  // Obtener datos del formulario
+  const tipoOperacion = document.getElementById("tipoOperacion").value;
+  const funcionObjetivo = document.getElementById("funcionObjetivo").value;
+  const restricciones = [];
+  const wrapper = document.getElementById("resWrapper");
 
-    const restricciones = [];
-    const wrapper = document.getElementById("resWrapper");
+  Array.from(wrapper.children).forEach((div) => {
+    const expr = div.querySelector(`[name^="restriccion_"]`).value;
+    const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
+    const val = div.querySelector(`[name^="valorRes_"]`).value;
 
-    Array.from(wrapper.children).forEach((div) => {
-      const expr = div.querySelector(`[name^="restriccion_"]`).value;
-      const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
-      const val = div.querySelector(`[name^="valorRes_"]`).value;
+    restricciones.push({ expr, op, val });
+  });
 
-      restricciones.push({ expr, op, val });
-    });
+  const payload = {
+    tipoOperacion,
+    funcionObjetivo,
+    restricciones,
+  };
 
-    const payload = {
-      tipoOperacion,
-      funcionObjetivo,
-      // numeroVariables,
-      restricciones,
-    };
-
-    try {
-      console.log("payload para general: ", payload);
-      // const data = await resolverSimplexGeneral(payload);
-
-      // ✅ CORRECCIÓN: Verificar la estructura correcta de la respuesta
-      // if (data.status !== "success" || !data.resultado?.optimo) {
-      //   // Manejar casos especiales
-      //   if (
-      //     data.status === "warning" &&
-      //     data.resultado?.status === "infactible"
-      //   ) {
-      //     throw new Error(
-      //       "Problema infactible: " +
-      //         (data.resultado.mensaje || "No tiene solución factible")
-      //     );
-      //   } else if (data.tipo === "no_acotada") {
-      //     throw new Error(
-      //       "Problema no acotado: La solución tiende al infinito"
-      //     );
-      //   } else {
-      //     throw new Error(
-      //       data.error || "El servidor no devolvió una solución válida"
-      //     );
-      //   }
-      // }
-
-      // // ✅ Pasar solo el resultado, no toda la respuesta del servidor
-      // mostrarResultadoGranM(data.resultado);
-      fetch("/resolver_gran_m", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("avla", data);
-          document.getElementById("resultados").innerHTML = data.html;
+  if (metodoSelecionado === metodoSimplexBtn.innerText) {
+    // MÉTODO SIMPLEX: varía el endpoint según el tipo de operación
+    
+    if (tipoOperacion === "Maximizar") {
+      // Simplex clásico para maximización
+      try {
+        console.log("payload para simplex clásico (maximizar): ", payload);
+        const data = await resolverSimplex(payload);
+        mostrarResultadoSimplex(data);
+      } catch (err) {
+        console.error("Error al resolver con Simplex clásico:", err);
+        alerta.open({
+          type: "error",
+          message: "Error al resolver el problema con Simplex clásico.",
+          className: "alert alert-warning",
         });
-    } catch (err) {
-      console.error("Error al resolver:", err);
-      alerta.open({
-        type: "error",
-        message: "Error al resolver con Simplex General: " + err.message,
-        className: "alert alert-error",
-      });
+      }
+      
+    } else if (tipoOperacion === "Minimizar") {
+      // Gran M para minimización + SciPy para llenar la tarjeta de solución
+      try {
+        console.log("payload para simplex Gran M (minimizar): ", payload);
+        
+        // Llamada paralela: Gran M para pasos detallados y SciPy para la tarjeta
+        const [granMResponse, scipyData] = await Promise.all([
+          fetch("/resolver_gran_m", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }).then(res => res.json()),
+          resolverProblema(payload)  // SciPy para llenar la tarjeta
+        ]);
+        
+        console.log("Respuesta Gran M:", granMResponse);
+        console.log("Respuesta SciPy para tarjeta:", scipyData);
+        
+        // Mostrar el HTML detallado del Gran M
+        document.getElementById("resultados").innerHTML = granMResponse.html;
+        
+        // Llenar la tarjeta de solución con los datos de SciPy
+        if (scipyData.resultado.status === "ok") {
+          mostrarSolucion(scipyData);
+        } else {
+          console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
+        }
+        
+      } catch (err) {
+        console.error("Error al resolver con Gran M:", err);
+        alerta.open({
+          type: "error",
+          message: "Error al resolver con Simplex Gran M: " + err.message,
+          className: "alert alert-error",
+        });
+      }
     }
-  } else if (metodoSelecionado === metodoSimplexBtn.innerText) {
-    // alerta.open({
-    //   type: "warning",
-    //   message: `El método Simplex aún no está implementado`,
-    //   className: "alert alert-warning alert-outline",
-    // });
-    // return;
-
-    const tipoOperacion = document.getElementById("tipoOperacion").value;
-    const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-    // const numeroVariables = parseInt(
-    //   document.getElementById("numeroVariables").value
-    // );
-
-    const restricciones = [];
-    const wrapper = document.getElementById("resWrapper");
-
-    Array.from(wrapper.children).forEach((div) => {
-      const expr = div.querySelector(`[name^="restriccion_"]`).value;
-      const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
-      const val = div.querySelector(`[name^="valorRes_"]`).value;
-
-      restricciones.push({ expr, op, val });
-    });
-
-    const payload = {
-      tipoOperacion,
-      funcionObjetivo,
-      // numeroVariables,
-      restricciones,
-    };
-
-    // if (!esValidoParaSimplex(payload)) {
-    //   alerta.open({
-    //     type: "error",
-    //     message:
-    //       "Solo se permiten problemas de maximización con restricciones '≤' y coeficientes positivos.",
-    //     className: "alert alert-warning",
-    //   });
-    //   return;
-    // }
-
-    try {
-      console.log("payload para simplex: ", payload);
-      const data = await resolverSimplex(payload);
-      mostrarResultadoSimplex(data);
-    } catch (err) {
-      console.error("Error al resolver con Simplex:", err);
-      alerta.open({
-        type: "error",
-        message: "Error al resolver el problema con Simplex.",
-        className: "alert alert-warning",
-      });
-    }
+    
   } else if (metodoSelecionado === metodoScipyBtn.innerText) {
-    const tipoOperacion = document.getElementById("tipoOperacion").value;
-    const funcionObjetivo = document.getElementById("funcionObjetivo").value;
-    // const numeroVariables = parseInt(
-    //   document.getElementById("numeroVariables").value
-    // );
-
-    const restricciones = [];
-    const wrapper = document.getElementById("resWrapper");
-
-    Array.from(wrapper.children).forEach((div) => {
-      const expr = div.querySelector(`[name^="restriccion_"]`).value;
-      const op = div.querySelector(`[name^="operadorRestriccion_"]`).value;
-      const val = div.querySelector(`[name^="valorRes_"]`).value;
-
-      restricciones.push({ expr, op, val });
-    });
-
-    const payload = {
-      tipoOperacion,
-      funcionObjetivo,
-      // numeroVariables,
-      restricciones,
-    };
-
+    // MÉTODO SCIPY: siempre usa el mismo endpoint
     try {
       console.log("payload para scipy: ", payload);
       const data = await resolverProblema(payload);
@@ -402,19 +325,4 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
   }
 });
 
-function esValidoParaSimplex(payload) {
-  const { tipoOperacion, restricciones } = payload;
 
-  console.log(tipoOperacion, restricciones, "fuck this shit");
-  if (tipoOperacion !== "Maximizar") return false;
-
-  const todasMenorIgual = restricciones.every((r) => r.op === "≤");
-  if (!todasMenorIgual) return false;
-
-  const todosCoeficientesPositivos = restricciones.every((r) => {
-    const regex = /[-]/;
-    return !regex.test(r.expr);
-  });
-
-  return todosCoeficientesPositivos;
-}
