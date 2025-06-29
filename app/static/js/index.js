@@ -90,8 +90,8 @@ function crearRestriccion(numero) {
   div.className = "flex gap-2 items-center p-3 bg-base-200 rounded-lg";
 
   div.innerHTML = `
-      <input name="restriccion_${numero}" id="restriccion_${numero}" type="text" placeholder="ej: x1 + x2" class="input input-sm input-bordered flex-1" />
-      <select name="operadorRestriccion_${numero}" id="operadorRestriccion_${numero}" class="select select-sm select-bordered">
+      <input name="restriccion_${numero}" id="restriccion_${numero}" type="text" placeholder="ej: x1 + x2" class="input input-sm input-bordered flex-grow" />
+      <select name="operadorRestriccion_${numero}" id="operadorRestriccion_${numero}" class="select select-sm select-bordered flex-shrink-0 w-fit">
         <option>≤</option>
         <option>≥</option>
         <option>=</option>
