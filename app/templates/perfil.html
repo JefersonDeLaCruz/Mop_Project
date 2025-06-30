@@ -212,15 +212,66 @@
         </div>
 
         <!-- Paginación -->
+        {% if pagination and pagination.total_pages > 1 %}
         <div class="flex justify-center mt-8">
           <div class="join">
-            <button class="join-item btn">«</button>
-            <button class="join-item btn btn-active">1</button>
-            <button class="join-item btn">2</button>
-            <button class="join-item btn">3</button>
-            <button class="join-item btn">»</button>
+            <!-- Botón anterior -->
+            {% if pagination.has_prev %}
+              <a href="{{ url_for('main.perfil', page=pagination.prev_page) }}" class="join-item btn">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            {% else %}
+              <button class="join-item btn btn-disabled">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            {% endif %}
+            
+            <!-- Páginas -->
+            {% set start_page = pagination.current_page - 2 if pagination.current_page > 3 else 1 %}
+            {% set end_page = pagination.current_page + 2 if pagination.current_page < pagination.total_pages - 2 else pagination.total_pages %}
+            
+            {% if start_page > 1 %}
+              <a href="{{ url_for('main.perfil', page=1) }}" class="join-item btn">1</a>
+              {% if start_page > 2 %}
+                <button class="join-item btn btn-disabled">...</button>
+              {% endif %}
+            {% endif %}
+            
+            {% for page_num in range(start_page, end_page + 1) %}
+              {% if page_num == pagination.current_page %}
+                <button class="join-item btn btn-active">{{ page_num }}</button>
+              {% else %}
+                <a href="{{ url_for('main.perfil', page=page_num) }}" class="join-item btn">{{ page_num }}</a>
+              {% endif %}
+            {% endfor %}
+            
+            {% if end_page < pagination.total_pages %}
+              {% if end_page < pagination.total_pages - 1 %}
+                <button class="join-item btn btn-disabled">...</button>
+              {% endif %}
+              <a href="{{ url_for('main.perfil', page=pagination.total_pages) }}" class="join-item btn">{{ pagination.total_pages }}</a>
+            {% endif %}
+            
+            <!-- Botón siguiente -->
+            {% if pagination.has_next %}
+              <a href="{{ url_for('main.perfil', page=pagination.next_page) }}" class="join-item btn">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            {% else %}
+              <button class="join-item btn btn-disabled">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            {% endif %}
           </div>
         </div>
+        
+        <!-- Información de paginación -->
+        <div class="text-center mt-4 text-sm text-base-content/60">
+          Mostrando {{ (pagination.current_page - 1) * pagination.per_page + 1 }} - 
+          {{ pagination.current_page * pagination.per_page if pagination.current_page * pagination.per_page <= total_problemas else total_problemas }} 
+          de {{ total_problemas }} problema{% if total_problemas != 1 %}s{% endif %}
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

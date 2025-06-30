@@ -114,11 +114,32 @@ def perfil():
         # Cargar historial del usuario
         historial_usuario = cargar_historial(current_user.id)
         
-        # Ordenar por fecha (más recientes primero) y tomar solo los últimos 6 para el perfil
+        # Obtener parámetros de paginación
+        page = request.args.get('page', 1, type=int)
+        per_page = 6  # Problemas por página
+        
+        # Validar que la página sea válida
+        if page < 1:
+            page = 1
+        
+        # Ordenar por fecha (más recientes primero) y aplicar paginación
         problemas_recientes = []
+        total_problemas = len(historial_usuario["problemas"])
+        total_pages = (total_problemas + per_page - 1) // per_page if total_problemas > 0 else 0
+        
+        # Validar que la página no exceda el total de páginas
+        if page > total_pages and total_pages > 0:
+            page = total_pages
+        
         if historial_usuario["problemas"]:
             problemas_ordenados = sorted(historial_usuario["problemas"], key=lambda x: x["fecha"], reverse=True)
-            problemas_recientes = problemas_ordenados[:6]  # Solo mostrar los 6 más recientes en el perfil
+            
+            # Calcular índices para la paginación
+            start_idx = (page - 1) * per_page
+            end_idx = start_idx + per_page
+            
+            # Obtener problemas para la página actual
+            problemas_recientes = problemas_ordenados[start_idx:end_idx]
         
         # Pasar la información del usuario actual y su historial al template
         user_info = {
@@ -127,13 +148,23 @@ def perfil():
             'name': current_user.name
         }
         
-        # Calcular estadísticas
-        total_problemas = len(historial_usuario["problemas"])
+        # Información de paginación
+        pagination_info = {
+            'current_page': page,
+            'total_pages': total_pages,
+            'per_page': per_page,
+            'total_items': total_problemas,
+            'has_prev': page > 1,
+            'has_next': page < total_pages,
+            'prev_page': page - 1 if page > 1 else None,
+            'next_page': page + 1 if page < total_pages else None
+        }
         
         return render_template("perfil.html", 
                              user=user_info, 
                              problemas_recientes=problemas_recientes,
-                             total_problemas=total_problemas)
+                             total_problemas=total_problemas,
+                             pagination=pagination_info)
                              
     except Exception as e:
         print(f"Error al cargar perfil: {e}")
@@ -146,7 +177,8 @@ def perfil():
         return render_template("perfil.html", 
                              user=user_info, 
                              problemas_recientes=[],
-                             total_problemas=0)
+                             total_problemas=0,
+                             pagination={'current_page': 1, 'total_pages': 0, 'has_prev': False, 'has_next': False})
 
 
 @main.route("/actualizar_perfil", methods=["POST"])

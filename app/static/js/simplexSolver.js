@@ -45,9 +45,7 @@ export function mostrarResultadoSimplex(data) {
     "mb-6",
     "p-4",
     "rounded",
-    "bg-primary",
-    "bg-opacity-10",
-    "text-primary-content",
+    "bg-base-200",
     "border-l-4",
     "border-primary"
   );
@@ -101,13 +99,11 @@ export function mostrarResultadoSimplex(data) {
     "mb-6",
     "p-4",
     "rounded",
-    "bg-warning",
-    "bg-opacity-10",
-    "text-warning-content"
+    "bg-base-200"
   );
   
   modeloExtendidoDiv.innerHTML = `
-    <h3 class="font-bold text-lg mb-3 text-warning">Construcción del Modelo Estándar</h3>
+    <h3 class="font-bold text-lg mb-3 text-primary">Construcción del Modelo Estándar</h3>
     <div class="space-y-3">
       <div class="bg-base-100 p-3 rounded">
         <h4 class="font-bold text-base mb-2">Pasos de transformación:</h4>
@@ -119,7 +115,7 @@ export function mostrarResultadoSimplex(data) {
           <li><strong>Función objetivo:</strong> Se modifica para incluir penalización M a variables artificiales</li>
         </ol>
       </div>
-      <div class="bg-info bg-opacity-20 p-3 rounded">
+      <div class="bg-base-100 p-3 rounded border-l-4 border-info">
         <p class="text-sm"><strong>Objetivo:</strong> Convertir el problema a la forma estándar para poder aplicar el algoritmo simplex.</p>
       </div>
     </div>
@@ -148,7 +144,7 @@ export function mostrarResultadoSimplex(data) {
     // Agregar criterio de optimalidad antes de la tabla
     if (index > 0) { // No mostrar para la iteración 0 (tabla inicial)
       const criterioDiv = document.createElement("div");
-      criterioDiv.classList.add("mb-4", "p-3", "rounded", "bg-accent", "bg-opacity-10", "text-accent-content");
+      criterioDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200", "border-l-4", "border-accent");
       criterioDiv.innerHTML = `
         <h4 class="font-bold text-base mb-2 text-accent">Criterio de Optimalidad:</h4>
         <p class="text-sm">Se revisa la fila Z en busca de coeficientes negativos:</p>
@@ -202,16 +198,16 @@ export function mostrarResultadoSimplex(data) {
             const pivotCol = iteracion.pivot_info.columna;
             
             if (i === pivotRow && idx === pivotCol + 1) { // +1 porque la primera columna es VB
-              cssClass += " bg-error text-error-content font-bold"; // Elemento pivote
+              cssClass += " bg-error text-error-content font-bold border-2 border-error"; // Elemento pivote
             } else if (i === pivotRow) {
-              cssClass += " bg-warning bg-opacity-30"; // Fila pivote
+              cssClass += " bg-warning bg-opacity-30 border-warning"; // Fila pivote
             } else if (idx === pivotCol + 1) {
-              cssClass += " bg-warning bg-opacity-30"; // Columna pivote
+              cssClass += " bg-info bg-opacity-30 border-info"; // Columna pivote
             }
           }
           
           if (idx === 0) {
-            cssClass += " font-bold";
+            cssClass += " font-bold bg-base-200";
           }
           
           return `<td class="${cssClass}">${celda}</td>`;
@@ -224,6 +220,30 @@ export function mostrarResultadoSimplex(data) {
     tabla.appendChild(tbody);
     divIteracion.appendChild(tabla);
 
+    // Agregar leyenda de colores si hay información de pivote
+    if (iteracion.pivot_info && index > 0) {
+      const leyendaDiv = document.createElement("div");
+      leyendaDiv.classList.add("mt-3", "p-3", "rounded", "bg-base-100", "border");
+      leyendaDiv.innerHTML = `
+        <h6 class="font-bold text-sm mb-2">Leyenda de colores:</h6>
+        <div class="flex flex-wrap gap-4 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-4 bg-error border border-error rounded"></span>
+            <span>Elemento pivote (${iteracion.pivot_info.elemento_pivote})</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-4 bg-warning bg-opacity-30 border border-warning rounded"></span>
+            <span>Fila pivote (${iteracion.pivot_info.variable_saliente} sale)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-4 bg-info bg-opacity-30 border border-info rounded"></span>
+            <span>Columna pivote (${iteracion.pivot_info.variable_entrante} entra)</span>
+          </div>
+        </div>
+      `;
+      divIteracion.appendChild(leyendaDiv);
+    }
+
     if (iteracion.detalles) {
       const d = iteracion.detalles;
       
@@ -233,7 +253,7 @@ export function mostrarResultadoSimplex(data) {
 
       // Encabezado de análisis de la iteración
       const analisisDiv = document.createElement("div");
-      analisisDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-300", "text-base-content");
+      analisisDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-200");
       analisisDiv.innerHTML = `
         <h4 class="font-bold text-lg mb-3 text-primary">Análisis de la Iteración ${index}</h4>
         <p class="text-sm mb-2">En esta iteración se realizan los siguientes pasos:</p>
@@ -248,23 +268,23 @@ export function mostrarResultadoSimplex(data) {
 
       // Identificación del pivoteo
       const pivoteoDiv = document.createElement("div");
-      pivoteoDiv.classList.add("mb-6", "p-4", "rounded", "bg-info", "bg-opacity-10", "text-info-content");
+      pivoteoDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-200", "border-l-4", "border-primary");
       pivoteoDiv.innerHTML = `
-        <h4 class="font-bold text-lg mb-3 text-info">Detalles del Pivoteo</h4>
+        <h4 class="font-bold text-lg mb-3 text-primary">Detalles del Pivoteo</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <div class="bg-base-100 p-3 rounded">
+          <div class="bg-base-100 p-3 rounded border-l-4 border-success">
             <p class="font-bold text-sm mb-1">Variable Entrante</p>
-            <span class="badge badge-success text-lg">${d.columna_pivote.variable || 'N/A'}</span>
+            <span class="badge badge-success text-lg">${iteracion.pivot_info?.variable_entrante || d.columna_pivote.variable || 'N/A'}</span>
             <p class="text-xs mt-1">Mejora la función objetivo</p>
           </div>
-          <div class="bg-base-100 p-3 rounded">
+          <div class="bg-base-100 p-3 rounded border-l-4 border-error">
             <p class="font-bold text-sm mb-1">Variable Saliente</p>
-            <span class="badge badge-error text-lg">${d.fila_pivote.variable_sale || d.fila_pivote.variable || 'Variable saliente'}</span>
+            <span class="badge badge-error text-lg">${iteracion.pivot_info?.variable_saliente || d.fila_pivote.variable_sale || 'Variable saliente'}</span>
             <p class="text-xs mt-1">Abandona la base</p>
           </div>
-          <div class="bg-base-100 p-3 rounded">
+          <div class="bg-base-100 p-3 rounded border-l-4 border-warning">
             <p class="font-bold text-sm mb-1">Elemento Pivote</p>
-            <span class="badge badge-warning text-lg">${d.normalizacion?.pivote || 'N/A'}</span>
+            <span class="badge badge-warning text-lg">${iteracion.pivot_info?.elemento_pivote || d.normalizacion?.pivote || 'N/A'}</span>
             <p class="text-xs mt-1">Punto de intersección</p>
           </div>
         </div>
@@ -272,27 +292,27 @@ export function mostrarResultadoSimplex(data) {
 
       // Justificación de la columna pivote con más detalles
       const colPivoteDiv = document.createElement("div");
-      colPivoteDiv.classList.add("mb-4", "p-3", "rounded", "bg-accent", "bg-opacity-10", "text-accent-content");
+      colPivoteDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       colPivoteDiv.innerHTML = `
-        <h5 class="font-bold text-base mb-2 text-accent">Paso 1: Selección de la Variable Entrante (Columna Pivote)</h5>
+        <h5 class="font-bold text-base mb-2 text-primary">Paso 1: Selección de la Variable Entrante (Columna Pivote)</h5>
         <div class="bg-base-100 p-3 rounded mb-3">
           <p class="text-sm mb-2"><strong>Criterio:</strong> Se busca el coeficiente más negativo en la fila Z.</p>
           <p class="text-sm mb-2"><strong>Justificación matemática:</strong> Un coeficiente negativo en la fila Z indica que incrementar esa variable mejorará el valor de la función objetivo.</p>
           <p class="text-sm"><strong>Resultado:</strong> ${d.columna_pivote.explicacion}</p>
         </div>
-        <div class="bg-warning bg-opacity-20 p-2 rounded">
+        <div class="bg-base-100 p-2 rounded border-l-4 border-warning">
           <p class="text-xs"><strong>Nota:</strong> Si no hay coeficientes negativos, la solución actual es óptima.</p>
         </div>
       `;
 
       // Cálculo de razones con tabla detallada y explicaciones matemáticas
       const razonesDiv = document.createElement("div");
-      razonesDiv.classList.add("mb-4", "p-3", "rounded", "bg-warning", "bg-opacity-10", "text-warning-content");
+      razonesDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       
       const razonesHTML = d.fila_pivote.razones
         .map((r) => {
           const esMinima = r.fila === d.fila_pivote.fila_seleccionada;
-          const cssClass = esMinima ? "bg-success bg-opacity-20 font-bold" : "";
+          const cssClass = esMinima ? "bg-success bg-opacity-20 font-bold border-2 border-success" : "";
           const factibilidad = r.razon !== '∞' && r.razon >= 0;
           return `
             <tr class="${cssClass}">
@@ -312,7 +332,7 @@ export function mostrarResultadoSimplex(data) {
         .join("");
 
       razonesDiv.innerHTML = `
-        <h5 class="font-bold text-base mb-2 text-warning">Paso 2: Prueba de la Razón Mínima (Selección de Variable Saliente)</h5>
+        <h5 class="font-bold text-base mb-2 text-primary">Paso 2: Prueba de la Razón Mínima (Selección de Variable Saliente)</h5>
         <div class="bg-base-100 p-3 rounded mb-3">
           <p class="text-sm mb-2"><strong>Objetivo:</strong> Determinar cuál variable básica debe salir de la base para mantener la factibilidad.</p>
           <p class="text-sm mb-2"><strong>Fórmula:</strong> Razón = bj / Coeficiente de la columna pivote (solo si coeficiente > 0)</p>
@@ -336,14 +356,14 @@ export function mostrarResultadoSimplex(data) {
             </tbody>
           </table>
         </div>
-        <div class="bg-info bg-opacity-20 p-2 rounded mt-3">
+        <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-info">
           <p class="text-xs"><strong>Interpretación:</strong> La variable básica seleccionada será la primera en alcanzar cero cuando se incremente la variable entrante, garantizando que no se violen las restricciones de no negatividad.</p>
         </div>
       `;
 
       // Normalización de la fila pivote con más detalles
       const normalizacionDiv = document.createElement("div");
-      normalizacionDiv.classList.add("mb-4", "p-3", "rounded", "bg-secondary", "bg-opacity-10", "text-secondary-content");
+      normalizacionDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       
       if (d.normalizacion) {
         const normTablaHTML = d.normalizacion.original
@@ -365,7 +385,7 @@ export function mostrarResultadoSimplex(data) {
           .join("");
 
         normalizacionDiv.innerHTML = `
-          <h5 class="font-bold text-base mb-2 text-secondary">Paso 3: Normalización de la Fila Pivote</h5>
+          <h5 class="font-bold text-base mb-2 text-primary">Paso 3: Normalización de la Fila Pivote</h5>
           <div class="bg-base-100 p-3 rounded mb-3">
             <p class="text-sm mb-2"><strong>Objetivo:</strong> Convertir el elemento pivote en 1 dividiendo toda la fila por su valor.</p>
             <p class="text-sm mb-2"><strong>Operación:</strong> Nueva_Fila_Pivote = Fila_Pivote ÷ Elemento_Pivote</p>
@@ -388,7 +408,7 @@ export function mostrarResultadoSimplex(data) {
               </tbody>
             </table>
           </div>
-          <div class="bg-success bg-opacity-20 p-2 rounded mt-3">
+          <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-success">
             <p class="text-xs"><strong>Verificación:</strong> El elemento pivote ahora tiene valor 1, lo que permite eliminar la variable correspondiente de las otras ecuaciones.</p>
           </div>
         `;
@@ -396,7 +416,7 @@ export function mostrarResultadoSimplex(data) {
 
       // Transformaciones de otras filas con más detalles
       const transformacionesDiv = document.createElement("div");
-      transformacionesDiv.classList.add("mb-4", "p-3", "rounded", "bg-primary", "bg-opacity-10", "text-primary-content");
+      transformacionesDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       
       const transformacionesHTML = d.transformaciones
         .map((t) => {
@@ -457,29 +477,29 @@ export function mostrarResultadoSimplex(data) {
           <p class="text-sm">Para cada fila i ≠ fila pivote:</p>
         </div>
         ${transformacionesHTML}
-        <div class="bg-info bg-opacity-20 p-2 rounded mt-3">
+        <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-info">
           <p class="text-xs"><strong>Resultado:</strong> Ahora la columna de la variable entrante tiene 1 en la posición de la variable básica y 0 en todas las demás posiciones.</p>
         </div>
       `;
 
       // Actualización de la base con más detalle
       const baseDiv = document.createElement("div");
-      baseDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-300", "text-base-content");
+      baseDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       baseDiv.innerHTML = `
         <h5 class="font-bold text-base mb-3">Paso 5: Actualización de la Base</h5>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-error bg-opacity-10 p-3 rounded">
+          <div class="bg-base-100 p-3 rounded border-l-4 border-error">
             <p class="font-bold text-sm mb-1 text-error">Variable Saliente:</p>
-            <span class="badge badge-error">${d.fila_pivote.variable_sale || 'Variable saliente'}</span>
+            <span class="badge badge-error">${iteracion.pivot_info?.variable_saliente || d.fila_pivote.variable_sale || 'Variable saliente'}</span>
             <p class="text-xs mt-2">Esta variable deja de ser básica y se vuelve no básica (valor = 0)</p>
           </div>
-          <div class="bg-success bg-opacity-10 p-3 rounded">
+          <div class="bg-base-100 p-3 rounded border-l-4 border-success">
             <p class="font-bold text-sm mb-1 text-success">Variable Entrante:</p>
-            <span class="badge badge-success">${d.columna_pivote.variable || 'Variable entrante'}</span>
+            <span class="badge badge-success">${iteracion.pivot_info?.variable_entrante || d.columna_pivote.variable || 'Variable entrante'}</span>
             <p class="text-xs mt-2">Esta variable se vuelve básica y tendrá un valor positivo</p>
           </div>
         </div>
-        <div class="bg-info bg-opacity-20 p-2 rounded mt-3">
+        <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-info">
           <p class="text-xs"><strong>Resultado:</strong> La nueva base está formada por las variables que tienen exactamente un coeficiente 1 en su columna y 0 en todas las demás filas.</p>
         </div>
       `;
@@ -506,9 +526,9 @@ export function mostrarResultadoSimplex(data) {
     "mb-6",
     "p-4",
     "rounded",
-    "bg-success",
-    "bg-opacity-10",
-    "text-success-content",
+    "bg-base-200",
+    "border-l-4",
+    "border-success",
     "shadow"
   );
 

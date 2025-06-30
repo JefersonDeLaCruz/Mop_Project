@@ -223,6 +223,7 @@ def _simplex(c, A, b):
                 razones.append(razon)
             razon_just.append({
                 "fila": int(i + 1),
+                "variable_basica": vb[i],  # Agregar la variable básica actual
                 "rhs": float(round(rhs, 4)),
                 "coef_pivote": float(round(coef, 4)),
                 "razon": float(round(razon, 4)) if razon != float("inf") else "infinito"
@@ -235,6 +236,9 @@ def _simplex(c, A, b):
         # Seleccionar la fila pivote (mínima razón positiva)
         fila_pivote = razones.index(min(razones))
         pivote = tableau[fila_pivote][col]
+
+        # Guardar la variable que sale ANTES de actualizarla
+        variable_que_sale = vb[fila_pivote]
 
         # Normalizar la fila pivote (dividir por el pivote)
         fila_antigua = tableau[fila_pivote][:]
@@ -269,7 +273,9 @@ def _simplex(c, A, b):
             "fila_pivote": {
                 "indice": fila_pivote + 1,
                 "razones": razon_just,
-                "explicacion": f"Se elige la fila {fila_pivote + 1} porque tiene la razón mínima entre bj y el coeficiente pivote."
+                "explicacion": f"Se elige la fila {fila_pivote + 1} porque tiene la razón mínima entre bj y el coeficiente pivote.",
+                "variable_sale": variable_que_sale,
+                "fila_seleccionada": fila_pivote + 1
             },
             "normalizacion": {
                 "original": [round(x, 4) for x in fila_antigua],
@@ -281,6 +287,14 @@ def _simplex(c, A, b):
         }
 
         iteracion["detalles"] = detalles
+        # Agregar información del pivote para resaltado en frontend
+        iteracion["pivot_info"] = {
+            "fila": fila_pivote,
+            "columna": col,
+            "variable_entrante": var_pivote,
+            "variable_saliente": variable_que_sale,
+            "elemento_pivote": round(pivote, 4)
+        }
         iteraciones.append(iteracion)
 
     # Extraer la solución óptima (valores de las variables originales)
