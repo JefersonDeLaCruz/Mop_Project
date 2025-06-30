@@ -273,6 +273,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
           console.log("payload para simplex clásico (maximizar solo ≤): ", payload);
           const data = await resolverSimplex(payload);
           mostrarResultadoSimplex(data);
+          
+          // Guardar en historial
+          guardarEnHistorial(payload, "Simplex Clásico");
         } catch (err) {
           console.error("Error al resolver con Simplex clásico:", err);
           alerta.open({
@@ -307,6 +310,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         // Llenar la tarjeta de solución con los datos de SciPy
         if (scipyData.resultado.status === "ok") {
           mostrarSolucion(scipyData);
+          
+          // Guardar en historial
+          guardarEnHistorial(payload, "Gran M");
         } else {
           console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
         }
@@ -329,6 +335,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       console.log("respuesta de scipy:", data);
       if (data.resultado.status == "ok") {
         mostrarSolucion(data);
+        
+        // Guardar en historial
+        guardarEnHistorial(payload, "SciPy");
       } else {
         alerta.open({
           type: "error",
@@ -347,5 +356,43 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     }
   }
 });
+
+// Función para guardar problema en el historial
+async function guardarEnHistorial(payload, metodoUsado) {
+  try {
+    // Esperar un momento para que el DOM se actualice completamente
+    setTimeout(async () => {
+      const htmlGenerado = document.getElementById("resultados").innerHTML;
+      
+      // Solo guardar si hay contenido HTML generado
+      if (htmlGenerado && htmlGenerado.trim() !== "") {
+        const historialData = {
+          payload: payload,
+          metodo: metodoUsado,
+          html_detallado: htmlGenerado,
+          fecha: new Date().toISOString()
+        };
+        
+        console.log("Guardando en historial:", historialData);
+        
+        // Enviar al backend para guardar
+        const response = await fetch("/guardar_historial", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(historialData),
+        });
+        
+        if (response.ok) {
+          console.log("Problema guardado en historial exitosamente");
+        } else {
+          console.warn("Error al guardar en historial:", response.status);
+        }
+      }
+    }, 1000); // Esperar 1 segundo para que se complete el renderizado
+    
+  } catch (error) {
+    console.error("Error al guardar en historial:", error);
+  }
+}
 
 

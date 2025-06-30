@@ -1,0 +1,233 @@
+{% extends './base.html' %}
+
+{% block title %}Problema #{{ problema.id }} - Detalle{% endblock %}
+{% block tailwindcss %} {{super()}} {% endblock %}
+
+{% block nav %}
+{{super()}}
+{% endblock %}
+
+{% block main %}
+<div class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+  <div class="container mx-auto p-6">
+    
+    <!-- Header con información del problema -->
+    <div class="mb-8">
+      <!-- Breadcrumb -->
+      <div class="breadcrumbs text-sm mb-4">
+        <ul>
+          <li><a href="{{ url_for('main.perfil') }}">Perfil</a></li>
+          <li><a href="{{ url_for('main.historial') }}">Historial</a></li>
+          <li>Problema #{{ problema.id }}</li>
+        </ul>
+      </div>
+
+      <!-- Header principal -->
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold text-primary mb-2">
+            Problema #{{ problema.id }}
+          </h1>
+          <p class="text-lg text-base-content/70">
+            Resuelto el {{ problema.fecha.split('T')[0] if problema.fecha else 'Sin fecha' }}
+          </p>
+        </div>
+        
+        <div class="flex gap-3">
+          <a href="{{ url_for('main.historial') }}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Volver al Historial
+          </a>
+          <button class="btn btn-primary" onclick="window.print()">
+            <i class="fas fa-print"></i>
+            Imprimir
+          </button>
+        </div>
+      </div>
+
+      <!-- Información resumida -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">Tipo</div>
+          <div class="stat-value text-sm {% if problema.resumen.tipo == 'Maximizar' %}text-success{% else %}text-info{% endif %}">
+            {{ problema.resumen.tipo }}
+          </div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">Método</div>
+          <div class="stat-value text-sm text-secondary">{{ problema.metodo_usado }}</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">Variables</div>
+          <div class="stat-value text-sm text-accent">{{ problema.resumen.num_variables or 'N/A' }}</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">Restricciones</div>
+          <div class="stat-value text-sm text-warning">{{ problema.resumen.num_restricciones }}</div>
+        </div>
+      </div>
+
+      <!-- Función objetivo -->
+      <div class="card bg-base-100 shadow-lg mb-6">
+        <div class="card-body">
+          <h3 class="card-title text-primary mb-3">
+            <i class="fas fa-bullseye mr-2"></i>
+            Función Objetivo
+          </h3>
+          <div class="bg-base-200 p-4 rounded-lg">
+            <p class="font-mono text-lg">{{ problema.resumen.tipo }} Z = {{ problema.resumen.funcion_objetivo }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Restricciones originales -->
+      <div class="card bg-base-100 shadow-lg mb-6">
+        <div class="card-body">
+          <h3 class="card-title text-secondary mb-3">
+            <i class="fas fa-lock mr-2"></i>
+            Restricciones
+          </h3>
+          <div class="bg-base-200 p-4 rounded-lg">
+            {% if problema.payload_original and problema.payload_original.restricciones %}
+              <div class="space-y-2">
+                {% for restriccion in problema.payload_original.restricciones %}
+                  <p class="font-mono">{{ restriccion.expr }} {{ restriccion.op }} {{ restriccion.val }}</p>
+                {% endfor %}
+                <p class="font-mono text-base-content/60 mt-3">Todas las variables ≥ 0</p>
+              </div>
+            {% else %}
+              <p class="text-base-content/60">No hay información de restricciones disponible</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solución paso a paso -->
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl text-success mb-6">
+          <i class="fas fa-cogs mr-2"></i>
+          Solución Paso a Paso
+        </h2>
+        
+        <!-- Aquí se muestra el HTML detallado capturado -->
+        <div class="problema-detalle-content">
+          {% if problema.html_detallado %}
+            {{ problema.html_detallado | safe }}
+          {% else %}
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>No hay información detallada disponible para este problema.</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones adicionales -->
+    <div class="mt-8 text-center">
+      <div class="join">
+        <button class="join-item btn btn-outline" onclick="history.back()">
+          <i class="fas fa-arrow-left"></i>
+          Volver
+        </button>
+        <a href="{{ url_for('main.index') }}" class="join-item btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Resolver Nuevo Problema
+        </a>
+        <button class="join-item btn btn-outline" onclick="navigator.share ? navigator.share({title: 'Problema de Programación Lineal', text: 'Mira mi solución', url: window.location.href}) : alert('Compartir no disponible')">
+          <i class="fas fa-share"></i>
+          Compartir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estilos específicos para el contenido del problema -->
+<style>
+.problema-detalle-content {
+  /* Estilos para que el HTML insertado se vea bien */
+  line-height: 1.6;
+}
+
+.problema-detalle-content table {
+  @apply table table-zebra table-sm w-full my-4;
+}
+
+.problema-detalle-content h1, 
+.problema-detalle-content h2, 
+.problema-detalle-content h3 {
+  @apply font-bold text-primary mt-6 mb-3;
+}
+
+.problema-detalle-content h1 { @apply text-2xl; }
+.problema-detalle-content h2 { @apply text-xl; }
+.problema-detalle-content h3 { @apply text-lg; }
+
+.problema-detalle-content p {
+  @apply mb-3;
+}
+
+.problema-detalle-content ul, 
+.problema-detalle-content ol {
+  @apply ml-6 mb-3;
+}
+
+.problema-detalle-content li {
+  @apply mb-1;
+}
+
+.problema-detalle-content .alert {
+  @apply alert my-4;
+}
+
+/* Estilos específicos para contenido de Gran M */
+.problema-detalle-content .simplex-table {
+  @apply overflow-x-auto;
+}
+
+.problema-detalle-content .step {
+  @apply mb-6 p-4 bg-base-200 rounded-lg;
+}
+
+.problema-detalle-content .step-title {
+  @apply font-bold text-lg text-primary mb-2;
+}
+
+/* Estilos para imprimir */
+@media print {
+  .navbar, .breadcrumbs, .btn { display: none !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+  .container { max-width: none !important; padding: 0 !important; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Mejorar la presentación de tablas en el contenido
+  const tables = document.querySelectorAll('.problema-detalle-content table');
+  tables.forEach(table => {
+    table.classList.add('table', 'table-zebra', 'table-sm');
+    
+    // Envolver tablas en contenedor responsivo si no lo están
+    if (!table.parentElement.classList.contains('overflow-x-auto')) {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('overflow-x-auto', 'my-4');
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
+
+  // Mejorar la presentación de listas
+  const lists = document.querySelectorAll('.problema-detalle-content ul, .problema-detalle-content ol');
+  lists.forEach(list => {
+    list.classList.add('list-disc', 'list-inside');
+  });
+});
+</script>
+{% endblock %}

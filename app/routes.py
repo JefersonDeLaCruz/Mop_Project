@@ -86,13 +86,57 @@ def register():
 @main.route("/perfil")
 @login_required
 def perfil():
-    # Pasar la información del usuario actual al template
-    user_info = {
-        'id': current_user.id,
-        'username': current_user.username,
-        'name': current_user.name
-    }
-    return render_template("perfil.html", user=user_info)
+    try:
+        import json
+        import os
+        from datetime import datetime
+        
+        def get_historial_filename(user_id):
+            return f"./data/{user_id}_historial.json"
+        
+        def cargar_historial(user_id):
+            filename = get_historial_filename(user_id)
+            if os.path.exists(filename):
+                with open(filename, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            return {"user_id": user_id, "problemas": []}
+        
+        # Cargar historial del usuario
+        historial_usuario = cargar_historial(current_user.id)
+        
+        # Ordenar por fecha (más recientes primero) y tomar solo los últimos 6 para el perfil
+        problemas_recientes = []
+        if historial_usuario["problemas"]:
+            problemas_ordenados = sorted(historial_usuario["problemas"], key=lambda x: x["fecha"], reverse=True)
+            problemas_recientes = problemas_ordenados[:6]  # Solo mostrar los 6 más recientes en el perfil
+        
+        # Pasar la información del usuario actual y su historial al template
+        user_info = {
+            'id': current_user.id,
+            'username': current_user.username,
+            'name': current_user.name
+        }
+        
+        # Calcular estadísticas
+        total_problemas = len(historial_usuario["problemas"])
+        
+        return render_template("perfil.html", 
+                             user=user_info, 
+                             problemas_recientes=problemas_recientes,
+                             total_problemas=total_problemas)
+                             
+    except Exception as e:
+        print(f"Error al cargar perfil: {e}")
+        # En caso de error, mostrar perfil sin historial
+        user_info = {
+            'id': current_user.id,
+            'username': current_user.username,
+            'name': current_user.name
+        }
+        return render_template("perfil.html", 
+                             user=user_info, 
+                             problemas_recientes=[],
+                             total_problemas=0)
 
 
 @main.route("/actualizar_perfil", methods=["POST"])
@@ -332,3 +376,153 @@ def resolver_gran_m():
         return jsonify({"html": html})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+@main.route("/guardar_historial", methods=["POST"])
+@login_required
+def guardar_historial():
+    """Endpoint para guardar un problema resuelto en el historial del usuario"""
+    try:
+        data = request.get_json()
+        
+        # Importar aquí para evitar dependencias circulares
+        import json
+        import os
+        from datetime import datetime
+        from .solver import extraer_numero_variables
+        
+        def get_historial_filename(user_id):
+            return f"./data/{user_id}_historial.json"
+        
+        def cargar_historial(user_id):
+            filename = get_historial_filename(user_id)
+            if os.path.exists(filename):
+                with open(filename, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            return {"user_id": user_id, "problemas": []}
+        
+        # Extraer datos del payload para el resumen
+        payload = data.get("payload", {})
+        metodo = data.get("metodo", "Desconocido")
+        html_detallado = data.get("html_detallado", "")
+        
+        # Calcular número de variables automáticamente
+        expresiones = [payload.get("funcionObjetivo", "")] + [r.get("expr", "") for r in payload.get("restricciones", [])]
+        num_variables = extraer_numero_variables(expresiones)
+        
+        # Generar resumen del problema
+        resumen = {
+            "tipo": payload.get("tipoOperacion", "No especificado"),
+            "funcion_objetivo": payload.get("funcionObjetivo", ""),
+            "num_restricciones": len(payload.get("restricciones", [])),
+            "num_variables": num_variables,
+            "metodo": metodo
+        }
+        
+        # Cargar historial existente
+        historial = cargar_historial(current_user.id)
+        
+        # Crear nueva entrada
+        problema_id = len(historial["problemas"]) + 1
+        nuevo_problema = {
+            "id": problema_id,
+            "fecha": datetime.now().isoformat(),
+            "resumen": resumen,
+            "payload_original": payload,
+            "html_detallado": html_detallado,
+            "metodo_usado": metodo
+        }
+        
+        # Agregar al historial (mantener solo los últimos 50)
+        historial["problemas"].append(nuevo_problema)
+        if len(historial["problemas"]) > 50:
+            historial["problemas"] = historial["problemas"][-50:]
+        
+        # Crear directorio si no existe
+        filename = get_historial_filename(current_user.id)
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        
+        # Guardar archivo
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(historial, f, ensure_ascii=False, indent=2)
+        
+        return jsonify({
+            "status": "success",
+            "mensaje": "Problema guardado en historial",
+            "problema_id": problema_id
+        })
+        
+    except Exception as e:
+        print(f"Error al guardar historial: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "status": "error",
+            "mensaje": f"Error al guardar en historial: {str(e)}"
+        }), 500
+
+@main.route("/historial")
+@login_required
+def historial():
+    """Muestra el historial de problemas del usuario"""
+    try:
+        import json
+        import os
+        
+        def get_historial_filename(user_id):
+            return f"./data/{user_id}_historial.json"
+        
+        def cargar_historial(user_id):
+            filename = get_historial_filename(user_id)
+            if os.path.exists(filename):
+                with open(filename, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            return {"user_id": user_id, "problemas": []}
+        
+        historial_usuario = cargar_historial(current_user.id)
+        
+        # Ordenar por fecha (más recientes primero)
+        if historial_usuario["problemas"]:
+            historial_usuario["problemas"].sort(key=lambda x: x["fecha"], reverse=True)
+        
+        return render_template("historial.html", historial=historial_usuario)
+        
+    except Exception as e:
+        flash(f"Error al cargar el historial: {str(e)}", "error")
+        return redirect(url_for("main.perfil"))
+
+@main.route("/problema/<int:problema_id>")
+@login_required
+def ver_problema_detalle(problema_id):
+    """Muestra el detalle completo de un problema específico"""
+    try:
+        import json
+        import os
+        
+        def get_historial_filename(user_id):
+            return f"./data/{user_id}_historial.json"
+        
+        def cargar_historial(user_id):
+            filename = get_historial_filename(user_id)
+            if os.path.exists(filename):
+                with open(filename, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            return {"user_id": user_id, "problemas": []}
+        
+        historial = cargar_historial(current_user.id)
+        
+        # Buscar el problema específico
+        problema = None
+        for p in historial["problemas"]:
+            if p["id"] == problema_id:
+                problema = p
+                break
+        
+        if not problema:
+            flash("Problema no encontrado.", "error")
+            return redirect(url_for("main.historial"))
+        
+        return render_template("problema_detalle.html", problema=problema)
+        
+    except Exception as e:
+        flash(f"Error al cargar el problema: {str(e)}", "error")
+        return redirect(url_for("main.historial"))

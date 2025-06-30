@@ -96,8 +96,8 @@
             <div class="stats stats-vertical shadow">
               <div class="stat">
                 <div class="stat-title">Problemas resueltos</div>
-                <div class="stat-value text-primary">12</div>
-                <div class="stat-desc">En los últimos 30 días</div>
+                <div class="stat-value text-primary">{{ total_problemas }}</div>
+                <div class="stat-desc">Total histórico</div>
               </div>
               
               <!-- <div class="stat">
@@ -112,6 +112,13 @@
                 <div class="stat-desc">Por problema</div>
               </div> -->
 
+            </div>
+            
+            <div class="card-actions justify-center mt-6">
+              <a href="{{ url_for('main.historial') }}" class="btn btn-secondary">
+                <i class="fas fa-history"></i>
+                Ver Historial Completo
+              </a>
             </div>
           </div>
         </div>
@@ -143,93 +150,64 @@
         <!-- Grid de problemas -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          <!-- Problema 1 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-success/20 hover:border-success/40"
-               onclick="document.getElementById('problema_modal_1').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-success badge-sm">Maximización</div>
-                <div class="text-xs text-base-content/60">2 días atrás</div>
-              </div>
-              <h3 class="card-title text-lg mb-2">Problema de Producción</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Optimización de producción con 3 variables y 4 restricciones
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">3 variables</div>
-                  <div class="badge badge-outline badge-xs">4 restricciones</div>
+          {% if problemas_recientes %}
+            {% for problema in problemas_recientes %}
+            <!-- Problema {{ problema.id }} -->
+            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-primary/20 hover:border-primary/40"
+                 onclick="window.location.href='{{ url_for('main.ver_problema_detalle', problema_id=problema.id) }}'">
+              <div class="card-body p-4">
+                <div class="flex items-start justify-between mb-3">
+                  {% if problema.resumen.tipo.lower().startswith('max') %}
+                    <div class="badge badge-success badge-sm">{{ problema.resumen.tipo }}</div>
+                  {% elif problema.resumen.tipo.lower().startswith('min') %}
+                    <div class="badge badge-info badge-sm">{{ problema.resumen.tipo }}</div>
+                  {% else %}
+                    <div class="badge badge-warning badge-sm">{{ problema.resumen.tipo }}</div>
+                  {% endif %}
+                  <div class="text-xs text-base-content/60">
+                    {{ problema.fecha.split('T')[0] }}
+                  </div>
                 </div>
-                <div class="text-success font-bold">Z = 450</div>
+                <h3 class="card-title text-lg mb-2">
+                  {% if problema.resumen.tipo.lower().startswith('max') %}
+                    Problema de Maximización
+                  {% elif problema.resumen.tipo.lower().startswith('min') %}
+                    Problema de Minimización
+                  {% else %}
+                    Problema de Optimización
+                  {% endif %}
+                </h3>
+                <p class="text-sm text-base-content/70 mb-3">
+                  Función objetivo: {{ problema.resumen.funcion_objetivo[:40] }}{% if problema.resumen.funcion_objetivo|length > 40 %}...{% endif %}
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-xs">
+                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_variables }} variable{% if problema.resumen.num_variables != 1 %}s{% endif %}</div>
+                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_restricciones }} restricción{% if problema.resumen.num_restricciones != 1 %}es{% endif %}</div>
+                  </div>
+                  <div class="text-primary font-bold text-sm">{{ problema.metodo_usado }}</div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Problema 2 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-info/20 hover:border-info/40"
-               onclick="document.getElementById('problema_modal_2').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-info badge-sm">Minimización</div>
-                <div class="text-xs text-base-content/60">5 días atrás</div>
+            {% endfor %}
+          {% else %}
+            <!-- Mensaje cuando no hay problemas -->
+            <div class="col-span-full text-center py-12">
+              <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-base-300 flex items-center justify-center">
+                <i class="fas fa-calculator text-3xl text-base-content/50"></i>
               </div>
-              <h3 class="card-title text-lg mb-2">Problema de Transporte</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Minimización de costos de transporte entre ciudades
+              <h3 class="text-xl font-semibold text-base-content/70 mb-2">
+                No hay problemas resueltos aún
+              </h3>
+              <p class="text-base-content/50 mb-6">
+                Resuelve tu primer problema de programación lineal para verlo aquí
               </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">2 variables</div>
-                  <div class="badge badge-outline badge-xs">3 restricciones</div>
-                </div>
-                <div class="text-info font-bold">Z = 120</div>
-              </div>
+              <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                Resolver Problema
+              </a>
             </div>
-          </div>
-
-          <!-- Problema 3 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-warning/20 hover:border-warning/40"
-               onclick="document.getElementById('problema_modal_3').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-warning badge-sm">Maximización</div>
-                <div class="text-xs text-base-content/60">1 semana atrás</div>
-              </div>
-              <h3 class="card-title text-lg mb-2">Problema de Dieta</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Maximización de nutrientes con restricciones presupuestarias
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">4 variables</div>
-                  <div class="badge badge-outline badge-xs">5 restricciones</div>
-                </div>
-                <div class="text-warning font-bold">Z = 85.5</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Problema 4 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-error/20 hover:border-error/40"
-               onclick="document.getElementById('problema_modal_4').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-error badge-sm">Minimización</div>
-                <div class="text-xs text-base-content/60">2 semanas atrás</div>
-              </div>
-              <h3 class="card-title text-lg mb-2">Problema de Inventario</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Minimización de costos de almacenamiento y pedidos
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">2 variables</div>
-                  <div class="badge badge-outline badge-xs">4 restricciones</div>
-                </div>
-                <div class="text-error font-bold">Z = 75.2</div>
-              </div>
-            </div>
-          </div>
+          {% endif %}
 
         </div>
 
