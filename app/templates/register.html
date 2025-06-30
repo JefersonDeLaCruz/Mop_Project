@@ -51,9 +51,12 @@
 
         <!-- Enlace para ir al login -->
         <div class="mt-4">
-          <a href="{{ url_for('main.login') }}" class="link link-hover text-sm text-gray-400 hover:text-white">
-            {{ _("¿Ya tienes cuenta? Inicia sesión") }}
-          </a>
+          <p class="text-center text-sm text-gray-400">
+            {{ _("¿Ya tienes cuenta?") }}
+            <a href="{{ url_for('main.login') }}" class="link link-hover text-secondary hover:text-secondary-focus font-medium ml-1">
+              {{ _("Inicia sesión") }}
+            </a>
+          </p>
         </div>
       </form>
     </div>
@@ -281,9 +284,9 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Esperar 2.5 segundos para que el usuario vea el mensaje de éxito
-    // antes de redirigir al login
+    // antes de redirigir al index (ahora con sesión iniciada automáticamente)
     setTimeout(function() {
-      window.location.href = "{{ url_for('main.login') }}";
+      window.location.href = "{{ url_for('main.index') }}";
     }, 2500);
   });
 </script>

@@ -11,6 +11,7 @@ from .solver import resolver_problema_lp
 main = Blueprint("main", __name__)
 
 @main.route("/")
+@login_required
 def index():
     username = current_user.username if current_user.is_authenticated else None
     data = {
@@ -71,9 +72,18 @@ def register():
             "password": password
         }
 
+        # Guardar el nuevo usuario
         guardar_usuario(new_user, "./data/usuarios.json")
-        flash("Registro exitoso. Ahora inicia sesión.", "success")
-        # En lugar de redirigir inmediatamente, renderizar register.html con una flag
+        
+        # Obtener el usuario recién creado con su ID asignado
+        created_user = obtener_usuario_por_nombre_usuario(username, "./data/usuarios.json")
+        
+        # Crear objeto User e iniciar sesión automáticamente
+        user_obj = User(created_user["id"], created_user["username"], created_user["name"], created_user["password"])
+        login_user(user_obj)
+        
+        flash("¡Cuenta creada exitosamente! Bienvenido/a a OptimizeFlow.", "success")
+        # En lugar de redirigir al login, renderizar register.html con flag para ir al index
         return render_template("register.html", register_success=True)
     else:
         # Limpiar mensajes flash antiguos cuando se accede a register por GET
@@ -223,6 +233,7 @@ def actualizar_perfil():
 
 
 @main.route("/idioma/<lang_code>")
+@login_required
 def idioma(lang_code):
     if lang_code not in ["en", "es"]:
         lang_code = "es"
@@ -231,6 +242,7 @@ def idioma(lang_code):
 
 
 @main.route("/resolver", methods=["POST"])
+@login_required
 def resolver():
     data = request.get_json()
 
@@ -253,6 +265,7 @@ def resolver():
 
 from .simplex_solver import resolver_simplex_clasico
 @main.route("/resolver-simplex", methods=["POST"])
+@login_required
 def resolver_simplex():
     data = request.get_json()
     
@@ -282,6 +295,7 @@ import re
 from .test import GranMSimplexExtended
 
 @main.route("/resolver_gran_m", methods=["POST"])
+@login_required
 def resolver_gran_m():
     # 1. Recibir el payload
     data = request.get_json()
@@ -526,3 +540,46 @@ def ver_problema_detalle(problema_id):
     except Exception as e:
         flash(f"Error al cargar el problema: {str(e)}", "error")
         return redirect(url_for("main.historial"))
+
+@main.route("/api/problema/<int:problema_id>/datos", methods=["GET"])
+@login_required
+def obtener_datos_problema(problema_id):
+    """API endpoint para obtener los datos de un problema para editar"""
+    try:
+        import json
+        import os
+        
+        def get_historial_filename(user_id):
+            return f"./data/{user_id}_historial.json"
+        
+        def cargar_historial(user_id):
+            filename = get_historial_filename(user_id)
+            if os.path.exists(filename):
+                with open(filename, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            return {"user_id": user_id, "problemas": []}
+        
+        historial = cargar_historial(current_user.id)
+        
+        # Buscar el problema específico
+        problema = None
+        for p in historial["problemas"]:
+            if p["id"] == problema_id:
+                problema = p
+                break
+        
+        if not problema:
+            return jsonify({"error": "Problema no encontrado"}), 404
+        
+        # Extraer solo los datos necesarios para poblar el formulario
+        payload = problema.get("payload_original", {})
+        
+        return jsonify({
+            "tipoOperacion": payload.get("tipoOperacion", "Maximizar"),
+            "funcionObjetivo": payload.get("funcionObjetivo", ""),
+            "restricciones": payload.get("restricciones", []),
+            "metodo": problema.get("metodo_usado", "SciPy")
+        })
+        
+    except Exception as e:
+        return jsonify({"error": f"Error al cargar datos: {str(e)}"}), 500

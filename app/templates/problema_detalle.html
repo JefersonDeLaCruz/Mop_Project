@@ -38,6 +38,10 @@
             <i class="fas fa-arrow-left"></i>
             Volver al Historial
           </a>
+          <button class="btn btn-outline" onclick="editarProblema({{ problema.id }})">
+            <i class="fas fa-edit"></i>
+            Editar
+          </button>
           <button class="btn btn-primary" onclick="window.print()">
             <i class="fas fa-print"></i>
             Imprimir
@@ -139,10 +143,6 @@
           <i class="fas fa-plus"></i>
           Resolver Nuevo Problema
         </a>
-        <button class="join-item btn btn-outline" onclick="navigator.share ? navigator.share({title: 'Problema de Programación Lineal', text: 'Mira mi solución', url: window.location.href}) : alert('Compartir no disponible')">
-          <i class="fas fa-share"></i>
-          Compartir
-        </button>
       </div>
     </div>
   </div>
@@ -229,5 +229,35 @@ document.addEventListener('DOMContentLoaded', function() {
     list.classList.add('list-disc', 'list-inside');
   });
 });
+
+// Función para editar un problema - redirige al index con datos cargados
+async function editarProblema(problemaId) {
+  try {
+    // Obtener los datos del problema desde el backend
+    const response = await fetch(`/api/problema/${problemaId}/datos`);
+    
+    if (!response.ok) {
+      throw new Error('Error al cargar los datos del problema');
+    }
+    
+    const datos = await response.json();
+    
+    // Codificar los datos en la URL para enviarlos al index
+    const params = new URLSearchParams({
+      edit: '1',
+      tipoOperacion: datos.tipoOperacion,
+      funcionObjetivo: datos.funcionObjetivo,
+      restricciones: JSON.stringify(datos.restricciones),
+      metodo: datos.metodo
+    });
+    
+    // Redirigir al index con los parámetros
+    window.location.href = `{{ url_for('main.index') }}?${params.toString()}`;
+    
+  } catch (error) {
+    console.error('Error al editar problema:', error);
+    alert('Error al cargar los datos para editar. Inténtalo de nuevo.');
+  }
+}
 </script>
 {% endblock %}

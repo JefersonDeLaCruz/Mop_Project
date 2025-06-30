@@ -10,6 +10,7 @@ import {
 
 console.log("hola index");
 
+const limpiarBtn = document.getElementById("limpiarBtn")
 const input = document.getElementById("numeroVariables");
 const wrapper = document.getElementById("var_badge-wrapper");
 const btnAdd = document.getElementById("btnAdd");
@@ -394,5 +395,202 @@ async function guardarEnHistorial(payload, metodoUsado) {
     console.error("Error al guardar en historial:", error);
   }
 }
+
+// Función para cargar problema desde parámetros URL (para edición)
+function cargarProblemaDesdeURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Verificar si estamos en modo edición
+  if (urlParams.get('edit') === '1') {
+    try {
+      // Cargar tipo de operación
+      const tipoOperacion = urlParams.get('tipoOperacion');
+      if (tipoOperacion) {
+        document.getElementById('tipoOperacion').value = tipoOperacion;
+      }
+      
+      // Cargar función objetivo
+      const funcionObjetivo = urlParams.get('funcionObjetivo');
+      if (funcionObjetivo) {
+        document.getElementById('funcionObjetivo').value = funcionObjetivo;
+      }
+      
+      // Cargar restricciones
+      const restriccionesParam = urlParams.get('restricciones');
+      if (restriccionesParam) {
+        const restricciones = JSON.parse(restriccionesParam);
+        
+        // Limpiar restricciones existentes
+        const resWrapper = document.getElementById("resWrapper");
+        resWrapper.innerHTML = '';
+        
+        // Función local para crear restricción (copia de la función principal)
+        function crearRestriccionLocal(numero) {
+          const div = document.createElement("div");
+          div.className = "flex gap-2 items-center p-3 bg-base-200 rounded-lg";
+
+          div.innerHTML = `
+              <input name="restriccion_${numero}" id="restriccion_${numero}" type="text" placeholder="ej: x1 + x2" class="input input-sm input-bordered flex-grow" />
+              <select name="operadorRestriccion_${numero}" id="operadorRestriccion_${numero}" class="select select-sm select-bordered flex-shrink-0 w-fit">
+                <option>≤</option>
+                <option>≥</option>
+                <option>=</option>
+              </select>
+              <input name="valorRes_${numero}" id="valorRes_${numero}" type="number" placeholder="valor" required class="input input-sm input-bordered sm:w-20"/>
+              <span class="btn btn-xs sm:btn-sm btn-error btn-outline btnEliminar">
+                <i class="fas fa-trash"></i>
+              </span>
+            `;
+
+          // Agregar evento al botón eliminar
+          div.querySelector(".btnEliminar").addEventListener("click", () => {
+            if (resWrapper.children.length > 2) { // MIN_RESTRICCIONES = 2
+              div.remove();
+              actualizarNombresLocal();
+            } else {
+              alerta.open({
+                type: "warning",
+                message: `Debe haber al menos 2 restricciones`,
+                className: "alert alert-warning",
+              });
+            }
+          });
+
+          return div;
+        }
+        
+        // Función local para actualizar nombres
+        function actualizarNombresLocal() {
+          Array.from(resWrapper.children).forEach((div, index) => {
+            const i = index + 1;
+            div.querySelector(`[type="text"]`).name = `restriccion_${i}`;
+            div.querySelector(`[type="text"]`).id = `restriccion_${i}`;
+
+            div.querySelector("select").name = `operadorRestriccion_${i}`;
+            div.querySelector("select").id = `operadorRestriccion_${i}`;
+
+            div.querySelector(`[type="number"]`).name = `valorRes_${i}`;
+            div.querySelector(`[type="number"]`).id = `valorRes_${i}`;
+          });
+        }
+        
+        // Agregar las restricciones del problema
+        restricciones.forEach((restriccion, index) => {
+          const nuevaRestriccion = crearRestriccionLocal(index + 1);
+          
+          // Poblar los valores
+          const expresionInput = nuevaRestriccion.querySelector(`[type="text"]`);
+          const operadorSelect = nuevaRestriccion.querySelector('select');
+          const valorInput = nuevaRestriccion.querySelector(`[type="number"]`);
+          
+          expresionInput.value = restriccion.expr || '';
+          operadorSelect.value = restriccion.op || '≤';
+          valorInput.value = restriccion.val || '';
+          
+          resWrapper.appendChild(nuevaRestriccion);
+        });
+        
+        // Si hay menos de 2 restricciones, agregar las mínimas
+        while (resWrapper.children.length < 2) {
+          const nueva = crearRestriccionLocal(resWrapper.children.length + 1);
+          resWrapper.appendChild(nueva);
+        }
+        
+        // Actualizar nombres después de cargar
+        actualizarNombresLocal();
+      }
+      
+      // Cargar método seleccionado
+      const metodo = urlParams.get('metodo');
+      if (metodo) {
+        const metodoSimplexBtn = document.getElementById("metodo_simplex");
+        const metodoScipyBtn = document.getElementById("metodo_scipy");
+        
+        // Función para activar botón (copia de la función principal)
+        function activarBotonSeleccionadoLocal(boton) {
+          [metodoSimplexBtn, metodoScipyBtn].forEach((btn) => {
+            if (btn === boton) {
+              btn.classList.remove("btn-dash");
+              btn.classList.add("btn-active");
+            } else {
+              btn.classList.remove("btn-active");
+              btn.classList.add("btn-dash");
+            }
+          });
+        }
+        
+        // Mapear nombres de métodos
+        if (metodo === 'Simplex Clásico' || metodo === 'Gran M') {
+          activarBotonSeleccionadoLocal(metodoSimplexBtn);
+        } else if (metodo === 'SciPy') {
+          activarBotonSeleccionadoLocal(metodoScipyBtn);
+        }
+      }
+      
+      // Limpiar la URL después de cargar los datos
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Mostrar mensaje de confirmación
+      setTimeout(() => {
+        alerta.open({
+          type: "info",
+          message: "Problema cargado para edición. Puedes modificar los valores y resolver de nuevo.",
+          className: "alert alert-info",
+        });
+      }, 500);
+      
+    } catch (error) {
+      console.error('Error al cargar problema desde URL:', error);
+      alerta.open({
+        type: "error",
+        message: "Error al cargar los datos del problema para edición.",
+        className: "alert alert-error",
+      });
+    }
+  }
+}
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', cargarProblemaDesdeURL);
+
+// Función para limpiar todos los campos del formulario
+function limpiarFormulario() {
+  // Limpiar tipo de operación (volver al primer valor)
+  document.getElementById('tipoOperacion').selectedIndex = 0;
+  
+  // Limpiar función objetivo
+  document.getElementById('funcionObjetivo').value = '';
+  
+  // Limpiar restricciones existentes y volver a las 2 mínimas
+  resWrapper.innerHTML = '';
+  
+  // Recrear las 2 restricciones mínimas vacías
+  for (let i = 1; i <= MIN_RESTRICCIONES; i++) {
+    resWrapper.appendChild(crearRestriccion(i));
+  }
+  
+  // Limpiar selección de método
+  [metodoSimplexBtn, metodoScipyBtn].forEach((btn) => {
+    btn.classList.remove("btn-active");
+    btn.classList.add("btn-dash");
+  });
+  metodoSelecionado = undefined;
+  
+  // Limpiar resultados si existen
+  const resultadosDiv = document.getElementById("resultados");
+  if (resultadosDiv) {
+    resultadosDiv.innerHTML = '';
+  }
+  
+  // Mostrar mensaje de confirmación
+  alerta.open({
+    type: "success",
+    message: "Formulario limpiado correctamente",
+    className: "alert alert-success",
+  });
+}
+
+// Agregar evento al botón limpiar
+limpiarBtn.addEventListener("click", limpiarFormulario);
 
 

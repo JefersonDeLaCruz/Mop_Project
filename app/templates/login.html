@@ -41,6 +41,16 @@
             {{ _("Iniciar sesion") }}
           </button>
         </div>
+
+        <!-- Enlace para ir al registro -->
+        <div class="mt-4">
+          <p class="text-center text-sm text-gray-400">
+            {{ _("¿No tienes cuenta?") }}
+            <a href="{{ url_for('main.register') }}" class="link link-hover text-secondary hover:text-secondary-focus font-medium ml-1">
+              {{ _("Regístrate aquí") }}
+            </a>
+          </p>
+        </div>
       </form>
       <!-- FORMULARIO TERMINA AQUÍ -->
 
