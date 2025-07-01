@@ -1,5 +1,6 @@
 
 from flask import Flask
+from flask_babel import get_locale
 from app.extensions import babel, get_local_lang, login_manager
 from .helpers import cargar_usuarios
 from .models import User
@@ -13,6 +14,13 @@ def create_app():
     babel.init_app(app, locale_selector=get_local_lang)
     login_manager.init_app(app)
     login_manager.login_view = "main.login" #para redirigir a login si no esta autenticado
+    
+    # Hacer get_locale disponible globalmente en todos los templates
+    @app.context_processor
+    def inject_conf_vars():
+        return {
+            'get_locale': get_locale
+        }
 
     from .routes import main
     app.register_blueprint(main)

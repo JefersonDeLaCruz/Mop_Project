@@ -285,13 +285,17 @@ def cambiar_idioma(lang_code):
 @login_required
 def resolver():
     data = request.get_json()
+    
+    # Normalizar payload para garantizar compatibilidad con diferentes idiomas
+    from .extensions import normalize_payload_backend
+    normalized_data = normalize_payload_backend(data)
 
-    tipoOperacion = data.get("tipoOperacion")
-    funcionObjetivo = data.get("funcionObjetivo")
-    restricciones = data.get("restricciones", [])
+    tipoOperacion = normalized_data.get("tipoOperacion")
+    funcionObjetivo = normalized_data.get("funcionObjetivo")
+    restricciones = normalized_data.get("restricciones", [])
     
     # El número de variables ahora es opcional
-    numeroVariables = data.get("numeroVariables")
+    numeroVariables = normalized_data.get("numeroVariables")
     if numeroVariables is not None:
         numeroVariables = int(numeroVariables)
 
@@ -309,8 +313,12 @@ from .simplex_solver import resolver_simplex_clasico
 def resolver_simplex():
     data = request.get_json()
     
+    # Normalizar payload para garantizar compatibilidad con diferentes idiomas
+    from .extensions import normalize_payload_backend
+    normalized_data = normalize_payload_backend(data)
+    
     try:
-        resultado = resolver_simplex_clasico(data)
+        resultado = resolver_simplex_clasico(normalized_data)
         return jsonify({"resultado": resultado})
     except Exception as e:
         print(f"Error al resolver con Simplex: {e}")
@@ -339,6 +347,10 @@ from .test import GranMSimplexExtended
 def resolver_gran_m():
     # 1. Recibir el payload
     data = request.get_json()
+    
+    # Normalizar payload para garantizar compatibilidad con diferentes idiomas
+    from .extensions import normalize_payload_backend
+    normalized_data = normalize_payload_backend(data)
 
     # 2. Función para extraer automáticamente el número de variables
     def extraer_numero_variables(expresiones):
@@ -405,20 +417,20 @@ def resolver_gran_m():
 
     try:
         # 5. Extraer número de variables automáticamente si no se proporciona
-        if "numeroVariables" in data and data["numeroVariables"]:
-            n = int(data["numeroVariables"])
+        if "numeroVariables" in normalized_data and normalized_data["numeroVariables"]:
+            n = int(normalized_data["numeroVariables"])
         else:
             # Crear lista de todas las expresiones para analizarlas
-            expresiones = [data["funcionObjetivo"]] + [r["expr"] for r in data["restricciones"]]
+            expresiones = [normalized_data["funcionObjetivo"]] + [r["expr"] for r in normalized_data["restricciones"]]
             n = extraer_numero_variables(expresiones)
             
             if n == 0:
                 return jsonify({"error": "No se pudieron detectar variables en la función objetivo o restricciones"}), 400
 
         # 6. Parsear datos
-        funcion_objetivo = parse_funcion_objetivo(data["funcionObjetivo"], n)
-        restricciones, tipos = parse_restricciones(data["restricciones"], n)
-        minimizar = data["tipoOperacion"].lower().startswith("min")
+        funcion_objetivo = parse_funcion_objetivo(normalized_data["funcionObjetivo"], n)
+        restricciones, tipos = parse_restricciones(normalized_data["restricciones"], n)
+        minimizar = normalized_data["tipoOperacion"].lower().startswith("min")
         print("valor de minimizar", minimizar)
         print(f"Número de variables detectadas automáticamente: {n}")
         

@@ -4,6 +4,7 @@ import {
   resolverSimplex,
   mostrarResultadoSimplex,
 } from "./simplexSolver.js";
+import { normalizePayload, I18N_DEBUG } from "./i18n.js";
 
 // Usar la instancia global de Notyf definida en base.js
 // La variable 'alerta' estará disponible globalmente
@@ -225,26 +226,30 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     restricciones,
   };
 
+  // Normalizar el payload para que sea compatible con el backend
+  const normalizedPayload = normalizePayload(payload);
+  I18N_DEBUG.log("Payload normalizado para envío al backend", normalizedPayload);
+
   if (metodoSelecionado === metodoSimplexBtn.innerText) {
     // MÉTODO SIMPLEX: varía el endpoint según el tipo de operación
-    
-    if (tipoOperacion === "Maximizar") {
+    // Usar los valores normalizados para las comparaciones
+    if (normalizedPayload.tipoOperacion === "Maximizar") {
       // Verificar si hay restricciones mixtas (no solo ≤)
-      const tieneRestriccionesMixtas = restricciones.some(r => r.op === "≥" || r.op === "=");
+      const tieneRestriccionesMixtas = normalizedPayload.restricciones.some(r => r.op === "≥" || r.op === "=");
       
       if (tieneRestriccionesMixtas) {
         // Usar Gran M para restricciones mixtas en maximización
         try {
-          console.log("payload para simplex Gran M (maximizar con restricciones mixtas): ", payload);
+          console.log("payload para simplex Gran M (maximizar con restricciones mixtas): ", normalizedPayload);
           
           // Llamada paralela: Gran M para pasos detallados y SciPy para la tarjeta
           const [granMResponse, scipyData] = await Promise.all([
             fetch("/resolver_gran_m", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
+              body: JSON.stringify(normalizedPayload),
             }).then(res => res.json()),
-            resolverProblema(payload)  // SciPy para llenar la tarjeta
+            resolverProblema(normalizedPayload)  // SciPy para llenar la tarjeta
           ]);
           
           console.log("Respuesta Gran M (maximizar):", granMResponse);
@@ -271,12 +276,12 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       } else {
         // Simplex clásico para maximización con solo restricciones ≤
         try {
-          console.log("payload para simplex clásico (maximizar solo ≤): ", payload);
-          const data = await resolverSimplex(payload);
+          console.log("payload para simplex clásico (maximizar solo ≤): ", normalizedPayload);
+          const data = await resolverSimplex(normalizedPayload);
           mostrarResultadoSimplex(data);
           
           // Guardar en historial
-          guardarEnHistorial(payload, "Simplex Clásico");
+          guardarEnHistorial(normalizedPayload, "Simplex Clásico");
         } catch (err) {
           console.error("Error al resolver con Simplex clásico:", err);
           alerta.open({
@@ -287,19 +292,19 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         }
       }
       
-    } else if (tipoOperacion === "Minimizar") {
+    } else if (normalizedPayload.tipoOperacion === "Minimizar") {
       // Gran M para minimización + SciPy para llenar la tarjeta de solución
       try {
-        console.log("payload para simplex Gran M (minimizar): ", payload);
+        console.log("payload para simplex Gran M (minimizar): ", normalizedPayload);
         
         // Llamada paralela: Gran M para pasos detallados y SciPy para la tarjeta
         const [granMResponse, scipyData] = await Promise.all([
           fetch("/resolver_gran_m", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify(normalizedPayload),
           }).then(res => res.json()),
-          resolverProblema(payload)  // SciPy para llenar la tarjeta
+          resolverProblema(normalizedPayload)  // SciPy para llenar la tarjeta
         ]);
         
         console.log("Respuesta Gran M:", granMResponse);
@@ -313,7 +318,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
           mostrarSolucion(scipyData);
           
           // Guardar en historial
-          guardarEnHistorial(payload, "Gran M");
+          guardarEnHistorial(normalizedPayload, "Gran M");
         } else {
           console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
         }
@@ -331,14 +336,14 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
   } else if (metodoSelecionado === metodoScipyBtn.innerText) {
     // MÉTODO SCIPY: siempre usa el mismo endpoint
     try {
-      console.log("payload para scipy: ", payload);
-      const data = await resolverProblema(payload);
+      console.log("payload para scipy: ", normalizedPayload);
+      const data = await resolverProblema(normalizedPayload);
       console.log("respuesta de scipy:", data);
       if (data.resultado.status == "ok") {
         mostrarSolucion(data);
         
         // Guardar en historial
-        guardarEnHistorial(payload, "SciPy");
+        guardarEnHistorial(normalizedPayload, "SciPy");
       } else {
         alerta.open({
           type: "error",

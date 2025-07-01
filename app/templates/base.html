@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" data-act-class="ACTIVECLASS">
+<html lang="{{ get_locale() }}" data-act-class="ACTIVECLASS">
 
 <head>
     <meta charset="UTF-8">
@@ -207,6 +207,9 @@
             });
         });
     </script>
+    
+    <!-- Script de internacionalización para el frontend -->
+    <script type="module" src="{{ url_for('static', filename='js/i18n.js') }}"></script>
     
     {% block customScript %}
 
