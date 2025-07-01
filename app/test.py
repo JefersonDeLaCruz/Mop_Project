@@ -159,7 +159,7 @@ class GranMSimplexExtended:
 
     def generate_extended_model(self, objective: List[float], constraints: List[List[float]], 
                               constraint_types: List[str], minimize: bool = True) -> str:
-        """Genera el modelo extendido con variables auxiliares"""
+        """Genera la transformación del problema a forma estándar con variables auxiliares"""
         num_vars = len(objective)
         
         # Contadores para variables auxiliares
@@ -173,12 +173,12 @@ class GranMSimplexExtended:
         artificial_vars = []
         
         html = '<div class="mb-6 p-4 rounded bg-base-100 border border-primary/20">'
-        html += '<h2 class="font-bold text-lg mb-4 text-primary">Modelo Extendido con Variables de Holgura y Artificiales</h2>'
+        html += '<h2 class="font-bold text-lg mb-4 text-primary">Transformación a Forma Estándar para el Algoritmo Simplex</h2>'
         
         # Analizar cada restricción
-        html += '<h3 class="font-bold text-base mb-3 text-secondary">Análisis de Restricciones:</h3><ul class="list-disc pl-5">'
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Conversión de Desigualdades:</h3><ul class="list-disc pl-5">'
         for i, (constraint, constraint_type) in enumerate(zip(constraints, constraint_types)):
-            html += f'<li class="mb-2"><strong>Restricción {i+1}:</strong> '
+            html += f'<li class="mb-2"><strong>Ecuación {i+1}:</strong> '
             
             # Mostrar restricción original
             constraint_str = ""
@@ -208,7 +208,7 @@ class GranMSimplexExtended:
                 slack_count += 1
                 slack_var = f"s{slack_count}"
                 slack_vars.append(slack_var)
-                html += f'<br>↳ <span class="text-info font-medium">Agregar variable de holgura <strong>{slack_var}</strong> ≥ 0</span>'
+                html += f'<br>→ <span class="text-info font-medium">Introducir variable de holgura <strong>{slack_var}</strong> ≥ 0 para convertir a igualdad</span>'
                 
             elif constraint_type in ['>=', '>']:
                 surplus_count += 1
@@ -217,23 +217,23 @@ class GranMSimplexExtended:
                 artificial_var = f"a{artificial_count}"
                 surplus_vars.append(surplus_var)
                 artificial_vars.append(artificial_var)
-                html += f'<br>↳ <span class="text-warning font-medium">Agregar variable de exceso <strong>{surplus_var}</strong> ≥ 0</span>'
-                html += f'<br>↳ <span class="text-error font-medium">Agregar variable artificial <strong>{artificial_var}</strong> ≥ 0</span>'
+                html += f'<br>→ <span class="text-warning font-medium">Introducir variable de exceso <strong>{surplus_var}</strong> ≥ 0</span>'
+                html += f'<br>→ <span class="text-error font-medium">Requerir variable artificial <strong>{artificial_var}</strong> ≥ 0 para solución básica inicial</span>'
                 
             elif constraint_type == '=':
                 artificial_count += 1
                 artificial_var = f"a{artificial_count}"
                 artificial_vars.append(artificial_var)
-                html += f'<br>↳ <span class="text-error font-medium">Agregar variable artificial <strong>{artificial_var}</strong> ≥ 0</span>'
+                html += f'<br>→ <span class="text-error font-medium">Introducir variable artificial <strong>{artificial_var}</strong> ≥ 0 para obtener base factible</span>'
             
             html += '</li>'
         
         html += '</ul>'
         
-        # Modelo extendido completo
-        html += '<h3 class="font-bold text-base mb-3 text-secondary mt-6">Modelo Extendido Completo:</h3>'
+        # Problema transformado
+        html += '<h3 class="font-bold text-base mb-3 text-secondary mt-6">Problema en Forma Estándar:</h3>'
         
-        # Función objetivo extendida
+        # Función objetivo modificada
         obj_str = "Minimizar " if minimize else "Maximizar "
         obj_str += "Z = "
         
@@ -259,7 +259,7 @@ class GranMSimplexExtended:
         for surplus_var in surplus_vars:
             obj_str += f" + 0{surplus_var}"
         
-        # Variables artificiales (coeficiente M)
+        # Variables artificiales (penalizadas con M)
         for artificial_var in artificial_vars:
             if minimize:
                 obj_str += f" + M{artificial_var}"
@@ -268,8 +268,8 @@ class GranMSimplexExtended:
         
         html += f'<p class="mb-4 font-mono bg-base-200 px-3 py-2 rounded border-l-4 border-primary"><strong>{obj_str}</strong></p>'
         
-        # Restricciones extendidas
-        html += '<p class="mb-2"><strong>Sujeto a:</strong></p><ul class="list-disc pl-5">'
+        # Sistema de ecuaciones resultante
+        html += '<p class="mb-2"><strong>Sistema de ecuaciones lineales:</strong></p><ul class="list-disc pl-5">'
         
         slack_idx = 0
         surplus_idx = 0
@@ -292,7 +292,7 @@ class GranMSimplexExtended:
                 else:
                     constraint_str += f"({frac.numerator}/{frac.denominator})x<sub>{j+1}</sub>"
             
-            # Variables auxiliares
+            # Variables auxiliares según el tipo de restricción
             if constraint_type in ['<=', '<']:
                 slack_idx += 1
                 constraint_str += f" + <span class='text-info font-medium'>s<sub>{slack_idx}</sub></span>"
@@ -306,7 +306,7 @@ class GranMSimplexExtended:
                 artificial_idx += 1
                 constraint_str += f" + <span class='text-error font-medium'>a<sub>{artificial_idx}</sub></span>"
             
-            # bj (lado derecho)
+            # Término independiente
             rhs_frac = Fraction(constraint[-1]).limit_denominator()
             if rhs_frac.denominator == 1:
                 constraint_str += f" = {rhs_frac.numerator}"
@@ -315,29 +315,29 @@ class GranMSimplexExtended:
             
             html += f'<li class="mb-1 font-mono text-sm">{constraint_str}</li>'
         
-        # Restricciones de no negatividad
+        # Condiciones de no negatividad
         all_vars = [f"x<sub>{i+1}</sub>" for i in range(num_vars)]
         all_vars.extend([f"<span class='text-info font-medium'>s<sub>{i+1}</sub></span>" for i in range(len(slack_vars))])
         all_vars.extend([f"<span class='text-warning font-medium'>H<sub>{i+1}</sub></span>" for i in range(len(surplus_vars))])
         all_vars.extend([f"<span class='text-error font-medium'>a<sub>{i+1}</sub></span>" for i in range(len(artificial_vars))])
         
-        html += f'<li class="mb-1 font-mono text-sm">{", ".join(all_vars)} ≥ 0</li>'
+        html += f'<li class="mb-1 font-mono text-sm">Condiciones: {", ".join(all_vars)} ≥ 0</li>'
         html += '</ul></div>'
         
         return html
 
     def generate_initial_table_steps(self, objective: List[float], constraints: List[List[float]], 
                                    constraint_types: List[str], minimize: bool = True) -> str:
-        """Genera los pasos detallados para construir la tabla inicial"""
+        """Genera la explicación detallada para establecer la tabla simplex inicial"""
         html = '<div class="mb-6 p-4 rounded bg-base-100 border-l-4 border-warning">'
-        html += '<h2 class="font-bold text-lg mb-4 text-warning">Pasos para Construir la Tabla Inicial (Iteración 0)</h2>'
+        html += '<h2 class="font-bold text-lg mb-4 text-warning">Construcción de la Tabla Simplex Inicial</h2>'
         
         num_vars = len(objective)
         num_constraints = len(constraints)
         
-        # Paso 1: Identificar variables
-        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 1: Identificación de Variables</h3>'
-        html += f'<p class="mb-2">Variables originales: x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>{num_vars}</sub></p>'
+        # Fase 1: Catálogo de variables del sistema
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Fase 1: Inventario de Variables del Sistema</h3>'
+        html += f'<p class="mb-2">Variables de decisión: x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>{num_vars}</sub></p>'
         
         slack_count = sum(1 for ct in constraint_types if ct in ['<=', '<'])
         surplus_count = sum(1 for ct in constraint_types if ct in ['>=', '>'])
@@ -351,32 +351,32 @@ class GranMSimplexExtended:
             html += f'<p class="mb-2">Variables artificiales: <span class="text-error font-medium">a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>{artificial_count}</sub></span></p>'
         
         total_vars = num_vars + slack_count + surplus_count + artificial_count
-        html += f'<p class="mb-4 font-bold">Total de variables: {total_vars}</p>'
+        html += f'<p class="mb-4 font-bold">Dimensión total del sistema: {total_vars} variables</p>'
         
-        # Paso 2: Matriz de coeficientes
-        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 2: Construcción de la Matriz de Coeficientes</h3>'
-        html += '<p class="mb-2">La matriz se construye columna por columna:</p><ul class="list-disc pl-5">'
+        # Fase 2: Estructuración matricial
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Fase 2: Estructuración de la Matriz de Coeficientes</h3>'
+        html += '<p class="mb-2">Configuración sistemática de la matriz por categorías de variables:</p><ul class="list-disc pl-5">'
         
-        # Variables originales
-        html += '<li class="mb-1"><strong>Variables originales (x<sub>1</sub>, x<sub>2</sub>, ...):</strong> Se copian directamente los coeficientes de las restricciones</li>'
+        # Variables de decisión
+        html += '<li class="mb-1"><strong>Variables de decisión (x<sub>1</sub>, x<sub>2</sub>, ...):</strong> Coeficientes extraídos directamente del planteamiento original</li>'
         
         # Variables de holgura
         if slack_count > 0:
-            html += '<li class="mb-1"><strong>Variables de holgura (s<sub>i</sub>):</strong> <span class="text-info">Coeficiente +1 en su restricción correspondiente, 0 en las demás</span></li>'
+            html += '<li class="mb-1"><strong>Variables de holgura (s<sub>i</sub>):</strong> <span class="text-info">Matriz identidad parcial - valor unitario en ecuación asociada, cero en resto</span></li>'
         
         # Variables de exceso
         if surplus_count > 0:
-            html += '<li class="mb-1"><strong>Variables de exceso (H<sub>i</sub>):</strong> <span class="text-warning">Coeficiente -1 en su restricción correspondiente, 0 en las demás</span></li>'
+            html += '<li class="mb-1"><strong>Variables de exceso (H<sub>i</sub>):</strong> <span class="text-warning">Coeficiente negativo unitario en ecuación correspondiente, cero en otras</span></li>'
         
         # Variables artificiales
         if artificial_count > 0:
-            html += '<li class="mb-1"><strong>Variables artificiales (a<sub>i</sub>):</strong> <span class="text-error">Coeficiente +1 en su restricción correspondiente, 0 en las demás</span></li>'
+            html += '<li class="mb-1"><strong>Variables artificiales (a<sub>i</sub>):</strong> <span class="text-error">Matriz identidad completa - valor unitario en ecuación específica, cero en demás</span></li>'
         
         html += '</ul>'
         
-        # Paso 3: Base inicial
-        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 3: Identificación de la Base Inicial</h3>'
-        html += '<p class="mb-2">La base inicial está formada por las variables que tienen coeficiente 1 en exactamente una restricción y 0 en las demás:</p><ul class="list-disc pl-5">'
+        # Fase 3: Determinación de la base factible inicial
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Fase 3: Establecimiento de la Solución Básica Factible Inicial</h3>'
+        html += '<p class="mb-2">Selección de variables para formar la base inicial considerando la propiedad de independencia lineal:</p><ul class="list-disc pl-5">'
         
         basis_vars = []
         slack_idx = 0
@@ -387,40 +387,40 @@ class GranMSimplexExtended:
             if constraint_type in ['<=', '<']:
                 slack_idx += 1
                 basis_vars.append(f"s<sub>{slack_idx}</sub>")
-                html += f'<li class="mb-1">Restricción {i+1}: Variable básica <span class="text-info font-bold">s<sub>{slack_idx}</sub></span></li>'
+                html += f'<li class="mb-1">Ecuación {i+1}: Base constituida por <span class="text-info font-bold">s<sub>{slack_idx}</sub></span></li>'
             elif constraint_type in ['>=', '>']:
                 artificial_idx += 1
                 basis_vars.append(f"a<sub>{artificial_idx}</sub>")
-                html += f'<li class="mb-1">Restricción {i+1}: Variable básica <span class="text-error font-bold">a<sub>{artificial_idx}</sub></span></li>'
+                html += f'<li class="mb-1">Ecuación {i+1}: Base constituida por <span class="text-error font-bold">a<sub>{artificial_idx}</sub></span></li>'
             elif constraint_type == '=':
                 artificial_idx += 1
                 basis_vars.append(f"a<sub>{artificial_idx}</sub>")
-                html += f'<li class="mb-1">Restricción {i+1}: Variable básica <span class="text-error font-bold">a<sub>{artificial_idx}</sub></span></li>'
+                html += f'<li class="mb-1">Ecuación {i+1}: Base constituida por <span class="text-error font-bold">a<sub>{artificial_idx}</sub></span></li>'
         
         html += '</ul>'
-        html += f'<p class="mb-4 font-bold">Base inicial: {{{", ".join(basis_vars)}}}</p>'
+        html += f'<p class="mb-4 font-bold">Conjunto básico inicial: {{{", ".join(basis_vars)}}}</p>'
         
-        # Paso 4: Fila Z
-        html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 4: Construcción de la Fila Z</h3>'
-        html += '<p class="mb-2">La fila Z se construye de la siguiente manera:</p><ol class="list-decimal pl-5">'
-        html += '<li class="mb-1"><strong>Variables originales:</strong> Se copian los coeficientes de la función objetivo</li>'
-        html += '<li class="mb-1"><strong>Variables de holgura y exceso:</strong> Coeficiente 0</li>'
-        html += '<li class="mb-1"><strong>Variables artificiales:</strong> Coeficiente M (para minimización) o -M (para maximización)</li>'
-        html += '<li class="mb-1"><strong>Término independiente:</strong> Inicialmente 0</li>'
+        # Fase 4: Configuración de la función objetivo
+        html += '<h3 class="font-bold text-base mb-3 text-secondary">Fase 4: Configuración de la Función de Evaluación (Fila Z)</h3>'
+        html += '<p class="mb-2">Establecimiento de los coeficientes de evaluación para el proceso iterativo:</p><ol class="list-decimal pl-5">'
+        html += '<li class="mb-1"><strong>Variables de decisión:</strong> Transferencia directa de coeficientes del objetivo original</li>'
+        html += '<li class="mb-1"><strong>Variables de holgura y exceso:</strong> Coeficiente neutro (valor cero)</li>'
+        html += '<li class="mb-1"><strong>Variables artificiales:</strong> Penalización mediante coeficiente M (minimización) o -M (maximización)</li>'
+        html += '<li class="mb-1"><strong>Valor de la función:</strong> Inicialización en cero</li>'
         html += '</ol>'
         
-        # Paso 5: Eliminación de variables artificiales
+        # Fase 5: Proceso de depuración de variables artificiales
         if artificial_count > 0:
-            html += '<h3 class="font-bold text-base mb-3 text-secondary">Paso 5: Eliminación de Variables Artificiales de la Fila Z</h3>'
+            html += '<h3 class="font-bold text-base mb-3 text-secondary">Fase 5: Depuración de Variables Artificiales en la Función Objetivo</h3>'
             html += '<div class="bg-base-100 p-3 rounded border-l-4 border-error mb-4">'
-            html += '<p class="mb-2 text-error">Como las variables artificiales están en la base inicial con coeficiente M ≠ 0 en la fila Z, '
-            html += 'debemos eliminarlas usando operaciones elementales:</p>'
-            html += '<p class="mb-2 font-bold text-error">Para cada variable artificial a<sub>i</sub> en la base:</p><ol class="list-decimal pl-5 text-error">'
-            html += '<li class="mb-1">Identificar la fila donde a<sub>i</sub> es variable básica (coeficiente = 1)</li>'
-            html += '<li class="mb-1">Multiplicar esa fila por -M (o +M según el caso)</li>'
-            html += '<li class="mb-1">Sumar el resultado a la fila Z</li>'
+            html += '<p class="mb-2 text-error">Las variables artificiales presentes en la base inicial requieren neutralización en la función objetivo '
+            html += 'mediante operaciones de fila elementales para mantener la equivalencia del sistema:</p>'
+            html += '<p class="mb-2 font-bold text-error">Procedimiento de neutralización para cada variable artificial a<sub>i</sub> básica:</p><ol class="list-decimal pl-5 text-error">'
+            html += '<li class="mb-1">Localizar la ecuación donde a<sub>i</sub> actúa como variable básica (coeficiente unitario)</li>'
+            html += '<li class="mb-1">Aplicar multiplicación escalar por -M (o +M según corresponda) a dicha ecuación</li>'
+            html += '<li class="mb-1">Efectuar suma algebraica del resultado con la fila de evaluación Z</li>'
             html += '</ol>'
-            html += '<p class="text-error">Esto garantiza que las variables artificiales tengan coeficiente 0 en la fila Z.</p>'
+            html += '<p class="text-error">Esta operación garantiza coeficiente nulo para las variables artificiales en la función objetivo.</p>'
             html += '</div>'
         
         html += '</div>'
@@ -529,24 +529,24 @@ class GranMSimplexExtended:
             return matrix
             
         self.html_output += '<div class="mb-6 p-4 rounded bg-base-100 border-l-4 border-error">'
-        self.html_output += '<h2 class="font-bold text-lg mb-4 text-error">Eliminación de Variables Artificiales de la Fila Z</h2>'
-        self.html_output += '<p class="mb-3">Las variables artificiales en la base inicial deben tener coeficiente 0 en la fila Z. '
-        self.html_output += 'Aplicamos operaciones elementales para eliminarlas:</p>'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-error">Neutralización de Variables Artificiales en la Función Objetivo</h2>'
+        self.html_output += '<p class="mb-3">Las variables artificiales presentes en la base inicial requieren ser neutralizadas en la fila Z '
+        self.html_output += 'mediante operaciones de fila para mantener la consistencia del algoritmo:</p>'
         
         for art_idx in artificial_indices:
             art_var = all_var_names[art_idx]
             z_coef = matrix[-1][art_idx]
             
             if z_coef.M_coefficient != 0 or z_coef.coefficient != 0:
-                self.html_output += f'<h3 class="font-bold text-base mb-2">Eliminando {art_var} (coeficiente actual: {self.mixed_value_to_html(z_coef, True)})</h3>'
+                self.html_output += f'<h3 class="font-bold text-base mb-2">Procesando {art_var} (valor actual en Z: {self.mixed_value_to_html(z_coef, True)})</h3>'
                 
                 # Encontrar fila donde está la variable artificial
                 for i, basis_var in enumerate(basis_vars):
                     if basis_var == art_var and i < len(matrix) - 1:
                         multiplier = matrix[-1][art_idx]
                         
-                        self.html_output += f'<p class="mb-2">• {art_var} está en la fila F{i+1} como variable básica</p>'
-                        self.html_output += f'<p class="mb-2">• Operación: Fila_Z = Fila_Z - ({self.mixed_value_to_html(multiplier)}) × F{i+1}</p>'
+                        self.html_output += f'<p class="mb-2">• {art_var} actúa como variable básica en la ecuación F{i+1}</p>'
+                        self.html_output += f'<p class="mb-2">• Transformación aplicada: Fila_Z = Fila_Z - ({self.mixed_value_to_html(multiplier)}) × F{i+1}</p>'
                         
                         self.html_output += '<div class="overflow-x-auto mb-3"><table class="table table-sm w-full text-center text-xs">'
                         self.html_output += '<thead><tr><th class="bg-base-200 px-1 py-1">Variable</th><th class="bg-base-200 px-1 py-1">Z Original</th><th class="bg-base-200 px-1 py-1">-</th><th class="bg-base-200 px-1 py-1">Factor × F{i+1}</th><th class="bg-base-200 px-1 py-1">=</th><th class="bg-base-200 px-1 py-1">Z Nueva</th></tr></thead><tbody>'
@@ -568,7 +568,7 @@ class GranMSimplexExtended:
                         self.html_output += '</tbody></table></div>'
                         break
                         
-        self.html_output += '<p class="mt-3 font-bold text-success">✅ Variables artificiales eliminadas de la fila Z. El coeficiente de cada variable artificial es ahora 0.</p>'
+        self.html_output += '<p class="mt-3 font-bold text-success">✅ Neutralización completada. Las variables artificiales ahora tienen coeficiente cero en la función objetivo.</p>'
         self.html_output += '</div>'
         
         return matrix
@@ -806,13 +806,13 @@ class GranMSimplexExtended:
         self.html_output = """
         <div class="w-full max-w-none">
             <h1 class="text-3xl font-bold text-primary mb-6 border-b-2 border-primary pb-3">
-                Método de la Gran M - Análisis Completo con Variables Auxiliares
+                Resolución mediante el Algoritmo de la Gran M - Solución Detallada
             </h1>
         """
         
-        # Modelo original
+        # Problema de programación lineal original
         self.html_output += '<div class="mb-6 p-4 rounded bg-base-100 border border-primary/20">'
-        self.html_output += '<h2 class="font-bold text-lg mb-4 text-primary">Modelo Matemático Original</h2>'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-primary">Formulación del Problema de Programación Lineal</h2>'
         
         obj_str = "Minimizar " if minimize else "Maximizar "
         obj_str += "Z = "
@@ -860,17 +860,17 @@ class GranMSimplexExtended:
         self.html_output += f'<li class="mb-1">{var_list} ≥ 0</li>'
         self.html_output += '</ul></div>'
         
-        # Modelo extendido
+        # Transformación a forma estándar
         self.html_output += self.generate_extended_model(objective, constraints, constraint_types, minimize)
         
-        # Pasos para tabla inicial
+        # Procedimiento de construcción de la tabla simplex
         self.html_output += self.generate_initial_table_steps(objective, constraints, constraint_types, minimize)
         
         # Configurar y resolver
         matrix, all_var_names, basis_vars = self.setup_problem(objective, constraints, constraint_types, minimize)
         
         self.html_output += '<div class="mb-6 p-4 rounded bg-base-100 border border-primary/20">'
-        self.html_output += '<h2 class="font-bold text-lg mb-4 text-primary">Proceso de Solución con Fracciones Exactas</h2>'
+        self.html_output += '<h2 class="font-bold text-lg mb-4 text-primary">Aplicación del Algoritmo Iterativo con Aritmética Exacta</h2>'
         self.html_output += '</div>'
         
         # Eliminar artificiales de Z

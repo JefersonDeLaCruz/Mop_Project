@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}Problema #{{ problema.id }} - Detalle{% endblock %}
+{% block title %}{{ _('Problema #%(id)s - Detalle', id=problema.id) }}{% endblock %}
 {% block tailwindcss %} {{super()}} {% endblock %}
 
 {% block nav %}
@@ -16,9 +16,9 @@
       <!-- Breadcrumb -->
       <div class="breadcrumbs text-sm mb-4">
         <ul>
-          <li><a href="{{ url_for('main.perfil') }}">Perfil</a></li>
-          <li><a href="{{ url_for('main.historial') }}">Historial</a></li>
-          <li>Problema #{{ problema.id }}</li>
+          <li><a href="{{ url_for('main.perfil') }}">{{ _('Perfil') }}</a></li>
+          <li><a href="{{ url_for('main.historial') }}">{{ _('Historial') }}</a></li>
+          <li>{{ _('Problema #%(id)s', id=problema.id) }}</li>
         </ul>
       </div>
 
@@ -26,25 +26,25 @@
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
         <div>
           <h1 class="text-3xl md:text-4xl font-bold text-primary mb-2">
-            Problema #{{ problema.id }}
+            {{ _('Problema #%(id)s', id=problema.id) }}
           </h1>
           <p class="text-lg text-base-content/70">
-            Resuelto el {{ problema.fecha.split('T')[0] if problema.fecha else 'Sin fecha' }}
+            {{ _('Resuelto el %(fecha)s', fecha=problema.fecha.split('T')[0] if problema.fecha else _('Sin fecha')) }}
           </p>
         </div>
         
         <div class="flex gap-3">
           <a href="{{ url_for('main.historial') }}" class="btn btn-outline">
             <i class="fas fa-arrow-left"></i>
-            Volver al Historial
+            {{ _('Volver al Historial') }}
           </a>
           <button class="btn btn-outline" onclick="editarProblema({{ problema.id }})">
             <i class="fas fa-edit"></i>
-            Editar
+            {{ _('Editar') }}
           </button>
           <button class="btn btn-primary" onclick="window.print()">
             <i class="fas fa-print"></i>
-            Imprimir
+            {{ _('Imprimir') }}
           </button>
         </div>
       </div>
@@ -52,24 +52,24 @@
       <!-- Información resumida -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="stat bg-base-100 shadow rounded-lg">
-          <div class="stat-title">Tipo</div>
+          <div class="stat-title">{{ _('Tipo') }}</div>
           <div class="stat-value text-sm {% if problema.resumen.tipo == 'Maximizar' %}text-success{% else %}text-info{% endif %}">
             {{ problema.resumen.tipo }}
           </div>
         </div>
         
         <div class="stat bg-base-100 shadow rounded-lg">
-          <div class="stat-title">Método</div>
+          <div class="stat-title">{{ _('Método') }}</div>
           <div class="stat-value text-sm text-secondary">{{ problema.metodo_usado }}</div>
         </div>
         
         <div class="stat bg-base-100 shadow rounded-lg">
-          <div class="stat-title">Variables</div>
+          <div class="stat-title">{{ _('Variables') }}</div>
           <div class="stat-value text-sm text-accent">{{ problema.resumen.num_variables or 'N/A' }}</div>
         </div>
         
         <div class="stat bg-base-100 shadow rounded-lg">
-          <div class="stat-title">Restricciones</div>
+          <div class="stat-title">{{ _('Restricciones') }}</div>
           <div class="stat-value text-sm text-warning">{{ problema.resumen.num_restricciones }}</div>
         </div>
       </div>

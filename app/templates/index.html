@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}Linear Programming Solver{% endblock %}
+{% block title %}{{ _('Linear Programming Solver') }}{% endblock %}
 
 {% block tailwindcss %} {{super()}} {% endblock %}
 
@@ -15,10 +15,10 @@
     <!-- Header con animación -->
     <div class="text-center mb-8 animate-fade-in">
       <h1 class="text-4xl md:text-5xl font-bold text-primary mb-2">
-        Solver de Programación Lineal
+        {{ _('Solver de Programación Lineal') }}
       </h1>
       <p class="text-lg text-base-content/70">
-        Optimiza tus problemas de manera eficiente
+        {{ _('Optimiza tus problemas de manera eficiente') }}
       </p>
 
     </div>
@@ -31,11 +31,11 @@
       <form id="formulario" action="{{ url_for('main.resolver') }}" method="post">
         <div class="space-y-6">
           <div class="flex items-center gap-3">
-            <p class="badge badge-neutral">Metodo</p>
+            <p class="badge badge-neutral">{{ _('Método') }}</p>
             <div  id="metodo" class="flex justify-around items-center w-full">
-              <span id="metodo_simplex" class="btn btn-info btn-dash btn-sm md:btn">Simplex</span>
-              <!-- <span id="metodo_general" class="btn btn-dash btn-info btn-sm md:btn">General</span> -->
-              <span id="metodo_scipy" class="btn btn-dash btn-info btn-sm md:btn">Scipy</span>
+              <span id="metodo_simplex" class="btn btn-info btn-dash btn-sm md:btn">{{ _('Simplex') }}</span>
+              <!-- <span id="metodo_general" class="btn btn-dash btn-info btn-sm md:btn">{{ _('General') }}</span> -->
+              <span id="metodo_scipy" class="btn btn-dash btn-info btn-sm md:btn">{{ _('Scipy') }}</span>
             </div>
           </div>
           <!-- Card de función objetivo -->
@@ -45,7 +45,7 @@
                 <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <i class="fas fa-bullseye text-primary"></i>
                 </div>
-                <h2 class="card-title text-xl">Función Objetivo</h2>
+                <h2 class="card-title text-xl">{{ _('Función Objetivo') }}</h2>
               </div>
 
               <!-- envuelvo todas las cards de inpu en un form -->
@@ -54,19 +54,19 @@
 
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text font-medium">Tipo de optimización</span>
+                  <span class="label-text font-medium">{{ _('Tipo de optimización') }}</span>
                 </label>
                 <select name="tipoOperacion" id="tipoOperacion" class="select select-bordered select-primary w-full">
-                  <option>Maximizar</option>
-                  <option>Minimizar</option>
+                  <option>{{ _('Maximizar') }}</option>
+                  <option>{{ _('Minimizar') }}</option>
                 </select>
               </div>
 
               <div class="form-control mt-4">
                 <label class="label">
-                  <span class="label-text font-medium">Función objetivo (ej: 3x1 + 2x2)</span>
+                  <span class="label-text font-medium">{{ _('Función objetivo (ej: 3x1 + 2x2)') }}</span>
                 </label>
-                <input name="funcionObjetivo" id="funcionObjetivo" type="text" placeholder="Ingresa la función objetivo"
+                <input name="funcionObjetivo" id="funcionObjetivo" type="text" placeholder="{{ _('Ingresa la función objetivo') }}"
                   class="input input-bordered input-primary w-full focus:input-primary" />
               </div>
             </div>
@@ -117,11 +117,11 @@
                   <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
                     <i class="fas fa-lock text-accent"></i>
                   </div>
-                  <h2 class="card-title text-xs sm:text-xl">Restricciones</h2>
+                  <h2 class="card-title text-xs sm:text-xl">{{ _('Restricciones') }}</h2>
                 </div>
                 <span id="addResBtn" class="btn btn-xs btn-accent btn-outline sm:btn">
                   <i class="fas fa-plus"></i>
-                  Agregar
+                  {{ _('Agregar') }}
                 </span>
               </div>
 
@@ -161,11 +161,11 @@
           <div class="flex gap-4 justify-center">
             <button type="submit" id="resolverBtn" class="btn btn-primary btn-sm sm:btn-lg group">
               <i class="fas fa-play group-hover:translate-x-1 transition-transform"></i>
-              Resolver
+              {{ _('Resolver') }}
             </button>
             <span id="limpiarBtn" class="btn btn-outline btn-sm sm:btn-lg">
               <i class="fas fa-redo"></i>
-              Limpiar
+              {{ _('Limpiar') }}
             </span>
           </div>
 
@@ -182,7 +182,7 @@
               <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
                 <i class="fas fa-chart-line text-success"></i>
               </div>
-              <h2 class="card-title text-xl">Solución</h2>
+              <h2 class="card-title text-xl">{{ _('Solución') }}</h2>
             </div>
 
             <!-- Estado inicial -->
@@ -190,9 +190,9 @@
               <div class="w-20 h-20 rounded-full bg-base-200 flex items-center justify-center mb-4">
                 <i class="fas fa-calculator text-3xl text-base-content/50"></i>
               </div>
-              <p class="text-lg font-medium mb-2">Listo para resolver</p>
+              <p class="text-lg font-medium mb-2">{{ _('Listo para resolver') }}</p>
               <p class="text-sm text-base-content/70">
-                Ingresa tu problema de programación lineal y presiona "Resolver"
+                {{ _('Ingresa tu problema de programación lineal y presiona "Resolver"') }}
               </p>
             </div>
 
@@ -200,11 +200,11 @@
             <div class="hidden" id="solution-content">
               <div class="stats stats-vertical lg:stats-horizontal shadow w-full mb-6">
                 <div class="stat">
-                  <div class="stat-title">Valor Óptimo</div>
+                  <div class="stat-title">{{ _('Valor Óptimo') }}</div>
                   <div id="valorOptimo" class="stat-value text-success">--</div>
                 </div>
                 <div class="stat">
-                  <div class="stat-title">Estado</div>
+                  <div class="stat-title">{{ _('Estado') }}</div>
                   <div id="estadoSolucion" class="stat-value text-sm">--</div>
                 </div>
               </div>
@@ -213,8 +213,8 @@
                 <table class="table table-zebra">
                   <thead>
                     <tr>
-                      <th>Variable</th>
-                      <th>Valor</th>
+                      <th>{{ _('Variable') }}</th>
+                      <th>{{ _('Valor') }}</th>
                     </tr>
                   </thead>
                   <tbody id="tablaVariables">
@@ -295,12 +295,12 @@
 <input type="checkbox" id="modal-grafico" class="modal-toggle" />
 <div class="modal modal-bottom sm:modal-middle w-[70dvw]">
   <div class="modal-box w-full max-w-5xl h-[90vh]">
-    <h3 class="font-bold text-lg mb-4">Gráfica completa</h3>
+    <h3 class="font-bold text-lg mb-4">{{ _('Gráfica completa') }}</h3>
     <div class="w-full h-[75vh] overflow-auto rounded-lg bg-base-200 p-2">
       <div id="grafico-ampliado" class="w-full h-full"></div>
     </div>
     <div class="modal-action">
-      <label for="modal-grafico" class="btn">Cerrar</label>
+      <label for="modal-grafico" class="btn">{{ _('Cerrar') }}</label>
     </div>
   </div>
 </div>

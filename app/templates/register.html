@@ -1,5 +1,5 @@
 {% extends './base.html' %} 
-{% block title %}Register{% endblock %} 
+{% block title %}{{ _('Register') }}{% endblock %} 
 {% block nav%}{% endblock %}
 {% block tailwindcss %} {{super()}} {% endblock %}
 {% block main %}
@@ -21,14 +21,14 @@
 
         <label class="input input-secondary rounded-full">
           <i class="fas fa-envelope opacity-50 h-[1em] w-[1em]"></i>
-          <input id="email" name="name" type="text" placeholder="Nombre" />
+          <input id="email" name="name" type="text" placeholder="{{ _('Nombre') }}" />
         </label>
 
 
 
         <label class="input input-secondary rounded-full">
           <i class="fas fa-user opacity-50 h-[1em] w-[1em]"></i>
-          <input id="username" name="username" type="text" placeholder="Usuario" />
+          <input id="username" name="username" type="text" placeholder="{{ _('Usuario') }}" />
         </label>
 
 
@@ -37,7 +37,7 @@
 
         <label class="input input-secondary rounded-full">
           <i class="fas fa-lock opacity-50 h-[1em] w-[1em]"></i>
-          <input id="password" name="password" type="password" placeholder="Contraseña" />
+          <input id="password" name="password" type="password" placeholder="{{ _('Contraseña') }}" />
         </label>
 
 
@@ -73,7 +73,7 @@
             <i class="fas fa-chart-line text-4xl text-white"></i>
           </div>
           <h2 class="text-3xl font-bold mb-2">OptimizeFlow</h2>
-          <p class="text-xl opacity-90">Solver de Programación Lineal</p>
+          <p class="text-xl opacity-90">{{ _('Solver de Programación Lineal') }}</p>
         </div>
 
         <!-- Features destacados -->
@@ -82,19 +82,19 @@
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-bullseye text-sm"></i>
             </div>
-            <span class="text-lg">Optimización de funciones objetivo</span>
+            <span class="text-lg">{{ _('Optimización de funciones objetivo') }}</span>
           </div>
           <div class="flex items-center justify-center space-x-3 animate-fade-in" style="animation-delay: 1s;">
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-project-diagram text-sm"></i>
             </div>
-            <span class="text-lg">Análisis de restricciones</span>
+            <span class="text-lg">{{ _('Análisis de restricciones') }}</span>
           </div>
           <div class="flex items-center justify-center space-x-3 animate-fade-in" style="animation-delay: 1.5s;">
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-calculator text-sm"></i>
             </div>
-            <span class="text-lg">Soluciones matemáticas precisas</span>
+            <span class="text-lg">{{ _('Soluciones matemáticas precisas') }}</span>
           </div>
         </div>
 

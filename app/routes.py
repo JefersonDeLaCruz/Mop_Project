@@ -265,12 +265,20 @@ def actualizar_perfil():
 
 
 @main.route("/idioma/<lang_code>")
-@login_required
-def idioma(lang_code):
+def cambiar_idioma(lang_code):
+    """Endpoint para cambiar el idioma de la aplicación"""
+    # Validar que el idioma sea soportado
     if lang_code not in ["en", "es"]:
-        lang_code = "es"
+        lang_code = "es"  # Por defecto español
+    
+    # Guardar el idioma en la sesión
     session["lang"] = lang_code
-    return redirect(url_for("main.index"))
+    
+    # Redireccionar de vuelta a la página anterior o al inicio
+    next_page = request.args.get('next')
+    if next_page:
+        return redirect(next_page)
+    return redirect(request.referrer or url_for("main.index"))
 
 
 @main.route("/resolver", methods=["POST"])

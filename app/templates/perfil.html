@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}Perfil de Usuario{% endblock %}
+{% block title %}{{ _('Perfil de Usuario') }}{% endblock %}
 {% block tailwindcss %} {{super()}} {% endblock %}
 
 {% block nav %}
@@ -15,13 +15,13 @@
     <div class="text-center mb-8 animate-fade-in">
       <h1 class="text-4xl md:text-5xl font-bold text-primary mb-2">
         {% if user %}
-          ¡Hola, {{ user.name }}!
+          {{ _('¡Hola, %(name)s!', name=user.name) }}
         {% else %}
-          Mi Perfil
+          {{ _('Mi Perfil') }}
         {% endif %}
       </h1>
       <p class="text-lg text-base-content/70">
-        Gestiona tu información y revisa tu historial
+        {{ _('Gestiona tu información y revisa tu historial') }}
       </p>
     </div>
     <!-- Grid principal responsivo -->
@@ -37,15 +37,15 @@
               <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <i class="fas fa-user text-primary"></i>
               </div>
-              <h2 class="card-title text-xl">Información Personal</h2>
+              <h2 class="card-title text-xl">{{ _('Información Personal') }}</h2>
             </div>
             
             <div class="space-y-4">
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text font-medium">Nombre completo</span>
+                  <span class="label-text font-medium">{{ _('Nombre completo') }}</span>
                 </label>
-                <input type="text" value="{{ user.name if user else 'No disponible' }}" 
+                <input type="text" value="{{ user.name if user else _('No disponible') }}" 
                        class="input input-bordered input-primary w-full" readonly />
               </div>
               
@@ -59,9 +59,9 @@
               
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text font-medium">Usuario</span>
+                  <span class="label-text font-medium">{{ _('Usuario') }}</span>
                 </label>
-                <input type="text" value="{{ user.username if user else 'No disponible' }}" 
+                <input type="text" value="{{ user.username if user else _('No disponible') }}" 
                        class="input input-bordered input-primary w-full" readonly />
               </div>
               
@@ -77,7 +77,7 @@
             <div class="card-actions justify-end mt-6">
               <label for="edit_profile_modal" class="btn btn-outline btn-primary cursor-pointer">
                 <i class="fas fa-edit"></i>
-                Editar perfil
+                {{ _('Editar perfil') }}
               </label>
             </div>
           </div>
@@ -90,14 +90,14 @@
               <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
                 <i class="fas fa-chart-bar text-secondary"></i>
               </div>
-              <h2 class="card-title text-xl">Estadísticas</h2>
+              <h2 class="card-title text-xl">{{ _('Estadísticas') }}</h2>
             </div>
             
             <div class="stats stats-vertical shadow">
               <div class="stat">
-                <div class="stat-title">Problemas resueltos</div>
+                <div class="stat-title">{{ _('Problemas resueltos') }}</div>
                 <div class="stat-value text-primary">{{ total_problemas }}</div>
-                <div class="stat-desc">Total histórico</div>
+                <div class="stat-desc">{{ _('Total histórico') }}</div>
               </div>
               
               <!-- <div class="stat">
@@ -117,7 +117,7 @@
             <div class="card-actions justify-center mt-6">
               <a href="{{ url_for('main.historial') }}" class="btn btn-secondary">
                 <i class="fas fa-history"></i>
-                Ver Historial Completo
+                {{ _('Ver Historial Completo') }}
               </a>
             </div>
           </div>
@@ -133,13 +133,13 @@
             <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
               <i class="fas fa-history text-success"></i>
             </div>
-            <h2 class="text-2xl font-bold">Problemas Resueltos</h2>
+            <h2 class="text-2xl font-bold">{{ _('Problemas Resueltos') }}</h2>
           </div>
           <div class="flex gap-2">
             <select class="select select-bordered select-sm">
-              <option>Todos</option>
-              <option>Maximización</option>
-              <option>Minimización</option>
+              <option>{{ _('Todos') }}</option>
+              <option>{{ _('Maximización') }}</option>
+              <option>{{ _('Minimización') }}</option>
             </select>
             <button class="btn btn-sm btn-outline">
               <i class="fas fa-filter"></i>
@@ -170,20 +170,20 @@
                 </div>
                 <h3 class="card-title text-lg mb-2">
                   {% if problema.resumen.tipo.lower().startswith('max') %}
-                    Problema de Maximización
+                    {{ _('Problema de Maximización') }}
                   {% elif problema.resumen.tipo.lower().startswith('min') %}
-                    Problema de Minimización
+                    {{ _('Problema de Minimización') }}
                   {% else %}
-                    Problema de Optimización
+                    {{ _('Problema de Optimización') }}
                   {% endif %}
                 </h3>
                 <p class="text-sm text-base-content/70 mb-3">
-                  Función objetivo: {{ problema.resumen.funcion_objetivo[:40] }}{% if problema.resumen.funcion_objetivo|length > 40 %}...{% endif %}
+                  {{ _('Función objetivo') }}: {{ problema.resumen.funcion_objetivo[:40] }}{% if problema.resumen.funcion_objetivo|length > 40 %}...{% endif %}
                 </p>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2 text-xs">
-                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_variables }} variable{% if problema.resumen.num_variables != 1 %}s{% endif %}</div>
-                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_restricciones }} restricción{% if problema.resumen.num_restricciones != 1 %}es{% endif %}</div>
+                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_variables }} {{ ngettext('variable', 'variables', problema.resumen.num_variables) }}</div>
+                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_restricciones }} {{ ngettext('restricción', 'restricciones', problema.resumen.num_restricciones) }}</div>
                   </div>
                   <div class="text-primary font-bold text-sm">{{ problema.metodo_usado }}</div>
                 </div>
@@ -197,14 +197,14 @@
                 <i class="fas fa-calculator text-3xl text-base-content/50"></i>
               </div>
               <h3 class="text-xl font-semibold text-base-content/70 mb-2">
-                No hay problemas resueltos aún
+                {{ _('No hay problemas resueltos aún') }}
               </h3>
               <p class="text-base-content/50 mb-6">
-                Resuelve tu primer problema de programación lineal para verlo aquí
+                {{ _('Resuelve tu primer problema de programación lineal para verlo aquí') }}
               </p>
               <a href="{{ url_for('main.index') }}" class="btn btn-primary">
                 <i class="fas fa-plus mr-2"></i>
-                Resolver Problema
+                {{ _('Resolver Problema') }}
               </a>
             </div>
           {% endif %}
@@ -329,12 +329,13 @@
       <!-- Opcional: Campo para nueva contraseña -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-medium">Nueva contraseña</span>
-          <span class="label-text-alt text-base-content/60">Opcional - déjalo vacío para mantener la actual</span>
+          <span class="label-text font-medium block">Nueva contraseña</span>
+          <span class="label-text-alt text-base-content/60 block">Opcional</span>
+          <!-- <span class="label-text-alt text-base-content/60">déjalo vacío para mantener la actual</span> -->
         </label>
         <input type="password" name="new_password" 
                class="input input-bordered input-accent w-full" 
-               minlength="4" placeholder="Nueva contraseña (opcional)" />
+               minlength="4" placeholder="déjalo vacío para mantener la actual" />
       </div>
       
       <!-- Confirmación de nueva contraseña -->

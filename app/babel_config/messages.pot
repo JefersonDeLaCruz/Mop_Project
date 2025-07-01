@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-30 21:47-0600\n"
+"POT-Creation-Date: 2025-06-30 18:20-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,442 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: templates/index.html:20
-msgid "Esto es modo oscuro"
+#: templates/base.html:32 templates/base.html:44
+msgid "Nuevo Problema"
+msgstr ""
+
+#: templates/base.html:33 templates/base.html:45
+msgid "Ejemplos"
+msgstr ""
+
+#: templates/base.html:34 templates/base.html:46
+msgid "Ayuda"
+msgstr ""
+
+#: templates/base.html:58
+msgid "Seleccionar tema"
+msgstr ""
+
+#: templates/base.html:63
+msgid "Tema Claro"
+msgstr ""
+
+#: templates/base.html:67
+msgid "Tema Oscuro"
+msgstr ""
+
+#: templates/base.html:86 templates/problema_detalle.html:19
+msgid "Perfil"
+msgstr ""
+
+#: templates/base.html:91
+msgid "Cerrar Sesión"
+msgstr ""
+
+#: templates/base.html:97
+msgid "Iniciar Sesión"
+msgstr ""
+
+#: templates/base.html:101 templates/register.html:48
+msgid "Registrarse"
+msgstr ""
+
+#: templates/historial.html:3 templates/historial.html:18
+msgid "Historial de Problemas"
+msgstr ""
+
+#: templates/historial.html:21
+msgid "Todos tus problemas resueltos en un solo lugar"
+msgstr ""
+
+#: templates/historial.html:30
+msgid "Volver al Perfil"
+msgstr ""
+
+#: templates/historial.html:36
+msgid "Todos los métodos"
+msgstr ""
+
+#: templates/historial.html:39
+msgid "Simplex Clásico"
+msgstr ""
+
+#: templates/historial.html:42
+msgid "Todos los tipos"
+msgstr ""
+
+#: templates/historial.html:43 templates/perfil.html:141
+msgid "Maximización"
+msgstr ""
+
+#: templates/historial.html:44 templates/perfil.html:142
+msgid "Minimización"
+msgstr ""
+
+#: templates/historial.html:55
+msgid "Total Resueltos"
+msgstr ""
+
+#: templates/historial.html:57
+msgid "problema en total"
+msgid_plural "problemas en total"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/historial.html:64
+msgid "Método Favorito"
+msgstr ""
+
+#: templates/historial.html:66
+msgid "más utilizado"
+msgstr ""
+
+#: templates/historial.html:73
+msgid "Último Problema"
+msgstr ""
+
+#: templates/historial.html:76
+msgid "Hace 2 días"
+msgstr ""
+
+#: templates/historial.html:81
+msgid "resuelto"
+msgstr ""
+
+#: templates/historial.html:101 templates/problema_detalle.html:21
+#: templates/problema_detalle.html:29
+#, python-format
+msgid "Problema #%(id)s"
+msgstr ""
+
+#: templates/historial.html:109
+#, python-format
+msgid "%(num)d variable"
+msgid_plural "%(num)d variables"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/historial.html:110
+#, python-format
+msgid "%(num)d restricción"
+msgid_plural "%(num)d restricciones"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/historial.html:122
+msgid "Ver detalles"
+msgstr ""
+
+#: templates/historial.html:146
+msgid "¡Aún no has resuelto problemas!"
+msgstr ""
+
+#: templates/historial.html:148
+msgid ""
+"Comienza resolviendo tu primer problema de programación lineal y "
+"aparecerá aquí en tu historial."
+msgstr ""
+
+#: templates/historial.html:152
+msgid "Resolver Primer Problema"
+msgstr ""
+
+#: templates/index.html:3
+msgid "Linear Programming Solver"
+msgstr ""
+
+#: templates/index.html:18 templates/login.html:70 templates/register.html:76
+msgid "Solver de Programación Lineal"
+msgstr ""
+
+#: templates/index.html:21
+msgid "Optimiza tus problemas de manera eficiente"
+msgstr ""
+
+#: templates/index.html:34 templates/problema_detalle.html:62
+msgid "Método"
+msgstr ""
+
+#: templates/index.html:36
+msgid "Simplex"
+msgstr ""
+
+#: templates/index.html:37
+msgid "General"
+msgstr ""
+
+#: templates/index.html:38
+msgid "Scipy"
+msgstr ""
+
+#: templates/index.html:48
+msgid "Función Objetivo"
+msgstr ""
+
+#: templates/index.html:57
+msgid "Tipo de optimización"
+msgstr ""
+
+#: templates/index.html:60
+msgid "Maximizar"
+msgstr ""
+
+#: templates/index.html:61
+msgid "Minimizar"
+msgstr ""
+
+#: templates/index.html:67
+msgid "Función objetivo (ej: 3x1 + 2x2)"
+msgstr ""
+
+#: templates/index.html:69
+msgid "Ingresa la función objetivo"
+msgstr ""
+
+#: templates/index.html:120 templates/problema_detalle.html:72
+msgid "Restricciones"
+msgstr ""
+
+#: templates/index.html:124
+msgid "Agregar"
+msgstr ""
+
+#: templates/index.html:164
+msgid "Resolver"
+msgstr ""
+
+#: templates/index.html:168
+msgid "Limpiar"
+msgstr ""
+
+#: templates/index.html:185
+msgid "Solución"
+msgstr ""
+
+#: templates/index.html:193
+msgid "Listo para resolver"
+msgstr ""
+
+#: templates/index.html:195
+msgid "Ingresa tu problema de programación lineal y presiona \"Resolver\""
+msgstr ""
+
+#: templates/index.html:203
+msgid "Valor Óptimo"
+msgstr ""
+
+#: templates/index.html:207
+msgid "Estado"
+msgstr ""
+
+#: templates/index.html:216
+msgid "Variable"
+msgstr ""
+
+#: templates/index.html:217
+msgid "Valor"
+msgstr ""
+
+#: templates/index.html:298
+msgid "Gráfica completa"
+msgstr ""
+
+#: templates/index.html:303
+msgid "Cerrar"
+msgstr ""
+
+#: templates/login.html:3
+msgid "Login"
+msgstr ""
+
+#: templates/login.html:24
+msgid "Bienvenido de nuevo"
+msgstr ""
+
+#: templates/login.html:29 templates/perfil.html:62 templates/register.html:31
+msgid "Usuario"
+msgstr ""
+
+#: templates/login.html:35 templates/register.html:40
+msgid "Contraseña"
+msgstr ""
+
+#: templates/login.html:41
+msgid "Iniciar sesion"
+msgstr ""
+
+#: templates/login.html:48
+msgid "¿No tienes cuenta?"
+msgstr ""
+
+#: templates/login.html:50
+msgid "Regístrate aquí"
+msgstr ""
+
+#: templates/login.html:79 templates/register.html:85
+msgid "Optimización de funciones objetivo"
+msgstr ""
+
+#: templates/login.html:85 templates/register.html:91
+msgid "Análisis de restricciones"
+msgstr ""
+
+#: templates/login.html:91 templates/register.html:97
+msgid "Soluciones matemáticas precisas"
+msgstr ""
+
+#: templates/perfil.html:3
+msgid "Perfil de Usuario"
+msgstr ""
+
+#: templates/perfil.html:18
+#, python-format
+msgid "¡Hola, %(name)s!"
+msgstr ""
+
+#: templates/perfil.html:20
+msgid "Mi Perfil"
+msgstr ""
+
+#: templates/perfil.html:24
+msgid "Gestiona tu información y revisa tu historial"
+msgstr ""
+
+#: templates/perfil.html:40
+msgid "Información Personal"
+msgstr ""
+
+#: templates/perfil.html:46
+msgid "Nombre completo"
+msgstr ""
+
+#: templates/perfil.html:48 templates/perfil.html:64
+msgid "No disponible"
+msgstr ""
+
+#: templates/perfil.html:80
+msgid "Editar perfil"
+msgstr ""
+
+#: templates/perfil.html:93
+msgid "Estadísticas"
+msgstr ""
+
+#: templates/perfil.html:98
+msgid "Problemas resueltos"
+msgstr ""
+
+#: templates/perfil.html:100
+msgid "Total histórico"
+msgstr ""
+
+#: templates/perfil.html:120
+msgid "Ver Historial Completo"
+msgstr ""
+
+#: templates/perfil.html:136
+msgid "Problemas Resueltos"
+msgstr ""
+
+#: templates/perfil.html:140
+msgid "Todos"
+msgstr ""
+
+#: templates/perfil.html:173
+msgid "Problema de Maximización"
+msgstr ""
+
+#: templates/perfil.html:175
+msgid "Problema de Minimización"
+msgstr ""
+
+#: templates/perfil.html:177
+msgid "Problema de Optimización"
+msgstr ""
+
+#: templates/perfil.html:181
+msgid "Función objetivo"
+msgstr ""
+
+#: templates/perfil.html:185
+msgid "variable"
+msgid_plural "variables"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/perfil.html:186
+msgid "restricción"
+msgid_plural "restricciones"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/perfil.html:200
+msgid "No hay problemas resueltos aún"
+msgstr ""
+
+#: templates/perfil.html:203
+msgid "Resuelve tu primer problema de programación lineal para verlo aquí"
+msgstr ""
+
+#: templates/perfil.html:207
+msgid "Resolver Problema"
+msgstr ""
+
+#: templates/problema_detalle.html:3
+#, python-format
+msgid "Problema #%(id)s - Detalle"
+msgstr ""
+
+#: templates/problema_detalle.html:20
+msgid "Historial"
+msgstr ""
+
+#: templates/problema_detalle.html:32
+#, python-format
+msgid "Resuelto el %(fecha)s"
+msgstr ""
+
+#: templates/problema_detalle.html:32
+msgid "Sin fecha"
+msgstr ""
+
+#: templates/problema_detalle.html:39
+msgid "Volver al Historial"
+msgstr ""
+
+#: templates/problema_detalle.html:43
+msgid "Editar"
+msgstr ""
+
+#: templates/problema_detalle.html:47
+msgid "Imprimir"
+msgstr ""
+
+#: templates/problema_detalle.html:55
+msgid "Tipo"
+msgstr ""
+
+#: templates/problema_detalle.html:67
+msgid "Variables"
+msgstr ""
+
+#: templates/register.html:2
+msgid "Register"
+msgstr ""
+
+#: templates/register.html:19
+msgid "Crear una cuenta"
+msgstr ""
+
+#: templates/register.html:24
+msgid "Nombre"
+msgstr ""
+
+#: templates/register.html:55
+msgid "¿Ya tienes cuenta?"
+msgstr ""
+
+#: templates/register.html:57
+msgid "Inicia sesión"
 msgstr ""
 

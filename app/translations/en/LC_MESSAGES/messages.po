@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-30 21:47-0600\n"
-"PO-Revision-Date: 2025-05-30 21:54-0600\n"
+"POT-Creation-Date: 2025-06-30 18:20-0600\n"
+"PO-Revision-Date: 2025-06-30 18:22-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
@@ -18,7 +18,330 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: templates/index.html:20
-msgid "Esto es modo oscuro"
-msgstr "This is dark mode"
+msgid "Nuevo Problema"
+msgstr "New Problem"
 
+msgid "Ejemplos"
+msgstr "Examples"
+
+msgid "Ayuda"
+msgstr "Help"
+
+msgid "Seleccionar tema"
+msgstr "Select theme"
+
+msgid "Tema Claro"
+msgstr "Light Theme"
+
+msgid "Tema Oscuro"
+msgstr "Dark Theme"
+
+msgid "Perfil"
+msgstr "Profile"
+
+msgid "Cerrar Sesión"
+msgstr "Log Out"
+
+msgid "Iniciar Sesión"
+msgstr "Log In"
+
+msgid "Registrarse"
+msgstr "Sign Up"
+
+msgid "Historial de Problemas"
+msgstr "Problem History"
+
+msgid "Todos tus problemas resueltos en un solo lugar"
+msgstr "All your solved problems in one place"
+
+msgid "Volver al Perfil"
+msgstr "Back to Profile"
+
+msgid "Todos los métodos"
+msgstr "All methods"
+
+msgid "Simplex Clásico"
+msgstr "Classic Simplex"
+
+msgid "Todos los tipos"
+msgstr "All types"
+
+msgid "Maximización"
+msgstr "Maximization"
+
+msgid "Minimización"
+msgstr "Minimization"
+
+msgid "Total Resueltos"
+msgstr "Total Solved"
+
+msgid "problema en total"
+msgid_plural "problemas en total"
+msgstr[0] "problem in total"
+msgstr[1] "problems in total"
+
+msgid "Método Favorito"
+msgstr "Favorite Method"
+
+msgid "más utilizado"
+msgstr "most used"
+
+msgid "Último Problema"
+msgstr "Latest Problem"
+
+msgid "Hace 2 días"
+msgstr "2 days ago"
+
+msgid "resuelto"
+msgstr "solved"
+
+msgid "Problema #%(id)s"
+msgstr "Problem #%(id)s"
+
+msgid "%(num)d variable"
+msgid_plural "%(num)d variables"
+msgstr[0] "%(num)d variable"
+msgstr[1] "%(num)d variables"
+
+msgid "%(num)d restricción"
+msgid_plural "%(num)d restricciones"
+msgstr[0] "%(num)d constraint"
+msgstr[1] "%(num)d constraints"
+
+msgid "Ver detalles"
+msgstr "View details"
+
+msgid "¡Aún no has resuelto problemas!"
+msgstr "You haven't solved any problems yet!"
+
+msgid ""
+"Comienza resolviendo tu primer problema de programación lineal y "
+"aparecerá aquí en tu historial."
+msgstr ""
+"Start by solving your first linear programming problem and it will appear here in your history."
+
+msgid "Resolver Primer Problema"
+msgstr "Solve First Problem"
+
+msgid "Linear Programming Solver"
+msgstr "Linear Programming Solver"
+
+msgid "Solver de Programación Lineal"
+msgstr "Linear Programming Solver"
+
+msgid "Optimiza tus problemas de manera eficiente"
+msgstr "Optimize your problems efficiently"
+
+msgid "Método"
+msgstr "Method"
+
+msgid "Simplex"
+msgstr "Simplex"
+
+msgid "General"
+msgstr "General"
+
+msgid "Scipy"
+msgstr "Scipy"
+
+msgid "Función Objetivo"
+msgstr "Objective Function"
+
+msgid "Tipo de optimización"
+msgstr "Optimization Type"
+
+msgid "Maximizar"
+msgstr "Maximize"
+
+msgid "Minimizar"
+msgstr "Minimize"
+
+msgid "Función objetivo (ej: 3x1 + 2x2)"
+msgstr "Objective function (e.g., 3x1 + 2x2)"
+
+msgid "Ingresa la función objetivo"
+msgstr "Enter the objective function"
+
+msgid "Restricciones"
+msgstr "Constraints"
+
+msgid "Agregar"
+msgstr "Add"
+
+msgid "Resolver"
+msgstr "Solve"
+
+msgid "Limpiar"
+msgstr "Clear"
+
+msgid "Solución"
+msgstr "Solution"
+
+msgid "Listo para resolver"
+msgstr "Ready to solve"
+
+msgid "Ingresa tu problema de programación lineal y presiona \"Resolver\""
+msgstr "Enter your linear programming problem and press \"Solve\""
+
+msgid "Valor Óptimo"
+msgstr "Optimal Value"
+
+msgid "Estado"
+msgstr "Status"
+
+msgid "Variable"
+msgstr "Variable"
+
+msgid "Valor"
+msgstr "Value"
+
+msgid "Gráfica completa"
+msgstr "Full Graph"
+
+msgid "Cerrar"
+msgstr "Close"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Bienvenido de nuevo"
+msgstr "Welcome back"
+
+msgid "Usuario"
+msgstr "Username"
+
+msgid "Contraseña"
+msgstr "Password"
+
+msgid "Iniciar sesion"
+msgstr "Log in"
+
+msgid "¿No tienes cuenta?"
+msgstr "Don't have an account?"
+
+msgid "Regístrate aquí"
+msgstr "Sign up here"
+
+msgid "Optimización de funciones objetivo"
+msgstr "Objective function optimization"
+
+msgid "Análisis de restricciones"
+msgstr "Constraint analysis"
+
+msgid "Soluciones matemáticas precisas"
+msgstr "Accurate mathematical solutions"
+
+msgid "Perfil de Usuario"
+msgstr "User Profile"
+
+msgid "¡Hola, %(name)s!"
+msgstr "Hello, %(name)s!"
+
+msgid "Mi Perfil"
+msgstr "My Profile"
+
+msgid "Gestiona tu información y revisa tu historial"
+msgstr "Manage your information and review your history"
+
+msgid "Información Personal"
+msgstr "Personal Information"
+
+msgid "Nombre completo"
+msgstr "Full name"
+
+msgid "No disponible"
+msgstr "Not available"
+
+msgid "Editar perfil"
+msgstr "Edit profile"
+
+msgid "Estadísticas"
+msgstr "Statistics"
+
+msgid "Problemas resueltos"
+msgstr "Problems solved"
+
+msgid "Total histórico"
+msgstr "Total history"
+
+msgid "Ver Historial Completo"
+msgstr "View Full History"
+
+msgid "Problemas Resueltos"
+msgstr "Solved Problems"
+
+msgid "Todos"
+msgstr "All"
+
+msgid "Problema de Maximización"
+msgstr "Maximization Problem"
+
+msgid "Problema de Minimización"
+msgstr "Minimization Problem"
+
+msgid "Problema de Optimización"
+msgstr "Optimization Problem"
+
+msgid "Función objetivo"
+msgstr "Objective function"
+
+msgid "variable"
+msgid_plural "variables"
+msgstr[0] "variable"
+msgstr[1] "variables"
+
+msgid "restricción"
+msgid_plural "restricciones"
+msgstr[0] "constraint"
+msgstr[1] "constraints"
+
+msgid "No hay problemas resueltos aún"
+msgstr "No problems solved yet"
+
+msgid "Resuelve tu primer problema de programación lineal para verlo aquí"
+msgstr "Solve your first linear programming problem to see it here"
+
+msgid "Resolver Problema"
+msgstr "Solve Problem"
+
+msgid "Problema #%(id)s - Detalle"
+msgstr "Problem #%(id)s - Detail"
+
+msgid "Historial"
+msgstr "History"
+
+msgid "Resuelto el %(fecha)s"
+msgstr "Solved on %(fecha)s"
+
+msgid "Sin fecha"
+msgstr "No date"
+
+msgid "Volver al Historial"
+msgstr "Back to History"
+
+msgid "Editar"
+msgstr "Edit"
+
+msgid "Imprimir"
+msgstr "Print"
+
+msgid "Tipo"
+msgstr "Type"
+
+msgid "Variables"
+msgstr "Variables"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Crear una cuenta"
+msgstr "Create an account"
+
+msgid "Nombre"
+msgstr "Name"
+
+msgid "¿Ya tienes cuenta?"
+msgstr "Already have an account?"
+
+msgid "Inicia sesión"
+msgstr "Log in"
