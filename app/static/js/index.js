@@ -171,14 +171,25 @@ const metodoScipyBtn = document.getElementById("metodo_scipy");
 
 let metodoSelecionado;
 
+// Inicializar botones de método sin selección
+function inicializarBotonesMetodo() {
+  [metodoSimplexBtn, metodoScipyBtn].forEach((btn) => {
+    btn.classList.remove("btn-active");
+    btn.classList.add("btn-outline");
+  });
+  metodoSelecionado = undefined;
+}
+
 function activarBotonSeleccionado(boton) {
   [metodoSimplexBtn, metodoScipyBtn].forEach((btn) => {
     if (btn === boton) {
-      btn.classList.remove("btn-dash");
+      // Activar: remover btn-outline y agregar btn-active (color sólido)
+      btn.classList.remove("btn-outline");
       btn.classList.add("btn-active");
     } else {
+      // Desactivar: remover btn-active y agregar btn-outline
       btn.classList.remove("btn-active");
-      btn.classList.add("btn-dash");
+      btn.classList.add("btn-outline");
     }
   });
   metodoSelecionado = boton.innerText;
@@ -265,6 +276,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
           }
           
+          // Scroll automático a la sección de resultados
+          scrollToResults();
+          
         } catch (err) {
           console.error("Error al resolver con Gran M (maximizar):", err);
           alerta.open({
@@ -279,6 +293,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
           console.log("payload para simplex clásico (maximizar solo ≤): ", normalizedPayload);
           const data = await resolverSimplex(normalizedPayload);
           mostrarResultadoSimplex(data);
+          
+          // Scroll automático a la sección de resultados
+          scrollToResults();
           
           // Guardar en historial
           guardarEnHistorial(normalizedPayload, "Simplex Clásico");
@@ -323,6 +340,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
           console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
         }
         
+        // Scroll automático a la sección de resultados
+        scrollToResults();
+        
       } catch (err) {
         console.error("Error al resolver con Gran M:", err);
         alerta.open({
@@ -341,6 +361,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       console.log("respuesta de scipy:", data);
       if (data.resultado.status == "ok") {
         mostrarSolucion(data);
+        
+        // Scroll automático a la sección de resultados
+        scrollToResults();
         
         // Guardar en historial
         guardarEnHistorial(normalizedPayload, "SciPy");
@@ -556,7 +579,13 @@ function cargarProblemaDesdeURL() {
 }
 
 // Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', cargarProblemaDesdeURL);
+document.addEventListener('DOMContentLoaded', () => {
+  // Inicializar los botones de método para que no estén seleccionados
+  inicializarBotonesMetodo();
+  
+  // Cargar problema desde URL si corresponde
+  cargarProblemaDesdeURL();
+});
 
 // Función para limpiar todos los campos del formulario
 function limpiarFormulario() {
@@ -575,11 +604,7 @@ function limpiarFormulario() {
   }
   
   // Limpiar selección de método
-  [metodoSimplexBtn, metodoScipyBtn].forEach((btn) => {
-    btn.classList.remove("btn-active");
-    btn.classList.add("btn-dash");
-  });
-  metodoSelecionado = undefined;
+  inicializarBotonesMetodo();
   
   // Limpiar resultados si existen
   const resultadosDiv = document.getElementById("resultados");
@@ -597,5 +622,16 @@ function limpiarFormulario() {
 
 // Agregar evento al botón limpiar
 limpiarBtn.addEventListener("click", limpiarFormulario);
+
+// Función para hacer scroll automático a la sección de resultados
+function scrollToResults() {
+  const resultadosSection = document.getElementById("resultados");
+  if (resultadosSection) {
+    resultadosSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+}
 
 

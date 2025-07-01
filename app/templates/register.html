@@ -1,5 +1,5 @@
 {% extends './base.html' %} 
-{% block title %}{{ _('Register') }}{% endblock %} 
+{% block title %} {{ _('Crear Cuenta') }} - LP Solver{% endblock %} 
 {% block nav%}{% endblock %}
 {% block tailwindcss %} {{super()}} {% endblock %}
 {% block main %}
@@ -284,9 +284,9 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Esperar 2.5 segundos para que el usuario vea el mensaje de éxito
-    // antes de redirigir al index (ahora con sesión iniciada automáticamente)
+    // antes de redirigir al dashboard (ahora con sesión iniciada automáticamente)
     setTimeout(function() {
-      window.location.href = "{{ url_for('main.index') }}";
+      window.location.href = "{{ url_for('main.dashboard') }}";
     }, 2500);
   });
 </script>

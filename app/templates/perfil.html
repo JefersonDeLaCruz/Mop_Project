@@ -1,6 +1,5 @@
 {% extends './base.html' %}
-
-{% block title %}{{ _('Perfil de Usuario') }}{% endblock %}
+{% block title %}👤 {{ _('Mi Perfil') }} - MOPSolver{% endblock %}
 {% block tailwindcss %} {{super()}} {% endblock %}
 
 {% block nav %}
@@ -135,16 +134,7 @@
             </div>
             <h2 class="text-2xl font-bold">{{ _('Problemas Resueltos') }}</h2>
           </div>
-          <div class="flex gap-2">
-            <select class="select select-bordered select-sm">
-              <option>{{ _('Todos') }}</option>
-              <option>{{ _('Maximización') }}</option>
-              <option>{{ _('Minimización') }}</option>
-            </select>
-            <button class="btn btn-sm btn-outline">
-              <i class="fas fa-filter"></i>
-            </button>
-          </div>
+          
         </div>
 
         <!-- Grid de problemas -->

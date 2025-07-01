@@ -30,9 +30,10 @@ def create_app():
 
 @login_manager.user_loader
 def load_user(user_id):
+    """Cargar usuario por ID para Flask-Login"""
     usuarios = cargar_usuarios("./data/usuarios.json")
     for user_data in usuarios:
         if str(user_data["id"]) == str(user_id):
-            return User(user_data["id"], user_data["username"], user_data["name"], user_data["password"])
+            return User(user_data["id"], user_data["username"], user_data["name"], user_data.get("password_hash"))
     return None
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-30 18:20-0600\n"
+"POT-Creation-Date: 2025-07-01 15:04-0600\n"
 "PO-Revision-Date: 2025-06-30 18:22-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,330 +18,1418 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-msgid "Nuevo Problema"
-msgstr "New Problem"
+#: app/routes.py:709
+#, fuzzy
+msgid "Problema de Producción Industrial"
+msgstr "Industrial Production Problem"
 
-msgid "Ejemplos"
-msgstr "Examples"
+#: app/routes.py:710
+msgid ""
+"Una fábrica de muebles produce dos tipos de productos: mesas (Producto A)"
+" y sillas (Producto B). La empresa cuenta con recursos limitados de "
+"madera y tiempo de producción. Cada mesa genera una ganancia de $3 y cada"
+" silla $2. La empresa necesita determinar cuántas unidades de cada "
+"producto fabricar para maximizar sus ganancias, considerando que tiene "
+"disponibles 18 unidades de madera y 12 horas de tiempo de producción "
+"diarias."
+msgstr ""
+"A furniture factory produces two types of products: tables (Product A) "
+"and chairs (Product B). The company has limited wood and production time "
+"resources. Each table generates a profit of $3 and each chair $2. The "
+"company needs to determine how many units of each product to manufacture "
+"to maximize its profits, considering that it has 18 units of wood and 12 "
+"hours of production time available daily."
 
-msgid "Ayuda"
-msgstr "Help"
-
-msgid "Seleccionar tema"
-msgstr "Select theme"
-
-msgid "Tema Claro"
-msgstr "Light Theme"
-
-msgid "Tema Oscuro"
-msgstr "Dark Theme"
-
-msgid "Perfil"
-msgstr "Profile"
-
-msgid "Cerrar Sesión"
-msgstr "Log Out"
-
-msgid "Iniciar Sesión"
-msgstr "Log In"
-
-msgid "Registrarse"
-msgstr "Sign Up"
-
-msgid "Historial de Problemas"
-msgstr "Problem History"
-
-msgid "Todos tus problemas resueltos en un solo lugar"
-msgstr "All your solved problems in one place"
-
-msgid "Volver al Perfil"
-msgstr "Back to Profile"
-
-msgid "Todos los métodos"
-msgstr "All methods"
-
-msgid "Simplex Clásico"
-msgstr "Classic Simplex"
-
-msgid "Todos los tipos"
-msgstr "All types"
-
+#: app/routes.py:711 app/templates/historial.html:43
 msgid "Maximización"
 msgstr "Maximization"
 
+#: app/routes.py:712
+msgid "x1 (Mesas producidas)"
+msgstr "x1 (Tables produced)"
+
+#: app/routes.py:712
+msgid "x2 (Sillas producidas)"
+msgstr "x2 (Chairs produced)"
+
+#: app/routes.py:715
+msgid ""
+"2x1 + x2 ≤ 18 (Limitación de madera: cada mesa usa 2 unidades, cada silla"
+" 1)"
+msgstr ""
+"2x1 + x2 ≤ 18 (Wood limitation: each table uses 2 units, each chair 1)"
+
+#: app/routes.py:716
+msgid ""
+"x1 + 3x2 ≤ 12 (Limitación de tiempo: cada mesa toma 1 hora, cada silla 3 "
+"horas)"
+msgstr ""
+"x1 + 3x2 ≤ 12 (Time limitation: each table takes 1 hour, each chair 3 "
+"hours)"
+
+#: app/routes.py:719 app/templates/ejemplos.html:64
+msgid "Producción"
+msgstr "Production"
+
+#: app/routes.py:723
+#, fuzzy
+msgid "Problema de Planificación Nutricional"
+msgstr "Nutritional Planning Problem"
+
+#: app/routes.py:724
+msgid ""
+"Un nutricionista necesita diseñar una dieta económica que cumpla con los "
+"requerimientos mínimos de nutrientes para un hospital. Dispone de dos "
+"tipos de alimentos: Alimento 1 (cuesta $4 por unidad) y Alimento 2 "
+"(cuesta $3 por unidad). La dieta debe garantizar al menos 10 unidades de "
+"proteína, 8 unidades de vitaminas y 12 unidades de minerales. El objetivo"
+" es minimizar el costo total de la dieta mientras se satisfacen todos los"
+" requerimientos nutricionales."
+msgstr ""
+"A nutritionist needs to design an economical diet that meets the minimum "
+"nutrient requirements for a hospital. They have two types of food "
+"available: Food 1 (costs $4 per unit) and Food 2 (costs $3 per unit). "
+"The diet must guarantee at least 10 units of protein, 8 units of vitamins "
+"and 12 units of minerals. The objective is to minimize the total cost of "
+"the diet while satisfying all nutritional requirements."
+
+#: app/routes.py:725 app/routes.py:740 app/templates/historial.html:44
 msgid "Minimización"
 msgstr "Minimization"
 
+#: app/routes.py:726
+msgid "x1 (Unidades de Alimento 1)"
+msgstr "x1 (Units of Food 1)"
+
+#: app/routes.py:726
+msgid "x2 (Unidades de Alimento 2)"
+msgstr "x2 (Units of Food 2)"
+
+#: app/routes.py:729
+msgid "2x1 + x2 ≥ 10 (Requerimiento mínimo de proteína)"
+msgstr "2x1 + x2 ≥ 10 (Minimum protein requirement)"
+
+#: app/routes.py:730
+msgid "x1 + x2 ≥ 8 (Requerimiento mínimo de vitaminas)"
+msgstr "x1 + x2 ≥ 8 (Minimum vitamin requirement)"
+
+#: app/routes.py:731
+msgid "x1 + 3x2 ≥ 12 (Requerimiento mínimo de minerales)"
+msgstr "x1 + 3x2 ≥ 12 (Minimum mineral requirement)"
+
+#: app/routes.py:734 app/templates/ejemplos.html:68
+msgid "Dieta"
+msgstr "Diet"
+
+#: app/routes.py:738
+#, fuzzy
+msgid "Problema de Optimización Logística"
+msgstr "Logistics Optimization Problem"
+
+#: app/routes.py:739
+msgid ""
+"Una empresa distribuidora debe transportar productos desde dos almacenes "
+"hacia dos tiendas para minimizar los costos de transporte. Cuenta con "
+"tres rutas posibles: Ruta 1 (costo $8 por unidad), Ruta 2 (costo $6 por "
+"unidad) y Ruta 3 (costo $10 por unidad). El almacén 1 puede enviar máximo"
+" 15 unidades por las rutas 1 y 2, el almacén 2 puede enviar máximo 25 "
+"unidades por la ruta 3. La tienda 1 necesita al menos 5 unidades y la "
+"tienda 2 necesita al menos 15 unidades. ¿Cómo distribuir el transporte "
+"para minimizar costos?"
+msgstr ""
+"A distribution company must transport products from two warehouses to two "
+"stores to minimize transportation costs. It has three possible routes: "
+"Route 1 (cost $8 per unit), Route 2 (cost $6 per unit) and Route 3 (cost "
+"$10 per unit). Warehouse 1 can send a maximum of 15 units via routes 1 and "
+"2, warehouse 2 can send a maximum of 25 units via route 3. Store 1 needs "
+"at least 5 units and store 2 needs at least 15 units. How to distribute "
+"transportation to minimize costs?"
+
+#: app/routes.py:741
+msgid "x1 (Unidades por Ruta 1)"
+msgstr "x1 (Units via Route 1)"
+
+#: app/routes.py:741
+msgid "x2 (Unidades por Ruta 2)"
+msgstr "x2 (Units via Route 2)"
+
+#: app/routes.py:741
+msgid "x3 (Unidades por Ruta 3)"
+msgstr "x3 (Units via Route 3)"
+
+#: app/routes.py:744
+msgid "x1 + x2 ≤ 15 (Capacidad máxima del almacén 1)"
+msgstr "x1 + x2 ≤ 15 (Maximum capacity of warehouse 1)"
+
+#: app/routes.py:745
+msgid "x3 ≤ 25 (Capacidad máxima del almacén 2)"
+msgstr "x3 ≤ 25 (Maximum capacity of warehouse 2)"
+
+#: app/routes.py:746
+msgid "x1 + x3 ≥ 5 (Demanda mínima de la tienda 1)"
+msgstr "x1 + x3 ≥ 5 (Minimum demand of store 1)"
+
+#: app/routes.py:747
+msgid "x2 + x3 ≥ 15 (Demanda mínima de la tienda 2)"
+msgstr "x2 + x3 ≥ 15 (Minimum demand of store 2)"
+
+#: app/routes.py:750 app/templates/ejemplos.html:72
+msgid "Transporte"
+msgstr "Transportation"
+
+#: app/templates/ayuda.html:3 app/templates/base.html:78
+#: app/templates/base.html:112 app/templates/dashboard.html:143
+msgid "Ayuda"
+msgstr "Help"
+
+# Help page translations
+#: app/templates/ayuda.html:16
+msgid "Centro de Ayuda"
+msgstr "Help Center"
+
+#: app/templates/ayuda.html:19
+msgid ""
+"Encuentra toda la información que necesitas para usar eficientemente "
+"nuestro solucionador de programación lineal."
+msgstr ""
+"Find all the information you need to efficiently use our linear "
+"programming solver."
+
+#: app/templates/ayuda.html:28
+msgid "Buscar en la ayuda..."
+msgstr "Search help..."
+
+#: app/templates/ayuda.html:47 app/templates/ayuda.html:78
+msgid "Inicio Rápido"
+msgstr "Quick Start"
+
+#: app/templates/ayuda.html:51
+msgid "Sintaxis"
+msgstr "Syntax"
+
+#: app/templates/ayuda.html:55 app/templates/base.html:74
+#: app/templates/base.html:108 app/templates/dashboard.html:96
+#: app/templates/ejemplos.html:3
+msgid "Ejemplos"
+msgstr "Examples"
+
+#: app/templates/ayuda.html:59
+msgid "FAQ"
+msgstr "FAQ"
+
+#: app/templates/ayuda.html:63
+msgid "Teoría"
+msgstr "Theory"
+
+#: app/templates/ayuda.html:67
+msgid "Aplicaciones"
+msgstr "Applications"
+
+#: app/templates/ayuda.html:87
+msgid "1. Crear Problema"
+msgstr "1. Create Problem"
+
+#: app/templates/ayuda.html:88
+msgid ""
+"Define tu función objetivo y restricciones usando nuestra interfaz "
+"intuitiva"
+msgstr ""
+"Define your objective function and constraints using our intuitive "
+"interface"
+
+#: app/templates/ayuda.html:97
+msgid "2. Resolver"
+msgstr "2. Solve"
+
+#: app/templates/ayuda.html:98
+msgid "Selecciona el método de solución y ejecuta el algoritmo"
+msgstr "Select the solution method and execute the algorithm"
+
+#: app/templates/ayuda.html:107
+msgid "3. Analizar"
+msgstr "3. Analyze"
+
+#: app/templates/ayuda.html:108
+msgid "Revisa los resultados y el análisis de sensibilidad"
+msgstr "Review the results and sensitivity analysis"
+
+#: app/templates/ayuda.html:120
+msgid "Guía de Sintaxis"
+msgstr "Syntax Guide"
+
+#: app/templates/ayuda.html:126
+msgid "Usa variables como x1, x2, x3... sin asteriscos para multiplicación"
+msgstr "Use variables like x1, x2, x3... without asterisks for multiplication"
+
+#: app/templates/ayuda.html:135 app/templates/index.html:48
+msgid "Función Objetivo"
+msgstr "Objective Function"
+
+#: app/templates/ayuda.html:139 app/templates/index.html:60
+msgid "Maximizar"
+msgstr "Maximize"
+
+#: app/templates/ayuda.html:145 app/templates/index.html:61
+msgid "Minimizar"
+msgstr "Minimize"
+
+#: app/templates/ayuda.html:159 app/templates/ejemplos.html:147
+#: app/templates/index.html:120 app/templates/problema_detalle.html:72
+msgid "Restricciones"
+msgstr "Constraints"
+
+#: app/templates/ayuda.html:188
+msgid "Importante:"
+msgstr "Important:"
+
+#: app/templates/ayuda.html:189
+msgid "NO uses asteriscos (*). Escribe \"2x1\" en lugar de \"2*x1\""
+msgstr "DO NOT use asterisks (*). Write \"2x1\" instead of \"2*x1\""
+
+#: app/templates/ayuda.html:201
+msgid "Ejemplos Prácticos"
+msgstr "Practical Examples"
+
+#: app/templates/ayuda.html:210
+msgid "Problema de Producción"
+msgstr "Production Problem"
+
+#: app/templates/ayuda.html:213 app/templates/ayuda.html:237
+msgid "Objetivo:"
+msgstr "Objective:"
+
+#: app/templates/ayuda.html:214 app/templates/ayuda.html:238
+msgid "Restricciones:"
+msgstr "Constraints:"
+
+#: app/templates/ayuda.html:223 app/templates/ayuda.html:247
+msgid "Ver Completo"
+msgstr "View Complete"
+
+#: app/templates/ayuda.html:234
+msgid "Problema de Dieta"
+msgstr "Diet Problem"
+
+#: app/templates/ayuda.html:257
+msgid "Ver Todos los Ejemplos"
+msgstr "View All Examples"
+
+# Theory section translations
+#: app/templates/ayuda.html:268
+msgid "Teoría y Fundamentos"
+msgstr "Theory and Fundamentals"
+
+#: app/templates/ayuda.html:277
+msgid "Historia de la Programación Lineal"
+msgstr "History of Linear Programming"
+
+#: app/templates/ayuda.html:283
+msgid "Origen Militar"
+msgstr "Military Origin"
+
+#: app/templates/ayuda.html:284
+msgid ""
+"Leonid Kantorovich desarrolla los primeros conceptos para optimizar "
+"recursos militares en la URSS durante la Segunda Guerra Mundial."
+msgstr ""
+"Leonid Kantorovich develops the first concepts to optimize military "
+"resources in the USSR during World War II."
+
+#: app/templates/ayuda.html:289 app/templates/ayuda.html:387
+msgid "Método Simplex"
+msgstr "Simplex Method"
+
+#: app/templates/ayuda.html:290
+msgid ""
+"George Dantzig inventa el algoritmo Simplex en Estados Unidos, "
+"revolucionando la resolución de problemas de optimización."
+msgstr ""
+"George Dantzig invents the Simplex algorithm in the United States, "
+"revolutionizing the solution of optimization problems."
+
+#: app/templates/ayuda.html:295
+msgid "Premio Nobel"
+msgstr "Nobel Prize"
+
+#: app/templates/ayuda.html:296
+msgid ""
+"Kantorovich y Tjalling Koopmans reciben el Premio Nobel de Economía por "
+"sus contribuciones a la teoría de optimización."
+msgstr ""
+"Kantorovich and Tjalling Koopmans receive the Nobel Prize in Economics "
+"for their contributions to optimization theory."
+
+#: app/templates/ayuda.html:310
+msgid "Región Factible"
+msgstr "Feasible Region"
+
+#: app/templates/ayuda.html:312
+msgid ""
+"El conjunto de todas las soluciones que satisfacen todas las "
+"restricciones del problema."
+msgstr "The set of all solutions that satisfy all the constraints of the problem."
+
+#: app/templates/ayuda.html:314
+msgid "Propiedades:"
+msgstr "Properties:"
+
+#: app/templates/ayuda.html:316
+msgid "Es un poliedro convexo"
+msgstr "It is a convex polyhedron"
+
+#: app/templates/ayuda.html:317
+msgid "Puede ser acotada o no acotada"
+msgstr "It can be bounded or unbounded"
+
+#: app/templates/ayuda.html:318
+msgid "Los vértices son candidatos a solución óptima"
+msgstr "The vertices are candidates for optimal solution"
+
+#: app/templates/ayuda.html:328
+msgid "Teorema Fundamental"
+msgstr "Fundamental Theorem"
+
+#: app/templates/ayuda.html:330
+msgid ""
+"Si existe una solución óptima, entonces existe al menos una solución "
+"óptima en un vértice de la región factible."
+msgstr ""
+"If an optimal solution exists, then there exists at least one optimal "
+"solution at a vertex of the feasible region."
+
+#: app/templates/ayuda.html:332
+msgid "Implicaciones:"
+msgstr "Implications:"
+
+#: app/templates/ayuda.html:334
+msgid "Solo necesitamos examinar los vértices"
+msgstr "We only need to examine the vertices"
+
+#: app/templates/ayuda.html:335
+msgid "El algoritmo Simplex es finito"
+msgstr "The Simplex algorithm is finite"
+
+#: app/templates/ayuda.html:336
+msgid "Garantiza encontrar la solución óptima"
+msgstr "Guarantees finding the optimal solution"
+
+#: app/templates/ayuda.html:346
+msgid "Dualidad"
+msgstr "Duality"
+
+#: app/templates/ayuda.html:348
+msgid ""
+"Todo problema de programación lineal tiene asociado un problema dual con "
+"propiedades complementarias."
+msgstr ""
+"Every linear programming problem has an associated dual problem with "
+"complementary properties."
+
+#: app/templates/ayuda.html:350
+msgid "Teorema de Dualidad Fuerte:"
+msgstr "Strong Duality Theorem:"
+
+#: app/templates/ayuda.html:351
+msgid ""
+"Si tanto el problema primal como el dual tienen solución óptima, entonces"
+" sus valores objetivos son iguales."
+msgstr ""
+"If both the primal and dual problems have optimal solutions, then their "
+"objective values are equal."
+
+#: app/templates/ayuda.html:360
+msgid "Análisis de Sensibilidad"
+msgstr "Sensitivity Analysis"
+
+#: app/templates/ayuda.html:362
+msgid "Estudia cómo cambios en los parámetros afectan la solución óptima."
+msgstr "Studies how changes in parameters affect the optimal solution."
+
+#: app/templates/ayuda.html:364
+msgid "Información proporcionada:"
+msgstr "Information provided:"
+
+#: app/templates/ayuda.html:366
+msgid "Rangos de validez de la solución"
+msgstr "Solution validity ranges"
+
+#: app/templates/ayuda.html:367
+msgid "Precios sombra (valores duales)"
+msgstr "Shadow prices (dual values)"
+
+#: app/templates/ayuda.html:368
+msgid "Costos reducidos"
+msgstr "Reduced costs"
+
+#: app/templates/ayuda.html:380
+msgid "Métodos de Solución"
+msgstr "Solution Methods"
+
+#: app/templates/ayuda.html:388
+msgid ""
+"Algoritmo clásico que se mueve entre vértices adyacentes de la región "
+"factible hasta encontrar el óptimo."
+msgstr ""
+"Classic algorithm that moves between adjacent vertices of the feasible "
+"region until finding the optimum."
+
+#: app/templates/ayuda.html:394
+msgid "Métodos de Punto Interior"
+msgstr "Interior Point Methods"
+
+#: app/templates/ayuda.html:395
+msgid ""
+"Algoritmos modernos que atraviesan el interior de la región factible, muy"
+" eficientes para problemas grandes."
+msgstr ""
+"Modern algorithms that traverse the interior of the feasible region, very"
+" efficient for large problems."
+
+#: app/templates/ayuda.html:401
+msgid "Métodos de Descomposición"
+msgstr "Decomposition Methods"
+
+#: app/templates/ayuda.html:402
+msgid ""
+"Técnicas para resolver problemas muy grandes dividiendo en subproblemas "
+"más manejables."
+msgstr ""
+"Techniques for solving very large problems by dividing into more "
+"manageable subproblems."
+
+# Applications section translations
+#: app/templates/ayuda.html:416
+msgid "Aplicaciones en el Mundo Real"
+msgstr "Real-World Applications"
+
+#: app/templates/ayuda.html:427
+msgid "Aerolíneas"
+msgstr "Airlines"
+
+#: app/templates/ayuda.html:429
+msgid "Programación de vuelos"
+msgstr "Flight scheduling"
+
+#: app/templates/ayuda.html:430
+msgid "Asignación de tripulaciones"
+msgstr "Crew assignment"
+
+#: app/templates/ayuda.html:431
+msgid "Gestión de combustible"
+msgstr "Fuel management"
+
+#: app/templates/ayuda.html:432
+msgid "Pricing dinámico"
+msgstr "Dynamic pricing"
+
+#: app/templates/ayuda.html:442
+msgid "Manufactura"
+msgstr "Manufacturing"
+
+#: app/templates/ayuda.html:444
+msgid "Planificación de producción"
+msgstr "Production planning"
+
+#: app/templates/ayuda.html:445
+msgid "Control de inventarios"
+msgstr "Inventory control"
+
+#: app/templates/ayuda.html:446
+msgid "Asignación de recursos"
+msgstr "Resource allocation"
+
+#: app/templates/ayuda.html:447
+msgid "Optimización de cadena de suministro"
+msgstr "Supply chain optimization"
+
+#: app/templates/ayuda.html:457
+msgid "Finanzas"
+msgstr "Finance"
+
+#: app/templates/ayuda.html:459
+msgid "Optimización de portafolios"
+msgstr "Portfolio optimization"
+
+#: app/templates/ayuda.html:460
+msgid "Gestión de riesgos"
+msgstr "Risk management"
+
+#: app/templates/ayuda.html:461
+msgid "Asignación de activos"
+msgstr "Asset allocation"
+
+#: app/templates/ayuda.html:462
+msgid "Trading algorítmico"
+msgstr "Algorithmic trading"
+
+#: app/templates/ayuda.html:472
+msgid "Logística"
+msgstr "Logistics"
+
+#: app/templates/ayuda.html:474
+msgid "Ruteo de vehículos"
+msgstr "Vehicle routing"
+
+#: app/templates/ayuda.html:475
+msgid "Localización de almacenes"
+msgstr "Warehouse location"
+
+#: app/templates/ayuda.html:476
+msgid "Distribución óptima"
+msgstr "Optimal distribution"
+
+#: app/templates/ayuda.html:477
+msgid "Gestión de flotas"
+msgstr "Fleet management"
+
+#: app/templates/ayuda.html:487
+msgid "Energía"
+msgstr "Energy"
+
+#: app/templates/ayuda.html:489
+msgid "Despacho económico"
+msgstr "Economic dispatch"
+
+#: app/templates/ayuda.html:490
+msgid "Planificación energética"
+msgstr "Energy planning"
+
+#: app/templates/ayuda.html:491
+msgid "Distribución eléctrica"
+msgstr "Electrical distribution"
+
+#: app/templates/ayuda.html:492
+msgid "Energías renovables"
+msgstr "Renewable energy"
+
+#: app/templates/ayuda.html:502
+msgid "Salud"
+msgstr "Healthcare"
+
+#: app/templates/ayuda.html:504
+msgid "Programación de quirófanos"
+msgstr "Operating room scheduling"
+
+#: app/templates/ayuda.html:505
+msgid "Asignación de recursos médicos"
+msgstr "Medical resource allocation"
+
+#: app/templates/ayuda.html:506
+msgid "Planificación de tratamientos"
+msgstr "Treatment planning"
+
+#: app/templates/ayuda.html:507
+msgid "Gestión hospitalaria"
+msgstr "Hospital management"
+
+#: app/templates/ayuda.html:515
+msgid "Casos de Estudio Destacados"
+msgstr "Featured Case Studies"
+
+#: app/templates/ayuda.html:522
+msgid "UPS: Optimización de Rutas"
+msgstr "UPS: Route Optimization"
+
+#: app/templates/ayuda.html:524
+msgid ""
+"UPS utiliza algoritmos de programación lineal para optimizar las rutas de"
+" entrega, reduciendo:"
+msgstr ""
+"UPS uses linear programming algorithms to optimize delivery routes, "
+"reducing:"
+
+#: app/templates/ayuda.html:527
+msgid "Distancia recorrida"
+msgstr "Distance traveled"
+
+#: app/templates/ayuda.html:529
+msgid "Millones de millas anuales"
+msgstr "Millions of miles annually"
+
+#: app/templates/ayuda.html:532
+msgid "Emisiones CO2"
+msgstr "CO2 emissions"
+
+#: app/templates/ayuda.html:534
+msgid "Toneladas por año"
+msgstr "Tons per year"
+
+#: app/templates/ayuda.html:544
+msgid "USDA: Programa de Alimentación Escolar"
+msgstr "USDA: School Feeding Program"
+
+#: app/templates/ayuda.html:546
+msgid ""
+"El Departamento de Agricultura de EE.UU. optimiza menús escolares "
+"balanceando:"
+msgstr "The U.S. Department of Agriculture optimizes school menus by balancing:"
+
+#: app/templates/ayuda.html:548
+msgid "Requisitos nutricionales mínimos"
+msgstr "Minimum nutritional requirements"
+
+#: app/templates/ayuda.html:549
+msgid "Restricciones presupuestarias"
+msgstr "Budget constraints"
+
+#: app/templates/ayuda.html:550
+msgid "Preferencias de los estudiantes"
+msgstr "Student preferences"
+
+#: app/templates/ayuda.html:551
+msgid "Disponibilidad estacional de alimentos"
+msgstr "Seasonal food availability"
+
+#: app/templates/ayuda.html:553
+msgid "30M+ estudiantes beneficiados"
+msgstr "30M+ students benefited"
+
+#: app/templates/ayuda.html:564
+msgid "Impacto Económico Global"
+msgstr "Global Economic Impact"
+
+#: app/templates/ayuda.html:569
+msgid "Ahorros anuales estimados en costos operativos globalmente"
+msgstr "Estimated annual savings in operating costs globally"
+
+#: app/templates/ayuda.html:573
+msgid "De las empresas Fortune 500 utilizan optimización matemática"
+msgstr "Of Fortune 500 companies use mathematical optimization"
+
+#: app/templates/ayuda.html:577
+msgid "Mejora típica en eficiencia operacional tras implementar PL"
+msgstr "Typical improvement in operational efficiency after implementing LP"
+
+#: app/templates/ayuda.html:590
+msgid "Preguntas Frecuentes"
+msgstr "Frequently Asked Questions"
+
+#: app/templates/ayuda.html:598
+msgid "¿Qué tipos de problemas puede resolver el sistema?"
+msgstr "What types of problems can the system solve?"
+
+#: app/templates/ayuda.html:601
+msgid ""
+"El sistema puede resolver problemas de programación lineal estándar, "
+"incluyendo maximización y minimización, con restricciones lineales de "
+"igualdad y desigualdad."
+msgstr ""
+"The system can solve standard linear programming problems, including "
+"maximization and minimization, with linear equality and inequality "
+"constraints."
+
+#: app/templates/ayuda.html:609
+msgid "¿Hay límite en el número de variables?"
+msgstr "Is there a limit on the number of variables?"
+
+#: app/templates/ayuda.html:612
+msgid ""
+"Técnicamente no hay límite estricto, pero por razones de rendimiento y "
+"usabilidad, recomendamos hasta 20 variables para una experiencia óptima."
+msgstr ""
+"Technically there is no strict limit, but for performance and usability "
+"reasons, we recommend up to 20 variables for an optimal experience."
+
+#: app/templates/ayuda.html:620
+msgid "¿Puedo guardar mis problemas resueltos?"
+msgstr "Can I save my solved problems?"
+
+#: app/templates/ayuda.html:623
+msgid ""
+"Sí, todos tus problemas se guardan automáticamente en tu historial "
+"personal. Puedes acceder a ellos desde tu perfil de usuario."
+msgstr ""
+"Yes, all your problems are automatically saved in your personal history. "
+"You can access them from your user profile."
+
+#: app/templates/ayuda.html:631
+msgid "¿Qué hago si obtengo una solución \"No factible\"?"
+msgstr "What do I do if I get a \"Not feasible\" solution?"
+
+#: app/templates/ayuda.html:634
+msgid ""
+"Una solución no factible significa que las restricciones son "
+"contradictorias. Revisa tus restricciones para asegurarte de que sean "
+"consistentes y que exista al menos una solución que las satisfaga todas."
+msgstr ""
+"A non-feasible solution means that the constraints are contradictory. "
+"Review your constraints to ensure they are consistent and that there is "
+"at least one solution that satisfies them all."
+
+#: app/templates/ayuda.html:642
+msgid "¿Cómo interpreto los resultados del análisis de sensibilidad?"
+msgstr "How do I interpret the sensitivity analysis results?"
+
+#: app/templates/ayuda.html:645
+msgid ""
+"El análisis de sensibilidad te muestra cómo cambios en los coeficientes "
+"afectan la solución óptima. Los valores duales indican cuánto mejora la "
+"función objetivo al relajar una restricción en una unidad."
+msgstr ""
+"Sensitivity analysis shows you how changes in coefficients affect the "
+"optimal solution. Dual values indicate how much the objective function "
+"improves by relaxing a constraint by one unit."
+
+#: app/templates/ayuda.html:663
+msgid "¿Listo para empezar?"
+msgstr "Ready to get started?"
+
+#: app/templates/ayuda.html:667
+msgid ""
+"Ahora que conoces las bases, es momento de crear y resolver tu primer "
+"problema de programación lineal."
+msgstr ""
+"Now that you know the basics, it's time to create and solve your first "
+"linear programming problem."
+
+#: app/templates/ayuda.html:673
+msgid "Crear Problema"
+msgstr "Create Problem"
+
+#: app/templates/ayuda.html:677
+msgid "Ver Ejemplos"
+msgstr "View Examples"
+
+#: app/templates/base.html:66 app/templates/base.html:100
+#: app/templates/dashboard.html:3
+msgid "Inicio"
+msgstr "Home"
+
+#: app/templates/base.html:70 app/templates/base.html:104
+#: app/templates/index.html:3
+msgid "Nuevo Problema"
+msgstr "New Problem"
+
+# Additional navbar translations
+#: app/templates/base.html:122
+msgid "Cambiar tema"
+msgstr "Change theme"
+
+#: app/templates/base.html:129
+msgid "Seleccionar tema"
+msgstr "Select theme"
+
+#: app/templates/base.html:135
+msgid "Tema Claro"
+msgstr "Light Theme"
+
+#: app/templates/base.html:139
+msgid "Tema Oscuro"
+msgstr "Dark Theme"
+
+#: app/templates/base.html:143
+msgid "Tema Suave"
+msgstr "Soft Theme"
+
+#: app/templates/base.html:147
+msgid "Tema Empresarial"
+msgstr "Business Theme"
+
+#: app/templates/base.html:154
+msgid "Cambiar idioma"
+msgstr "Change language"
+
+#: app/templates/base.html:161
+#, fuzzy
+msgid "Seleccionar idioma"
+msgstr "Select theme"
+
+#: app/templates/base.html:180
+msgid "Cuenta de usuario"
+msgstr "User account"
+
+#: app/templates/base.html:203 app/templates/dashboard.html:74
+msgid "Mi Perfil"
+msgstr "My Profile"
+
+#: app/templates/base.html:207 app/templates/problema_detalle.html:20
+msgid "Historial"
+msgstr "History"
+
+#: app/templates/base.html:212
+msgid "Cerrar Sesión"
+msgstr "Log Out"
+
+#: app/templates/base.html:219
+msgid "Accede a tu cuenta"
+msgstr "Access your account"
+
+#: app/templates/base.html:225 app/templates/login.html:3
+msgid "Iniciar Sesión"
+msgstr "Log In"
+
+#: app/templates/base.html:229 app/templates/register.html:2
+msgid "Crear Cuenta"
+msgstr "Create Account"
+
+#: app/templates/dashboard.html:22
+#, python-format
+msgid "¡Bienvenido, %(name)s!"
+msgstr "Welcome, %(name)s!"
+
+#: app/templates/dashboard.html:24
+msgid "¡Bienvenido, Usuario!"
+msgstr "Welcome, User!"
+
+#: app/templates/dashboard.html:27
+msgid "Tu centro de soluciones para programación lineal"
+msgstr "Your linear programming solutions center"
+
+#: app/templates/dashboard.html:52
+msgid "Resolver Problema"
+msgstr "Solve Problem"
+
+#: app/templates/dashboard.html:53
+msgid "Principal"
+msgstr "Main"
+
+#: app/templates/dashboard.html:56
+msgid "Utiliza nuestro solucionador para encontrar la solución óptima."
+msgstr "Use our solver to find the optimal solution."
+
+#: app/templates/dashboard.html:60
+msgid "Comenzar"
+msgstr "Start"
+
+#: app/templates/dashboard.html:75
+msgid "Configuración"
+msgstr "Settings"
+
+#: app/templates/dashboard.html:78
+msgid "Gestiona tu información personal y configuraciones."
+msgstr "Manage your personal information and settings."
+
+#: app/templates/dashboard.html:82
+msgid "Ver Perfil"
+msgstr "View Profile"
+
+#: app/templates/dashboard.html:97
+msgid "Aprender"
+msgstr "Learn"
+
+#: app/templates/dashboard.html:100
+msgid "Explora casos reales y aprende con ejemplos."
+msgstr "Explore real cases and learn with examples."
+
+#: app/templates/dashboard.html:104
+msgid "Explorar"
+msgstr "Explore"
+
+#: app/templates/dashboard.html:119
+msgid "Estadísticas"
+msgstr "Statistics"
+
+#: app/templates/dashboard.html:126
+msgid "Problemas"
+msgstr "Problems"
+
+#: app/templates/dashboard.html:128
+msgid "Total creados"
+msgstr "Total created"
+
+#: app/templates/dashboard.html:144
+msgid "Documentación"
+msgstr "Documentation"
+
+#: app/templates/dashboard.html:148
+msgid "Ver Guía"
+msgstr "View Guide"
+
+# Examples page translations
+#: app/templates/ejemplos.html:20
+msgid "Ejemplos de Programación Lineal"
+msgstr "Linear Programming Examples"
+
+#: app/templates/ejemplos.html:31
+msgid ""
+"Explora problemas reales resueltos paso a paso. Cada ejemplo incluye su "
+"formulación matemática completa y puedes cargar los datos directamente en"
+" la calculadora para experimentar."
+msgstr ""
+"Explore real problems solved step by step. Each example includes its "
+"complete mathematical formulation and you can load the data directly into"
+" the calculator to experiment."
+
+#: app/templates/ejemplos.html:38
+msgid "Problemas Reales"
+msgstr "Real Problems"
+
+#: app/templates/ejemplos.html:42
+msgid "Calculadora Integrada"
+msgstr "Integrated Calculator"
+
+#: app/templates/ejemplos.html:46
+msgid "Paso a Paso"
+msgstr "Step by Step"
+
+#: app/templates/ejemplos.html:60
+msgid "Todos"
+msgstr "All"
+
+#: app/templates/ejemplos.html:116 app/templates/problema_detalle.html:67
+msgid "Variables"
+msgstr "Variables"
+
+#: app/templates/ejemplos.html:133
+msgid "Objetivo"
+msgstr "Objective"
+
+#: app/templates/ejemplos.html:170
+msgid "Solución Óptima"
+msgstr "Optimal Solution"
+
+#: app/templates/ejemplos.html:182
+msgid "Calcular Ejemplo"
+msgstr "Calculate Example"
+
+#: app/templates/ejemplos.html:206
+msgid "¡Practica con tus propios problemas!"
+msgstr "Practice with your own problems!"
+
+#: app/templates/ejemplos.html:209
+msgid ""
+"Ahora que has explorado los ejemplos, es momento de crear y resolver tus "
+"propios problemas de programación lineal usando nuestra calculadora "
+"interactiva."
+msgstr ""
+"Now that you've explored the examples, it's time to create and solve your"
+" own linear programming problems using our interactive calculator."
+
+#: app/templates/ejemplos.html:222
+msgid "Calculadora Intuitiva"
+msgstr "Intuitive Calculator"
+
+#: app/templates/ejemplos.html:223
+msgid "Interfaz fácil de usar para crear tus problemas"
+msgstr "Easy-to-use interface for creating your problems"
+
+#: app/templates/ejemplos.html:234
+msgid "Soluciones Detalladas"
+msgstr "Detailed Solutions"
+
+#: app/templates/ejemplos.html:235
+msgid "Resultados paso a paso con explicaciones"
+msgstr "Step-by-step results with explanations"
+
+#: app/templates/ejemplos.html:246
+msgid "Historial Completo"
+msgstr "Complete History"
+
+#: app/templates/ejemplos.html:247
+msgid "Guarda y revisa tus problemas anteriores"
+msgstr "Save and review your previous problems"
+
+#: app/templates/ejemplos.html:256
+msgid "Crear Nuevo Problema"
+msgstr "Create New Problem"
+
+#: app/templates/ejemplos.html:260
+msgid "Ver Ayuda"
+msgstr "View Help"
+
+#: app/templates/historial.html:3 app/templates/historial.html:18
+msgid "Historial de Problemas"
+msgstr "Problem History"
+
+#: app/templates/historial.html:21
+msgid "Todos tus problemas resueltos en un solo lugar"
+msgstr "All your solved problems in one place"
+
+#: app/templates/historial.html:30
+msgid "Volver al Perfil"
+msgstr "Back to Profile"
+
+#: app/templates/historial.html:36
+msgid "Todos los métodos"
+msgstr "All methods"
+
+#: app/templates/historial.html:39
+msgid "Simplex Clásico"
+msgstr "Classic Simplex"
+
+#: app/templates/historial.html:42
+msgid "Todos los tipos"
+msgstr "All types"
+
+#: app/templates/historial.html:55
 msgid "Total Resueltos"
 msgstr "Total Solved"
 
+#: app/templates/historial.html:57
 msgid "problema en total"
 msgid_plural "problemas en total"
 msgstr[0] "problem in total"
 msgstr[1] "problems in total"
 
+#: app/templates/historial.html:64
 msgid "Método Favorito"
 msgstr "Favorite Method"
 
+#: app/templates/historial.html:66
 msgid "más utilizado"
 msgstr "most used"
 
+#: app/templates/historial.html:73
 msgid "Último Problema"
 msgstr "Latest Problem"
 
+#: app/templates/historial.html:76
 msgid "Hace 2 días"
 msgstr "2 days ago"
 
+#: app/templates/historial.html:81
 msgid "resuelto"
 msgstr "solved"
 
+#: app/templates/historial.html:101 app/templates/problema_detalle.html:21
+#: app/templates/problema_detalle.html:29
+#, python-format
 msgid "Problema #%(id)s"
 msgstr "Problem #%(id)s"
 
+#: app/templates/historial.html:109
+#, python-format
 msgid "%(num)d variable"
 msgid_plural "%(num)d variables"
 msgstr[0] "%(num)d variable"
 msgstr[1] "%(num)d variables"
 
+#: app/templates/historial.html:110
+#, python-format
 msgid "%(num)d restricción"
 msgid_plural "%(num)d restricciones"
 msgstr[0] "%(num)d constraint"
 msgstr[1] "%(num)d constraints"
 
+#: app/templates/historial.html:122
 msgid "Ver detalles"
 msgstr "View details"
 
+#: app/templates/historial.html:146
 msgid "¡Aún no has resuelto problemas!"
 msgstr "You haven't solved any problems yet!"
 
+#: app/templates/historial.html:148
 msgid ""
 "Comienza resolviendo tu primer problema de programación lineal y "
 "aparecerá aquí en tu historial."
 msgstr ""
-"Start by solving your first linear programming problem and it will appear here in your history."
+"Start by solving your first linear programming problem and it will appear"
+" here in your history."
 
+#: app/templates/historial.html:152
 msgid "Resolver Primer Problema"
 msgstr "Solve First Problem"
 
-msgid "Linear Programming Solver"
-msgstr "Linear Programming Solver"
-
+#: app/templates/index.html:18 app/templates/login.html:70
+#: app/templates/register.html:76
 msgid "Solver de Programación Lineal"
 msgstr "Linear Programming Solver"
 
+#: app/templates/index.html:21
 msgid "Optimiza tus problemas de manera eficiente"
 msgstr "Optimize your problems efficiently"
 
+#: app/templates/index.html:34 app/templates/problema_detalle.html:62
 msgid "Método"
 msgstr "Method"
 
+#: app/templates/index.html:36
 msgid "Simplex"
 msgstr "Simplex"
 
+#: app/templates/index.html:37
 msgid "General"
 msgstr "General"
 
+#: app/templates/index.html:38
 msgid "Scipy"
 msgstr "Scipy"
 
-msgid "Función Objetivo"
-msgstr "Objective Function"
-
+#: app/templates/index.html:57
 msgid "Tipo de optimización"
 msgstr "Optimization Type"
 
-msgid "Maximizar"
-msgstr "Maximize"
-
-msgid "Minimizar"
-msgstr "Minimize"
-
+#: app/templates/index.html:67
 msgid "Función objetivo (ej: 3x1 + 2x2)"
 msgstr "Objective function (e.g., 3x1 + 2x2)"
 
+#: app/templates/index.html:69
 msgid "Ingresa la función objetivo"
 msgstr "Enter the objective function"
 
-msgid "Restricciones"
-msgstr "Constraints"
-
+#: app/templates/index.html:124
 msgid "Agregar"
 msgstr "Add"
 
+#: app/templates/index.html:164
 msgid "Resolver"
 msgstr "Solve"
 
+#: app/templates/index.html:168
 msgid "Limpiar"
 msgstr "Clear"
 
+#: app/templates/index.html:185
 msgid "Solución"
 msgstr "Solution"
 
+#: app/templates/index.html:193
 msgid "Listo para resolver"
 msgstr "Ready to solve"
 
+#: app/templates/index.html:195
 msgid "Ingresa tu problema de programación lineal y presiona \"Resolver\""
 msgstr "Enter your linear programming problem and press \"Solve\""
 
+#: app/templates/index.html:203
 msgid "Valor Óptimo"
 msgstr "Optimal Value"
 
+#: app/templates/index.html:207
 msgid "Estado"
 msgstr "Status"
 
+#: app/templates/index.html:216
 msgid "Variable"
 msgstr "Variable"
 
+#: app/templates/index.html:217
 msgid "Valor"
 msgstr "Value"
 
+#: app/templates/index.html:298
 msgid "Gráfica completa"
 msgstr "Full Graph"
 
+#: app/templates/index.html:303
 msgid "Cerrar"
 msgstr "Close"
 
-msgid "Login"
-msgstr "Login"
-
+#: app/templates/login.html:24
 msgid "Bienvenido de nuevo"
 msgstr "Welcome back"
 
+#: app/templates/login.html:29 app/templates/register.html:31
 msgid "Usuario"
 msgstr "Username"
 
+#: app/templates/login.html:35 app/templates/register.html:40
 msgid "Contraseña"
 msgstr "Password"
 
+#: app/templates/login.html:41
 msgid "Iniciar sesion"
 msgstr "Log in"
 
+#: app/templates/login.html:48
 msgid "¿No tienes cuenta?"
 msgstr "Don't have an account?"
 
+#: app/templates/login.html:50
 msgid "Regístrate aquí"
 msgstr "Sign up here"
 
+#: app/templates/login.html:79 app/templates/register.html:85
 msgid "Optimización de funciones objetivo"
 msgstr "Objective function optimization"
 
+#: app/templates/login.html:85 app/templates/register.html:91
 msgid "Análisis de restricciones"
 msgstr "Constraint analysis"
 
+#: app/templates/login.html:91 app/templates/register.html:97
 msgid "Soluciones matemáticas precisas"
 msgstr "Accurate mathematical solutions"
 
-msgid "Perfil de Usuario"
-msgstr "User Profile"
-
-msgid "¡Hola, %(name)s!"
-msgstr "Hello, %(name)s!"
-
-msgid "Mi Perfil"
-msgstr "My Profile"
-
-msgid "Gestiona tu información y revisa tu historial"
-msgstr "Manage your information and review your history"
-
-msgid "Información Personal"
-msgstr "Personal Information"
-
-msgid "Nombre completo"
-msgstr "Full name"
-
-msgid "No disponible"
-msgstr "Not available"
-
-msgid "Editar perfil"
-msgstr "Edit profile"
-
-msgid "Estadísticas"
-msgstr "Statistics"
-
-msgid "Problemas resueltos"
-msgstr "Problems solved"
-
-msgid "Total histórico"
-msgstr "Total history"
-
-msgid "Ver Historial Completo"
-msgstr "View Full History"
-
-msgid "Problemas Resueltos"
-msgstr "Solved Problems"
-
-msgid "Todos"
-msgstr "All"
-
-msgid "Problema de Maximización"
-msgstr "Maximization Problem"
-
-msgid "Problema de Minimización"
-msgstr "Minimization Problem"
-
-msgid "Problema de Optimización"
-msgstr "Optimization Problem"
-
-msgid "Función objetivo"
-msgstr "Objective function"
-
-msgid "variable"
-msgid_plural "variables"
-msgstr[0] "variable"
-msgstr[1] "variables"
-
-msgid "restricción"
-msgid_plural "restricciones"
-msgstr[0] "constraint"
-msgstr[1] "constraints"
-
-msgid "No hay problemas resueltos aún"
-msgstr "No problems solved yet"
-
-msgid "Resuelve tu primer problema de programación lineal para verlo aquí"
-msgstr "Solve your first linear programming problem to see it here"
-
-msgid "Resolver Problema"
-msgstr "Solve Problem"
-
+#: app/templates/problema_detalle.html:3
+#, python-format
 msgid "Problema #%(id)s - Detalle"
 msgstr "Problem #%(id)s - Detail"
 
-msgid "Historial"
-msgstr "History"
+#: app/templates/problema_detalle.html:19
+msgid "Perfil"
+msgstr "Profile"
 
+#: app/templates/problema_detalle.html:32
+#, python-format
 msgid "Resuelto el %(fecha)s"
 msgstr "Solved on %(fecha)s"
 
+#: app/templates/problema_detalle.html:32
 msgid "Sin fecha"
 msgstr "No date"
 
+#: app/templates/problema_detalle.html:39
 msgid "Volver al Historial"
 msgstr "Back to History"
 
+#: app/templates/problema_detalle.html:43
 msgid "Editar"
 msgstr "Edit"
 
+#: app/templates/problema_detalle.html:47
 msgid "Imprimir"
 msgstr "Print"
 
+#: app/templates/problema_detalle.html:55
 msgid "Tipo"
 msgstr "Type"
 
-msgid "Variables"
-msgstr "Variables"
-
-msgid "Register"
-msgstr "Register"
-
+#: app/templates/register.html:19
 msgid "Crear una cuenta"
 msgstr "Create an account"
 
+#: app/templates/register.html:24
 msgid "Nombre"
 msgstr "Name"
 
+#: app/templates/register.html:48
+msgid "Registrarse"
+msgstr "Sign Up"
+
+#: app/templates/register.html:55
 msgid "¿Ya tienes cuenta?"
 msgstr "Already have an account?"
 
+#: app/templates/register.html:57
 msgid "Inicia sesión"
 msgstr "Log in"
+
+#~ msgid "Linear Programming Solver"
+#~ msgstr "Linear Programming Solver"
+
+#~ msgid "Login"
+#~ msgstr "Login"
+
+#~ msgid "Perfil de Usuario"
+#~ msgstr "User Profile"
+
+#~ msgid "¡Hola, %(name)s!"
+#~ msgstr "Hello, %(name)s!"
+
+#~ msgid "Gestiona tu información y revisa tu historial"
+#~ msgstr "Manage your information and review your history"
+
+#~ msgid "Información Personal"
+#~ msgstr "Personal Information"
+
+#~ msgid "Nombre completo"
+#~ msgstr "Full name"
+
+#~ msgid "No disponible"
+#~ msgstr "Not available"
+
+#~ msgid "Editar perfil"
+#~ msgstr "Edit profile"
+
+#~ msgid "Problemas resueltos"
+#~ msgstr "Problems solved"
+
+#~ msgid "Total histórico"
+#~ msgstr "Total history"
+
+#~ msgid "Ver Historial Completo"
+#~ msgstr "View Full History"
+
+#~ msgid "Problemas Resueltos"
+#~ msgstr "Solved Problems"
+
+#~ msgid "Problema de Maximización"
+#~ msgstr "Maximization Problem"
+
+#~ msgid "Problema de Minimización"
+#~ msgstr "Minimization Problem"
+
+#~ msgid "Función objetivo"
+#~ msgstr "Objective function"
+
+#~ msgid "variable"
+#~ msgid_plural "variables"
+#~ msgstr[0] "variable"
+#~ msgstr[1] "variables"
+
+#~ msgid "restricción"
+#~ msgid_plural "restricciones"
+#~ msgstr[0] "constraint"
+#~ msgstr[1] "constraints"
+
+#~ msgid "No hay problemas resueltos aún"
+#~ msgstr "No problems solved yet"
+
+#~ msgid "Resuelve tu primer problema de programación lineal para verlo aquí"
+#~ msgstr "Solve your first linear programming problem to see it here"
+
+#~ msgid "Register"
+#~ msgstr "Register"
+
+# Dashboard translations
+#~ msgid "Panel de Control"
+#~ msgstr "Dashboard"
+
+#~ msgid "Bienvenido al LP Solver"
+#~ msgstr "Welcome to LP Solver"
+
+#~ msgid ""
+#~ "Tu plataforma completa para resolver "
+#~ "problemas de programación lineal de "
+#~ "manera eficiente y precisa."
+#~ msgstr ""
+#~ "Your complete platform for solving "
+#~ "linear programming problems efficiently and"
+#~ " accurately."
+
+#~ msgid "Explorar Ejemplos"
+#~ msgstr "Explore Examples"
+
+#~ msgid "Problemas Recientes"
+#~ msgstr "Recent Problems"
+
+#~ msgid "Tus últimos problemas resueltos"
+#~ msgstr "Your latest solved problems"
+
+#~ msgid "Estadísticas Rápidas"
+#~ msgstr "Quick Statistics"
+
+#~ msgid "Resumen de tu actividad"
+#~ msgstr "Summary of your activity"
+
+#~ msgid "Completados"
+#~ msgstr "Completed"
+
+#~ msgid "Revisa tus problemas"
+#~ msgstr "Review your problems"
+
+#~ msgid "Resueltos"
+#~ msgstr "Solved"
+
+#~ msgid "Ver Todos"
+#~ msgstr "View All"
+
+#~ msgid "Problema sin título"
+#~ msgstr "Untitled problem"
+
+#~ msgid "Sin descripción"
+#~ msgstr "No description"
+
+#~ msgid "Resuelto"
+#~ msgstr "Solved"
+
+#~ msgid "Tasa de Éxito"
+#~ msgstr "Success Rate"
+
+#~ msgid "¡Comienza tu primer problema!"
+#~ msgstr "Start your first problem!"
+
+#~ msgid "Pendiente"
+#~ msgstr "Pending"
+
+#~ msgid "Lineal"
+#~ msgstr "Linear"
+
+#~ msgid "Nuevo usuario"
+#~ msgstr "New user"
+
+#~ msgid "Activo"
+#~ msgstr "Active"
+
