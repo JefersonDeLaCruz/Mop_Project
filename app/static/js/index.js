@@ -276,6 +276,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
           }
           
+          // Scroll automático a la sección de resultados
+          scrollToResults();
+          
         } catch (err) {
           console.error("Error al resolver con Gran M (maximizar):", err);
           alerta.open({
@@ -290,6 +293,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
           console.log("payload para simplex clásico (maximizar solo ≤): ", normalizedPayload);
           const data = await resolverSimplex(normalizedPayload);
           mostrarResultadoSimplex(data);
+          
+          // Scroll automático a la sección de resultados
+          scrollToResults();
           
           // Guardar en historial
           guardarEnHistorial(normalizedPayload, "Simplex Clásico");
@@ -334,6 +340,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
           console.warn("SciPy no pudo resolver para llenar la tarjeta:", scipyData.resultado.mensaje);
         }
         
+        // Scroll automático a la sección de resultados
+        scrollToResults();
+        
       } catch (err) {
         console.error("Error al resolver con Gran M:", err);
         alerta.open({
@@ -352,6 +361,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       console.log("respuesta de scipy:", data);
       if (data.resultado.status == "ok") {
         mostrarSolucion(data);
+        
+        // Scroll automático a la sección de resultados
+        scrollToResults();
         
         // Guardar en historial
         guardarEnHistorial(normalizedPayload, "SciPy");
@@ -610,5 +622,16 @@ function limpiarFormulario() {
 
 // Agregar evento al botón limpiar
 limpiarBtn.addEventListener("click", limpiarFormulario);
+
+// Función para hacer scroll automático a la sección de resultados
+function scrollToResults() {
+  const resultadosSection = document.getElementById("resultados");
+  if (resultadosSection) {
+    resultadosSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+}
 
 
