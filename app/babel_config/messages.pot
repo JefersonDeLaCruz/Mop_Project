@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-30 18:20-0600\n"
+"POT-Creation-Date: 2025-07-01 15:04-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,442 +17,1204 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: templates/base.html:32 templates/base.html:44
-msgid "Nuevo Problema"
+#: app/routes.py:709
+msgid "Problema de Producción Industrial"
 msgstr ""
 
-#: templates/base.html:33 templates/base.html:45
-msgid "Ejemplos"
+#: app/routes.py:710
+msgid ""
+"Una fábrica de muebles produce dos tipos de productos: mesas (Producto A)"
+" y sillas (Producto B). La empresa cuenta con recursos limitados de "
+"madera y tiempo de producción. Cada mesa genera una ganancia de $3 y cada"
+" silla $2. La empresa necesita determinar cuántas unidades de cada "
+"producto fabricar para maximizar sus ganancias, considerando que tiene "
+"disponibles 18 unidades de madera y 12 horas de tiempo de producción "
+"diarias."
 msgstr ""
 
-#: templates/base.html:34 templates/base.html:46
-msgid "Ayuda"
-msgstr ""
-
-#: templates/base.html:58
-msgid "Seleccionar tema"
-msgstr ""
-
-#: templates/base.html:63
-msgid "Tema Claro"
-msgstr ""
-
-#: templates/base.html:67
-msgid "Tema Oscuro"
-msgstr ""
-
-#: templates/base.html:86 templates/problema_detalle.html:19
-msgid "Perfil"
-msgstr ""
-
-#: templates/base.html:91
-msgid "Cerrar Sesión"
-msgstr ""
-
-#: templates/base.html:97
-msgid "Iniciar Sesión"
-msgstr ""
-
-#: templates/base.html:101 templates/register.html:48
-msgid "Registrarse"
-msgstr ""
-
-#: templates/historial.html:3 templates/historial.html:18
-msgid "Historial de Problemas"
-msgstr ""
-
-#: templates/historial.html:21
-msgid "Todos tus problemas resueltos en un solo lugar"
-msgstr ""
-
-#: templates/historial.html:30
-msgid "Volver al Perfil"
-msgstr ""
-
-#: templates/historial.html:36
-msgid "Todos los métodos"
-msgstr ""
-
-#: templates/historial.html:39
-msgid "Simplex Clásico"
-msgstr ""
-
-#: templates/historial.html:42
-msgid "Todos los tipos"
-msgstr ""
-
-#: templates/historial.html:43 templates/perfil.html:141
+#: app/routes.py:711 app/templates/historial.html:43
 msgid "Maximización"
 msgstr ""
 
-#: templates/historial.html:44 templates/perfil.html:142
+#: app/routes.py:712
+msgid "x1 (Mesas producidas)"
+msgstr ""
+
+#: app/routes.py:712
+msgid "x2 (Sillas producidas)"
+msgstr ""
+
+#: app/routes.py:715
+msgid ""
+"2x1 + x2 ≤ 18 (Limitación de madera: cada mesa usa 2 unidades, cada silla"
+" 1)"
+msgstr ""
+
+#: app/routes.py:716
+msgid ""
+"x1 + 3x2 ≤ 12 (Limitación de tiempo: cada mesa toma 1 hora, cada silla 3 "
+"horas)"
+msgstr ""
+
+#: app/routes.py:719 app/templates/ejemplos.html:64
+msgid "Producción"
+msgstr ""
+
+#: app/routes.py:723
+msgid "Problema de Planificación Nutricional"
+msgstr ""
+
+#: app/routes.py:724
+msgid ""
+"Un nutricionista necesita diseñar una dieta económica que cumpla con los "
+"requerimientos mínimos de nutrientes para un hospital. Dispone de dos "
+"tipos de alimentos: Alimento 1 (cuesta $4 por unidad) y Alimento 2 "
+"(cuesta $3 por unidad). La dieta debe garantizar al menos 10 unidades de "
+"proteína, 8 unidades de vitaminas y 12 unidades de minerales. El objetivo"
+" es minimizar el costo total de la dieta mientras se satisfacen todos los"
+" requerimientos nutricionales."
+msgstr ""
+
+#: app/routes.py:725 app/routes.py:740 app/templates/historial.html:44
 msgid "Minimización"
 msgstr ""
 
-#: templates/historial.html:55
+#: app/routes.py:726
+msgid "x1 (Unidades de Alimento 1)"
+msgstr ""
+
+#: app/routes.py:726
+msgid "x2 (Unidades de Alimento 2)"
+msgstr ""
+
+#: app/routes.py:729
+msgid "2x1 + x2 ≥ 10 (Requerimiento mínimo de proteína)"
+msgstr ""
+
+#: app/routes.py:730
+msgid "x1 + x2 ≥ 8 (Requerimiento mínimo de vitaminas)"
+msgstr ""
+
+#: app/routes.py:731
+msgid "x1 + 3x2 ≥ 12 (Requerimiento mínimo de minerales)"
+msgstr ""
+
+#: app/routes.py:734 app/templates/ejemplos.html:68
+msgid "Dieta"
+msgstr ""
+
+#: app/routes.py:738
+msgid "Problema de Optimización Logística"
+msgstr ""
+
+#: app/routes.py:739
+msgid ""
+"Una empresa distribuidora debe transportar productos desde dos almacenes "
+"hacia dos tiendas para minimizar los costos de transporte. Cuenta con "
+"tres rutas posibles: Ruta 1 (costo $8 por unidad), Ruta 2 (costo $6 por "
+"unidad) y Ruta 3 (costo $10 por unidad). El almacén 1 puede enviar máximo"
+" 15 unidades por las rutas 1 y 2, el almacén 2 puede enviar máximo 25 "
+"unidades por la ruta 3. La tienda 1 necesita al menos 5 unidades y la "
+"tienda 2 necesita al menos 15 unidades. ¿Cómo distribuir el transporte "
+"para minimizar costos?"
+msgstr ""
+
+#: app/routes.py:741
+msgid "x1 (Unidades por Ruta 1)"
+msgstr ""
+
+#: app/routes.py:741
+msgid "x2 (Unidades por Ruta 2)"
+msgstr ""
+
+#: app/routes.py:741
+msgid "x3 (Unidades por Ruta 3)"
+msgstr ""
+
+#: app/routes.py:744
+msgid "x1 + x2 ≤ 15 (Capacidad máxima del almacén 1)"
+msgstr ""
+
+#: app/routes.py:745
+msgid "x3 ≤ 25 (Capacidad máxima del almacén 2)"
+msgstr ""
+
+#: app/routes.py:746
+msgid "x1 + x3 ≥ 5 (Demanda mínima de la tienda 1)"
+msgstr ""
+
+#: app/routes.py:747
+msgid "x2 + x3 ≥ 15 (Demanda mínima de la tienda 2)"
+msgstr ""
+
+#: app/routes.py:750 app/templates/ejemplos.html:72
+msgid "Transporte"
+msgstr ""
+
+#: app/templates/ayuda.html:3 app/templates/base.html:78
+#: app/templates/base.html:112 app/templates/dashboard.html:143
+msgid "Ayuda"
+msgstr ""
+
+#: app/templates/ayuda.html:16
+msgid "Centro de Ayuda"
+msgstr ""
+
+#: app/templates/ayuda.html:19
+msgid ""
+"Encuentra toda la información que necesitas para usar eficientemente "
+"nuestro solucionador de programación lineal."
+msgstr ""
+
+#: app/templates/ayuda.html:28
+msgid "Buscar en la ayuda..."
+msgstr ""
+
+#: app/templates/ayuda.html:47 app/templates/ayuda.html:78
+msgid "Inicio Rápido"
+msgstr ""
+
+#: app/templates/ayuda.html:51
+msgid "Sintaxis"
+msgstr ""
+
+#: app/templates/ayuda.html:55 app/templates/base.html:74
+#: app/templates/base.html:108 app/templates/dashboard.html:96
+#: app/templates/ejemplos.html:3
+msgid "Ejemplos"
+msgstr ""
+
+#: app/templates/ayuda.html:59
+msgid "FAQ"
+msgstr ""
+
+#: app/templates/ayuda.html:63
+msgid "Teoría"
+msgstr ""
+
+#: app/templates/ayuda.html:67
+msgid "Aplicaciones"
+msgstr ""
+
+#: app/templates/ayuda.html:87
+msgid "1. Crear Problema"
+msgstr ""
+
+#: app/templates/ayuda.html:88
+msgid ""
+"Define tu función objetivo y restricciones usando nuestra interfaz "
+"intuitiva"
+msgstr ""
+
+#: app/templates/ayuda.html:97
+msgid "2. Resolver"
+msgstr ""
+
+#: app/templates/ayuda.html:98
+msgid "Selecciona el método de solución y ejecuta el algoritmo"
+msgstr ""
+
+#: app/templates/ayuda.html:107
+msgid "3. Analizar"
+msgstr ""
+
+#: app/templates/ayuda.html:108
+msgid "Revisa los resultados y el análisis de sensibilidad"
+msgstr ""
+
+#: app/templates/ayuda.html:120
+msgid "Guía de Sintaxis"
+msgstr ""
+
+#: app/templates/ayuda.html:126
+msgid "Usa variables como x1, x2, x3... sin asteriscos para multiplicación"
+msgstr ""
+
+#: app/templates/ayuda.html:135 app/templates/index.html:48
+msgid "Función Objetivo"
+msgstr ""
+
+#: app/templates/ayuda.html:139 app/templates/index.html:60
+msgid "Maximizar"
+msgstr ""
+
+#: app/templates/ayuda.html:145 app/templates/index.html:61
+msgid "Minimizar"
+msgstr ""
+
+#: app/templates/ayuda.html:159 app/templates/ejemplos.html:147
+#: app/templates/index.html:120 app/templates/problema_detalle.html:72
+msgid "Restricciones"
+msgstr ""
+
+#: app/templates/ayuda.html:188
+msgid "Importante:"
+msgstr ""
+
+#: app/templates/ayuda.html:189
+msgid "NO uses asteriscos (*). Escribe \"2x1\" en lugar de \"2*x1\""
+msgstr ""
+
+#: app/templates/ayuda.html:201
+msgid "Ejemplos Prácticos"
+msgstr ""
+
+#: app/templates/ayuda.html:210
+msgid "Problema de Producción"
+msgstr ""
+
+#: app/templates/ayuda.html:213 app/templates/ayuda.html:237
+msgid "Objetivo:"
+msgstr ""
+
+#: app/templates/ayuda.html:214 app/templates/ayuda.html:238
+msgid "Restricciones:"
+msgstr ""
+
+#: app/templates/ayuda.html:223 app/templates/ayuda.html:247
+msgid "Ver Completo"
+msgstr ""
+
+#: app/templates/ayuda.html:234
+msgid "Problema de Dieta"
+msgstr ""
+
+#: app/templates/ayuda.html:257
+msgid "Ver Todos los Ejemplos"
+msgstr ""
+
+#: app/templates/ayuda.html:268
+msgid "Teoría y Fundamentos"
+msgstr ""
+
+#: app/templates/ayuda.html:277
+msgid "Historia de la Programación Lineal"
+msgstr ""
+
+#: app/templates/ayuda.html:283
+msgid "Origen Militar"
+msgstr ""
+
+#: app/templates/ayuda.html:284
+msgid ""
+"Leonid Kantorovich desarrolla los primeros conceptos para optimizar "
+"recursos militares en la URSS durante la Segunda Guerra Mundial."
+msgstr ""
+
+#: app/templates/ayuda.html:289 app/templates/ayuda.html:387
+msgid "Método Simplex"
+msgstr ""
+
+#: app/templates/ayuda.html:290
+msgid ""
+"George Dantzig inventa el algoritmo Simplex en Estados Unidos, "
+"revolucionando la resolución de problemas de optimización."
+msgstr ""
+
+#: app/templates/ayuda.html:295
+msgid "Premio Nobel"
+msgstr ""
+
+#: app/templates/ayuda.html:296
+msgid ""
+"Kantorovich y Tjalling Koopmans reciben el Premio Nobel de Economía por "
+"sus contribuciones a la teoría de optimización."
+msgstr ""
+
+#: app/templates/ayuda.html:310
+msgid "Región Factible"
+msgstr ""
+
+#: app/templates/ayuda.html:312
+msgid ""
+"El conjunto de todas las soluciones que satisfacen todas las "
+"restricciones del problema."
+msgstr ""
+
+#: app/templates/ayuda.html:314
+msgid "Propiedades:"
+msgstr ""
+
+#: app/templates/ayuda.html:316
+msgid "Es un poliedro convexo"
+msgstr ""
+
+#: app/templates/ayuda.html:317
+msgid "Puede ser acotada o no acotada"
+msgstr ""
+
+#: app/templates/ayuda.html:318
+msgid "Los vértices son candidatos a solución óptima"
+msgstr ""
+
+#: app/templates/ayuda.html:328
+msgid "Teorema Fundamental"
+msgstr ""
+
+#: app/templates/ayuda.html:330
+msgid ""
+"Si existe una solución óptima, entonces existe al menos una solución "
+"óptima en un vértice de la región factible."
+msgstr ""
+
+#: app/templates/ayuda.html:332
+msgid "Implicaciones:"
+msgstr ""
+
+#: app/templates/ayuda.html:334
+msgid "Solo necesitamos examinar los vértices"
+msgstr ""
+
+#: app/templates/ayuda.html:335
+msgid "El algoritmo Simplex es finito"
+msgstr ""
+
+#: app/templates/ayuda.html:336
+msgid "Garantiza encontrar la solución óptima"
+msgstr ""
+
+#: app/templates/ayuda.html:346
+msgid "Dualidad"
+msgstr ""
+
+#: app/templates/ayuda.html:348
+msgid ""
+"Todo problema de programación lineal tiene asociado un problema dual con "
+"propiedades complementarias."
+msgstr ""
+
+#: app/templates/ayuda.html:350
+msgid "Teorema de Dualidad Fuerte:"
+msgstr ""
+
+#: app/templates/ayuda.html:351
+msgid ""
+"Si tanto el problema primal como el dual tienen solución óptima, entonces"
+" sus valores objetivos son iguales."
+msgstr ""
+
+#: app/templates/ayuda.html:360
+msgid "Análisis de Sensibilidad"
+msgstr ""
+
+#: app/templates/ayuda.html:362
+msgid "Estudia cómo cambios en los parámetros afectan la solución óptima."
+msgstr ""
+
+#: app/templates/ayuda.html:364
+msgid "Información proporcionada:"
+msgstr ""
+
+#: app/templates/ayuda.html:366
+msgid "Rangos de validez de la solución"
+msgstr ""
+
+#: app/templates/ayuda.html:367
+msgid "Precios sombra (valores duales)"
+msgstr ""
+
+#: app/templates/ayuda.html:368
+msgid "Costos reducidos"
+msgstr ""
+
+#: app/templates/ayuda.html:380
+msgid "Métodos de Solución"
+msgstr ""
+
+#: app/templates/ayuda.html:388
+msgid ""
+"Algoritmo clásico que se mueve entre vértices adyacentes de la región "
+"factible hasta encontrar el óptimo."
+msgstr ""
+
+#: app/templates/ayuda.html:394
+msgid "Métodos de Punto Interior"
+msgstr ""
+
+#: app/templates/ayuda.html:395
+msgid ""
+"Algoritmos modernos que atraviesan el interior de la región factible, muy"
+" eficientes para problemas grandes."
+msgstr ""
+
+#: app/templates/ayuda.html:401
+msgid "Métodos de Descomposición"
+msgstr ""
+
+#: app/templates/ayuda.html:402
+msgid ""
+"Técnicas para resolver problemas muy grandes dividiendo en subproblemas "
+"más manejables."
+msgstr ""
+
+#: app/templates/ayuda.html:416
+msgid "Aplicaciones en el Mundo Real"
+msgstr ""
+
+#: app/templates/ayuda.html:427
+msgid "Aerolíneas"
+msgstr ""
+
+#: app/templates/ayuda.html:429
+msgid "Programación de vuelos"
+msgstr ""
+
+#: app/templates/ayuda.html:430
+msgid "Asignación de tripulaciones"
+msgstr ""
+
+#: app/templates/ayuda.html:431
+msgid "Gestión de combustible"
+msgstr ""
+
+#: app/templates/ayuda.html:432
+msgid "Pricing dinámico"
+msgstr ""
+
+#: app/templates/ayuda.html:442
+msgid "Manufactura"
+msgstr ""
+
+#: app/templates/ayuda.html:444
+msgid "Planificación de producción"
+msgstr ""
+
+#: app/templates/ayuda.html:445
+msgid "Control de inventarios"
+msgstr ""
+
+#: app/templates/ayuda.html:446
+msgid "Asignación de recursos"
+msgstr ""
+
+#: app/templates/ayuda.html:447
+msgid "Optimización de cadena de suministro"
+msgstr ""
+
+#: app/templates/ayuda.html:457
+msgid "Finanzas"
+msgstr ""
+
+#: app/templates/ayuda.html:459
+msgid "Optimización de portafolios"
+msgstr ""
+
+#: app/templates/ayuda.html:460
+msgid "Gestión de riesgos"
+msgstr ""
+
+#: app/templates/ayuda.html:461
+msgid "Asignación de activos"
+msgstr ""
+
+#: app/templates/ayuda.html:462
+msgid "Trading algorítmico"
+msgstr ""
+
+#: app/templates/ayuda.html:472
+msgid "Logística"
+msgstr ""
+
+#: app/templates/ayuda.html:474
+msgid "Ruteo de vehículos"
+msgstr ""
+
+#: app/templates/ayuda.html:475
+msgid "Localización de almacenes"
+msgstr ""
+
+#: app/templates/ayuda.html:476
+msgid "Distribución óptima"
+msgstr ""
+
+#: app/templates/ayuda.html:477
+msgid "Gestión de flotas"
+msgstr ""
+
+#: app/templates/ayuda.html:487
+msgid "Energía"
+msgstr ""
+
+#: app/templates/ayuda.html:489
+msgid "Despacho económico"
+msgstr ""
+
+#: app/templates/ayuda.html:490
+msgid "Planificación energética"
+msgstr ""
+
+#: app/templates/ayuda.html:491
+msgid "Distribución eléctrica"
+msgstr ""
+
+#: app/templates/ayuda.html:492
+msgid "Energías renovables"
+msgstr ""
+
+#: app/templates/ayuda.html:502
+msgid "Salud"
+msgstr ""
+
+#: app/templates/ayuda.html:504
+msgid "Programación de quirófanos"
+msgstr ""
+
+#: app/templates/ayuda.html:505
+msgid "Asignación de recursos médicos"
+msgstr ""
+
+#: app/templates/ayuda.html:506
+msgid "Planificación de tratamientos"
+msgstr ""
+
+#: app/templates/ayuda.html:507
+msgid "Gestión hospitalaria"
+msgstr ""
+
+#: app/templates/ayuda.html:515
+msgid "Casos de Estudio Destacados"
+msgstr ""
+
+#: app/templates/ayuda.html:522
+msgid "UPS: Optimización de Rutas"
+msgstr ""
+
+#: app/templates/ayuda.html:524
+msgid ""
+"UPS utiliza algoritmos de programación lineal para optimizar las rutas de"
+" entrega, reduciendo:"
+msgstr ""
+
+#: app/templates/ayuda.html:527
+msgid "Distancia recorrida"
+msgstr ""
+
+#: app/templates/ayuda.html:529
+msgid "Millones de millas anuales"
+msgstr ""
+
+#: app/templates/ayuda.html:532
+msgid "Emisiones CO2"
+msgstr ""
+
+#: app/templates/ayuda.html:534
+msgid "Toneladas por año"
+msgstr ""
+
+#: app/templates/ayuda.html:544
+msgid "USDA: Programa de Alimentación Escolar"
+msgstr ""
+
+#: app/templates/ayuda.html:546
+msgid ""
+"El Departamento de Agricultura de EE.UU. optimiza menús escolares "
+"balanceando:"
+msgstr ""
+
+#: app/templates/ayuda.html:548
+msgid "Requisitos nutricionales mínimos"
+msgstr ""
+
+#: app/templates/ayuda.html:549
+msgid "Restricciones presupuestarias"
+msgstr ""
+
+#: app/templates/ayuda.html:550
+msgid "Preferencias de los estudiantes"
+msgstr ""
+
+#: app/templates/ayuda.html:551
+msgid "Disponibilidad estacional de alimentos"
+msgstr ""
+
+#: app/templates/ayuda.html:553
+msgid "30M+ estudiantes beneficiados"
+msgstr ""
+
+#: app/templates/ayuda.html:564
+msgid "Impacto Económico Global"
+msgstr ""
+
+#: app/templates/ayuda.html:569
+msgid "Ahorros anuales estimados en costos operativos globalmente"
+msgstr ""
+
+#: app/templates/ayuda.html:573
+msgid "De las empresas Fortune 500 utilizan optimización matemática"
+msgstr ""
+
+#: app/templates/ayuda.html:577
+msgid "Mejora típica en eficiencia operacional tras implementar PL"
+msgstr ""
+
+#: app/templates/ayuda.html:590
+msgid "Preguntas Frecuentes"
+msgstr ""
+
+#: app/templates/ayuda.html:598
+msgid "¿Qué tipos de problemas puede resolver el sistema?"
+msgstr ""
+
+#: app/templates/ayuda.html:601
+msgid ""
+"El sistema puede resolver problemas de programación lineal estándar, "
+"incluyendo maximización y minimización, con restricciones lineales de "
+"igualdad y desigualdad."
+msgstr ""
+
+#: app/templates/ayuda.html:609
+msgid "¿Hay límite en el número de variables?"
+msgstr ""
+
+#: app/templates/ayuda.html:612
+msgid ""
+"Técnicamente no hay límite estricto, pero por razones de rendimiento y "
+"usabilidad, recomendamos hasta 20 variables para una experiencia óptima."
+msgstr ""
+
+#: app/templates/ayuda.html:620
+msgid "¿Puedo guardar mis problemas resueltos?"
+msgstr ""
+
+#: app/templates/ayuda.html:623
+msgid ""
+"Sí, todos tus problemas se guardan automáticamente en tu historial "
+"personal. Puedes acceder a ellos desde tu perfil de usuario."
+msgstr ""
+
+#: app/templates/ayuda.html:631
+msgid "¿Qué hago si obtengo una solución \"No factible\"?"
+msgstr ""
+
+#: app/templates/ayuda.html:634
+msgid ""
+"Una solución no factible significa que las restricciones son "
+"contradictorias. Revisa tus restricciones para asegurarte de que sean "
+"consistentes y que exista al menos una solución que las satisfaga todas."
+msgstr ""
+
+#: app/templates/ayuda.html:642
+msgid "¿Cómo interpreto los resultados del análisis de sensibilidad?"
+msgstr ""
+
+#: app/templates/ayuda.html:645
+msgid ""
+"El análisis de sensibilidad te muestra cómo cambios en los coeficientes "
+"afectan la solución óptima. Los valores duales indican cuánto mejora la "
+"función objetivo al relajar una restricción en una unidad."
+msgstr ""
+
+#: app/templates/ayuda.html:663
+msgid "¿Listo para empezar?"
+msgstr ""
+
+#: app/templates/ayuda.html:667
+msgid ""
+"Ahora que conoces las bases, es momento de crear y resolver tu primer "
+"problema de programación lineal."
+msgstr ""
+
+#: app/templates/ayuda.html:673
+msgid "Crear Problema"
+msgstr ""
+
+#: app/templates/ayuda.html:677
+msgid "Ver Ejemplos"
+msgstr ""
+
+#: app/templates/base.html:66 app/templates/base.html:100
+#: app/templates/dashboard.html:3
+msgid "Inicio"
+msgstr ""
+
+#: app/templates/base.html:70 app/templates/base.html:104
+#: app/templates/index.html:3
+msgid "Nuevo Problema"
+msgstr ""
+
+#: app/templates/base.html:122
+msgid "Cambiar tema"
+msgstr ""
+
+#: app/templates/base.html:129
+msgid "Seleccionar tema"
+msgstr ""
+
+#: app/templates/base.html:135
+msgid "Tema Claro"
+msgstr ""
+
+#: app/templates/base.html:139
+msgid "Tema Oscuro"
+msgstr ""
+
+#: app/templates/base.html:143
+msgid "Tema Suave"
+msgstr ""
+
+#: app/templates/base.html:147
+msgid "Tema Empresarial"
+msgstr ""
+
+#: app/templates/base.html:154
+msgid "Cambiar idioma"
+msgstr ""
+
+#: app/templates/base.html:161
+msgid "Seleccionar idioma"
+msgstr ""
+
+#: app/templates/base.html:180
+msgid "Cuenta de usuario"
+msgstr ""
+
+#: app/templates/base.html:203 app/templates/dashboard.html:74
+msgid "Mi Perfil"
+msgstr ""
+
+#: app/templates/base.html:207 app/templates/problema_detalle.html:20
+msgid "Historial"
+msgstr ""
+
+#: app/templates/base.html:212
+msgid "Cerrar Sesión"
+msgstr ""
+
+#: app/templates/base.html:219
+msgid "Accede a tu cuenta"
+msgstr ""
+
+#: app/templates/base.html:225 app/templates/login.html:3
+msgid "Iniciar Sesión"
+msgstr ""
+
+#: app/templates/base.html:229 app/templates/register.html:2
+msgid "Crear Cuenta"
+msgstr ""
+
+#: app/templates/dashboard.html:22
+#, python-format
+msgid "¡Bienvenido, %(name)s!"
+msgstr ""
+
+#: app/templates/dashboard.html:24
+msgid "¡Bienvenido, Usuario!"
+msgstr ""
+
+#: app/templates/dashboard.html:27
+msgid "Tu centro de soluciones para programación lineal"
+msgstr ""
+
+#: app/templates/dashboard.html:52
+msgid "Resolver Problema"
+msgstr ""
+
+#: app/templates/dashboard.html:53
+msgid "Principal"
+msgstr ""
+
+#: app/templates/dashboard.html:56
+msgid "Utiliza nuestro solucionador para encontrar la solución óptima."
+msgstr ""
+
+#: app/templates/dashboard.html:60
+msgid "Comenzar"
+msgstr ""
+
+#: app/templates/dashboard.html:75
+msgid "Configuración"
+msgstr ""
+
+#: app/templates/dashboard.html:78
+msgid "Gestiona tu información personal y configuraciones."
+msgstr ""
+
+#: app/templates/dashboard.html:82
+msgid "Ver Perfil"
+msgstr ""
+
+#: app/templates/dashboard.html:97
+msgid "Aprender"
+msgstr ""
+
+#: app/templates/dashboard.html:100
+msgid "Explora casos reales y aprende con ejemplos."
+msgstr ""
+
+#: app/templates/dashboard.html:104
+msgid "Explorar"
+msgstr ""
+
+#: app/templates/dashboard.html:119
+msgid "Estadísticas"
+msgstr ""
+
+#: app/templates/dashboard.html:126
+msgid "Problemas"
+msgstr ""
+
+#: app/templates/dashboard.html:128
+msgid "Total creados"
+msgstr ""
+
+#: app/templates/dashboard.html:144
+msgid "Documentación"
+msgstr ""
+
+#: app/templates/dashboard.html:148
+msgid "Ver Guía"
+msgstr ""
+
+#: app/templates/ejemplos.html:20
+msgid "Ejemplos de Programación Lineal"
+msgstr ""
+
+#: app/templates/ejemplos.html:31
+msgid ""
+"Explora problemas reales resueltos paso a paso. Cada ejemplo incluye su "
+"formulación matemática completa y puedes cargar los datos directamente en"
+" la calculadora para experimentar."
+msgstr ""
+
+#: app/templates/ejemplos.html:38
+msgid "Problemas Reales"
+msgstr ""
+
+#: app/templates/ejemplos.html:42
+msgid "Calculadora Integrada"
+msgstr ""
+
+#: app/templates/ejemplos.html:46
+msgid "Paso a Paso"
+msgstr ""
+
+#: app/templates/ejemplos.html:60
+msgid "Todos"
+msgstr ""
+
+#: app/templates/ejemplos.html:116 app/templates/problema_detalle.html:67
+msgid "Variables"
+msgstr ""
+
+#: app/templates/ejemplos.html:133
+msgid "Objetivo"
+msgstr ""
+
+#: app/templates/ejemplos.html:170
+msgid "Solución Óptima"
+msgstr ""
+
+#: app/templates/ejemplos.html:182
+msgid "Calcular Ejemplo"
+msgstr ""
+
+#: app/templates/ejemplos.html:206
+msgid "¡Practica con tus propios problemas!"
+msgstr ""
+
+#: app/templates/ejemplos.html:209
+msgid ""
+"Ahora que has explorado los ejemplos, es momento de crear y resolver tus "
+"propios problemas de programación lineal usando nuestra calculadora "
+"interactiva."
+msgstr ""
+
+#: app/templates/ejemplos.html:222
+msgid "Calculadora Intuitiva"
+msgstr ""
+
+#: app/templates/ejemplos.html:223
+msgid "Interfaz fácil de usar para crear tus problemas"
+msgstr ""
+
+#: app/templates/ejemplos.html:234
+msgid "Soluciones Detalladas"
+msgstr ""
+
+#: app/templates/ejemplos.html:235
+msgid "Resultados paso a paso con explicaciones"
+msgstr ""
+
+#: app/templates/ejemplos.html:246
+msgid "Historial Completo"
+msgstr ""
+
+#: app/templates/ejemplos.html:247
+msgid "Guarda y revisa tus problemas anteriores"
+msgstr ""
+
+#: app/templates/ejemplos.html:256
+msgid "Crear Nuevo Problema"
+msgstr ""
+
+#: app/templates/ejemplos.html:260
+msgid "Ver Ayuda"
+msgstr ""
+
+#: app/templates/historial.html:3 app/templates/historial.html:18
+msgid "Historial de Problemas"
+msgstr ""
+
+#: app/templates/historial.html:21
+msgid "Todos tus problemas resueltos en un solo lugar"
+msgstr ""
+
+#: app/templates/historial.html:30
+msgid "Volver al Perfil"
+msgstr ""
+
+#: app/templates/historial.html:36
+msgid "Todos los métodos"
+msgstr ""
+
+#: app/templates/historial.html:39
+msgid "Simplex Clásico"
+msgstr ""
+
+#: app/templates/historial.html:42
+msgid "Todos los tipos"
+msgstr ""
+
+#: app/templates/historial.html:55
 msgid "Total Resueltos"
 msgstr ""
 
-#: templates/historial.html:57
+#: app/templates/historial.html:57
 msgid "problema en total"
 msgid_plural "problemas en total"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/historial.html:64
+#: app/templates/historial.html:64
 msgid "Método Favorito"
 msgstr ""
 
-#: templates/historial.html:66
+#: app/templates/historial.html:66
 msgid "más utilizado"
 msgstr ""
 
-#: templates/historial.html:73
+#: app/templates/historial.html:73
 msgid "Último Problema"
 msgstr ""
 
-#: templates/historial.html:76
+#: app/templates/historial.html:76
 msgid "Hace 2 días"
 msgstr ""
 
-#: templates/historial.html:81
+#: app/templates/historial.html:81
 msgid "resuelto"
 msgstr ""
 
-#: templates/historial.html:101 templates/problema_detalle.html:21
-#: templates/problema_detalle.html:29
+#: app/templates/historial.html:101 app/templates/problema_detalle.html:21
+#: app/templates/problema_detalle.html:29
 #, python-format
 msgid "Problema #%(id)s"
 msgstr ""
 
-#: templates/historial.html:109
+#: app/templates/historial.html:109
 #, python-format
 msgid "%(num)d variable"
 msgid_plural "%(num)d variables"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/historial.html:110
+#: app/templates/historial.html:110
 #, python-format
 msgid "%(num)d restricción"
 msgid_plural "%(num)d restricciones"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/historial.html:122
+#: app/templates/historial.html:122
 msgid "Ver detalles"
 msgstr ""
 
-#: templates/historial.html:146
+#: app/templates/historial.html:146
 msgid "¡Aún no has resuelto problemas!"
 msgstr ""
 
-#: templates/historial.html:148
+#: app/templates/historial.html:148
 msgid ""
 "Comienza resolviendo tu primer problema de programación lineal y "
 "aparecerá aquí en tu historial."
 msgstr ""
 
-#: templates/historial.html:152
+#: app/templates/historial.html:152
 msgid "Resolver Primer Problema"
 msgstr ""
 
-#: templates/index.html:3
-msgid "Linear Programming Solver"
-msgstr ""
-
-#: templates/index.html:18 templates/login.html:70 templates/register.html:76
+#: app/templates/index.html:18 app/templates/login.html:70
+#: app/templates/register.html:76
 msgid "Solver de Programación Lineal"
 msgstr ""
 
-#: templates/index.html:21
+#: app/templates/index.html:21
 msgid "Optimiza tus problemas de manera eficiente"
 msgstr ""
 
-#: templates/index.html:34 templates/problema_detalle.html:62
+#: app/templates/index.html:34 app/templates/problema_detalle.html:62
 msgid "Método"
 msgstr ""
 
-#: templates/index.html:36
+#: app/templates/index.html:36
 msgid "Simplex"
 msgstr ""
 
-#: templates/index.html:37
+#: app/templates/index.html:37
 msgid "General"
 msgstr ""
 
-#: templates/index.html:38
+#: app/templates/index.html:38
 msgid "Scipy"
 msgstr ""
 
-#: templates/index.html:48
-msgid "Función Objetivo"
-msgstr ""
-
-#: templates/index.html:57
+#: app/templates/index.html:57
 msgid "Tipo de optimización"
 msgstr ""
 
-#: templates/index.html:60
-msgid "Maximizar"
-msgstr ""
-
-#: templates/index.html:61
-msgid "Minimizar"
-msgstr ""
-
-#: templates/index.html:67
+#: app/templates/index.html:67
 msgid "Función objetivo (ej: 3x1 + 2x2)"
 msgstr ""
 
-#: templates/index.html:69
+#: app/templates/index.html:69
 msgid "Ingresa la función objetivo"
 msgstr ""
 
-#: templates/index.html:120 templates/problema_detalle.html:72
-msgid "Restricciones"
-msgstr ""
-
-#: templates/index.html:124
+#: app/templates/index.html:124
 msgid "Agregar"
 msgstr ""
 
-#: templates/index.html:164
+#: app/templates/index.html:164
 msgid "Resolver"
 msgstr ""
 
-#: templates/index.html:168
+#: app/templates/index.html:168
 msgid "Limpiar"
 msgstr ""
 
-#: templates/index.html:185
+#: app/templates/index.html:185
 msgid "Solución"
 msgstr ""
 
-#: templates/index.html:193
+#: app/templates/index.html:193
 msgid "Listo para resolver"
 msgstr ""
 
-#: templates/index.html:195
+#: app/templates/index.html:195
 msgid "Ingresa tu problema de programación lineal y presiona \"Resolver\""
 msgstr ""
 
-#: templates/index.html:203
+#: app/templates/index.html:203
 msgid "Valor Óptimo"
 msgstr ""
 
-#: templates/index.html:207
+#: app/templates/index.html:207
 msgid "Estado"
 msgstr ""
 
-#: templates/index.html:216
+#: app/templates/index.html:216
 msgid "Variable"
 msgstr ""
 
-#: templates/index.html:217
+#: app/templates/index.html:217
 msgid "Valor"
 msgstr ""
 
-#: templates/index.html:298
+#: app/templates/index.html:298
 msgid "Gráfica completa"
 msgstr ""
 
-#: templates/index.html:303
+#: app/templates/index.html:303
 msgid "Cerrar"
 msgstr ""
 
-#: templates/login.html:3
-msgid "Login"
-msgstr ""
-
-#: templates/login.html:24
+#: app/templates/login.html:24
 msgid "Bienvenido de nuevo"
 msgstr ""
 
-#: templates/login.html:29 templates/perfil.html:62 templates/register.html:31
+#: app/templates/login.html:29 app/templates/register.html:31
 msgid "Usuario"
 msgstr ""
 
-#: templates/login.html:35 templates/register.html:40
+#: app/templates/login.html:35 app/templates/register.html:40
 msgid "Contraseña"
 msgstr ""
 
-#: templates/login.html:41
+#: app/templates/login.html:41
 msgid "Iniciar sesion"
 msgstr ""
 
-#: templates/login.html:48
+#: app/templates/login.html:48
 msgid "¿No tienes cuenta?"
 msgstr ""
 
-#: templates/login.html:50
+#: app/templates/login.html:50
 msgid "Regístrate aquí"
 msgstr ""
 
-#: templates/login.html:79 templates/register.html:85
+#: app/templates/login.html:79 app/templates/register.html:85
 msgid "Optimización de funciones objetivo"
 msgstr ""
 
-#: templates/login.html:85 templates/register.html:91
+#: app/templates/login.html:85 app/templates/register.html:91
 msgid "Análisis de restricciones"
 msgstr ""
 
-#: templates/login.html:91 templates/register.html:97
+#: app/templates/login.html:91 app/templates/register.html:97
 msgid "Soluciones matemáticas precisas"
 msgstr ""
 
-#: templates/perfil.html:3
-msgid "Perfil de Usuario"
-msgstr ""
-
-#: templates/perfil.html:18
-#, python-format
-msgid "¡Hola, %(name)s!"
-msgstr ""
-
-#: templates/perfil.html:20
-msgid "Mi Perfil"
-msgstr ""
-
-#: templates/perfil.html:24
-msgid "Gestiona tu información y revisa tu historial"
-msgstr ""
-
-#: templates/perfil.html:40
-msgid "Información Personal"
-msgstr ""
-
-#: templates/perfil.html:46
-msgid "Nombre completo"
-msgstr ""
-
-#: templates/perfil.html:48 templates/perfil.html:64
-msgid "No disponible"
-msgstr ""
-
-#: templates/perfil.html:80
-msgid "Editar perfil"
-msgstr ""
-
-#: templates/perfil.html:93
-msgid "Estadísticas"
-msgstr ""
-
-#: templates/perfil.html:98
-msgid "Problemas resueltos"
-msgstr ""
-
-#: templates/perfil.html:100
-msgid "Total histórico"
-msgstr ""
-
-#: templates/perfil.html:120
-msgid "Ver Historial Completo"
-msgstr ""
-
-#: templates/perfil.html:136
-msgid "Problemas Resueltos"
-msgstr ""
-
-#: templates/perfil.html:140
-msgid "Todos"
-msgstr ""
-
-#: templates/perfil.html:173
-msgid "Problema de Maximización"
-msgstr ""
-
-#: templates/perfil.html:175
-msgid "Problema de Minimización"
-msgstr ""
-
-#: templates/perfil.html:177
-msgid "Problema de Optimización"
-msgstr ""
-
-#: templates/perfil.html:181
-msgid "Función objetivo"
-msgstr ""
-
-#: templates/perfil.html:185
-msgid "variable"
-msgid_plural "variables"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/perfil.html:186
-msgid "restricción"
-msgid_plural "restricciones"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/perfil.html:200
-msgid "No hay problemas resueltos aún"
-msgstr ""
-
-#: templates/perfil.html:203
-msgid "Resuelve tu primer problema de programación lineal para verlo aquí"
-msgstr ""
-
-#: templates/perfil.html:207
-msgid "Resolver Problema"
-msgstr ""
-
-#: templates/problema_detalle.html:3
+#: app/templates/problema_detalle.html:3
 #, python-format
 msgid "Problema #%(id)s - Detalle"
 msgstr ""
 
-#: templates/problema_detalle.html:20
-msgid "Historial"
+#: app/templates/problema_detalle.html:19
+msgid "Perfil"
 msgstr ""
 
-#: templates/problema_detalle.html:32
+#: app/templates/problema_detalle.html:32
 #, python-format
 msgid "Resuelto el %(fecha)s"
 msgstr ""
 
-#: templates/problema_detalle.html:32
+#: app/templates/problema_detalle.html:32
 msgid "Sin fecha"
 msgstr ""
 
-#: templates/problema_detalle.html:39
+#: app/templates/problema_detalle.html:39
 msgid "Volver al Historial"
 msgstr ""
 
-#: templates/problema_detalle.html:43
+#: app/templates/problema_detalle.html:43
 msgid "Editar"
 msgstr ""
 
-#: templates/problema_detalle.html:47
+#: app/templates/problema_detalle.html:47
 msgid "Imprimir"
 msgstr ""
 
-#: templates/problema_detalle.html:55
+#: app/templates/problema_detalle.html:55
 msgid "Tipo"
 msgstr ""
 
-#: templates/problema_detalle.html:67
-msgid "Variables"
-msgstr ""
-
-#: templates/register.html:2
-msgid "Register"
-msgstr ""
-
-#: templates/register.html:19
+#: app/templates/register.html:19
 msgid "Crear una cuenta"
 msgstr ""
 
-#: templates/register.html:24
+#: app/templates/register.html:24
 msgid "Nombre"
 msgstr ""
 
-#: templates/register.html:55
+#: app/templates/register.html:48
+msgid "Registrarse"
+msgstr ""
+
+#: app/templates/register.html:55
 msgid "¿Ya tienes cuenta?"
 msgstr ""
 
-#: templates/register.html:57
+#: app/templates/register.html:57
 msgid "Inicia sesión"
 msgstr ""
 

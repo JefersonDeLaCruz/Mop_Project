@@ -1,5 +1,6 @@
 import json
 import os
+from werkzeug.security import generate_password_hash
 
 def guardar_usuario(user, RUTA_ARCHIVO):
 
@@ -17,6 +18,13 @@ def guardar_usuario(user, RUTA_ARCHIVO):
 
     # Asignamos un ID automático al nuevo usuario
     user["id"] = users[-1]["id"] + 1 if users else 1
+    
+    # Si la contraseña no está hasheada, la hasheamos
+    if "password" in user and not user.get("password_hash"):
+        user["password_hash"] = generate_password_hash(user["password"])
+        # Eliminamos la contraseña en texto plano por seguridad
+        if "password" in user:  # Verificamos nuevamente antes de eliminar
+            del user["password"]
 
     # Agregamos el nuevo usuario
     users.append(user)
@@ -41,3 +49,25 @@ def obtener_usuario_por_nombre_usuario(username, RUTA_ARCHIVO):
         if user["username"] == username:
             return user
     return None
+
+def migrar_contraseñas_a_hash(RUTA_ARCHIVO):
+    """Migra contraseñas en texto plano a hash para usuarios existentes"""
+    usuarios = cargar_usuarios(RUTA_ARCHIVO)
+    usuarios_modificados = False
+    
+    for user in usuarios:
+        # Si tiene contraseña en texto plano y no tiene hash
+        if "password" in user and "password_hash" not in user:
+            user["password_hash"] = generate_password_hash(user["password"])
+            if "password" in user:  # Verificar antes de eliminar
+                del user["password"]  # Eliminar contraseña en texto plano
+            usuarios_modificados = True
+            print(f"Migrado usuario: {user.get('username', 'Usuario sin nombre')}")
+    
+    # Guardar cambios si se hicieron modificaciones
+    if usuarios_modificados:
+        with open(RUTA_ARCHIVO, "w", encoding="utf-8") as archivo:
+            json.dump(usuarios, archivo, ensure_ascii=False, indent=4)
+        print("Migración de contraseñas completada.")
+    else:
+        print("No se encontraron contraseñas que migrar.")

@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}{{ _('Login') }}{% endblock %}
+{% block title %} {{ _('Iniciar Sesión') }} - LP Solver{% endblock %}
 
 {% block tailwindcss %} {{super()}} {% endblock %}
 
@@ -233,9 +233,9 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Esperar 2.5 segundos para que el usuario vea el mensaje de éxito
-    // antes de redirigir al index
+    // antes de redirigir al dashboard
     setTimeout(function() {
-      window.location.href = "{{ url_for('main.index') }}";
+      window.location.href = "{{ url_for('main.dashboard') }}";
     }, 2500);
   });
 </script>

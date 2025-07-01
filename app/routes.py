@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, flash, jsonify, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_babel import gettext as _
 
 from .helpers import guardar_usuario, obtener_usuario_por_nombre_usuario
 
@@ -32,18 +33,29 @@ def login():
         password = request.form["password"]
 
         user_data = obtener_usuario_por_nombre_usuario(user, "./data/usuarios.json")
-        if user_data and user_data["password"] == password:
-            user = User(user_data["id"], user_data["username"], user_data["name"], user_data["password"])
-            login_user(user)
-            flash("¡Inicio de sesión exitoso!", "success")
-            # En lugar de redirigir inmediatamente, renderizar login.html con una flag
-            return render_template("login.html", login_success=True)
-        else:
-            flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
-            # return redirect(url_for("main.login"))
+        if user_data:
+            # Crear objeto User y verificar contraseña usando el hash
+            user_obj = User(user_data["id"], user_data["username"], user_data["name"], user_data.get("password_hash"))
+            
+            # Verificar contraseña (maneja tanto hash como texto plano para compatibilidad)
+            password_valid = False
+            if user_data.get("password_hash"):
+                # Usuario con contraseña hasheada
+                password_valid = user_obj.check_password(password)
+            elif user_data.get("password"):
+                # Usuario con contraseña en texto plano (para migración)
+                password_valid = (user_data.get("password") == password)
+            
+            if password_valid:
+                login_user(user_obj)
+                flash("¡Inicio de sesión exitoso!", "success")
+                # En lugar de redirigir inmediatamente, renderizar login.html con una flag
+                return render_template("login.html", login_success=True)
+        
+        flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
     else:
         # Limpiar mensajes flash antiguos cuando se accede a login por GET
-        # Esto evita que se acumulen mensajes de sesiones anteriores
+        # Esto evita que se acumulen mensajes de sesiones anteriales
         get_flashed_messages()
 
     return render_template("login.html")
@@ -54,6 +66,38 @@ def logout():
     logout_user()
     flash("Sesión cerrada correctamente.", "info")
     return redirect(url_for("main.login"))
+
+@main.route("/dashboard")
+@login_required
+def dashboard():
+    """Página de bienvenida/dashboard después del login"""
+    from datetime import datetime
+    import json
+    import os
+    
+    # Función para obtener el nombre del archivo de historial del usuario
+    def get_historial_filename(user_id):
+        return f"./data/{user_id}_historial.json"
+    
+    def cargar_historial(user_id):
+        filename = get_historial_filename(user_id)
+        if os.path.exists(filename):
+            with open(filename, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        return {"user_id": user_id, "problemas": []}
+    
+    # Cargar historial del usuario actual
+    historial_usuario = cargar_historial(current_user.id)
+    problemas_usuario = historial_usuario.get("problemas", [])
+    
+    # Calcular estadísticas simples
+    total_problemas = len(problemas_usuario)
+    
+    user_stats = {
+        'total_problemas': total_problemas
+    }
+    
+    return render_template("dashboard.html", user_stats=user_stats)
 
 @main.route("/register", methods=["GET", "POST"])
 def register():
@@ -69,17 +113,17 @@ def register():
         new_user = {
             "username": username,
             "name": name,
-            "password": password
+            "password": password  # guardar_usuario se encargará del hashing
         }
 
-        # Guardar el nuevo usuario
+        # Guardar el nuevo usuario (ya incluye hashing de contraseña)
         guardar_usuario(new_user, "./data/usuarios.json")
         
         # Obtener el usuario recién creado con su ID asignado
         created_user = obtener_usuario_por_nombre_usuario(username, "./data/usuarios.json")
         
         # Crear objeto User e iniciar sesión automáticamente
-        user_obj = User(created_user["id"], created_user["username"], created_user["name"], created_user["password"])
+        user_obj = User(created_user["id"], created_user["username"], created_user["name"], created_user.get("password_hash"))
         login_user(user_obj)
         
         flash("¡Cuenta creada exitosamente! Bienvenido/a a OptimizeFlow.", "success")
@@ -201,7 +245,21 @@ def actualizar_perfil():
     
     # Verificar contraseña actual
     user_data = obtener_usuario_por_nombre_usuario(current_user.username, "./data/usuarios.json")
-    if not user_data or user_data["password"] != current_password:
+    if not user_data:
+        flash("Error al acceder a tus datos de usuario.", "error")
+        return redirect(url_for("main.perfil"))
+    
+    # Verificar contraseña actual usando hash o texto plano para compatibilidad
+    password_valid = False
+    if user_data.get("password_hash"):
+        # Usuario con contraseña hasheada
+        temp_user = User(user_data["id"], user_data["username"], user_data["name"], user_data["password_hash"])
+        password_valid = temp_user.check_password(current_password)
+    elif user_data.get("password"):
+        # Usuario con contraseña en texto plano (para migración)
+        password_valid = (user_data.get("password") == current_password)
+    
+    if not password_valid:
         flash("La contraseña actual que ingresaste es incorrecta. Verifica e intenta de nuevo.", "error")
         return redirect(url_for("main.perfil"))
     
@@ -237,7 +295,11 @@ def actualizar_perfil():
                 usuario["name"] = new_name
                 usuario["username"] = new_username
                 if new_password:  # Solo actualizar si se proporciona nueva contraseña
-                    usuario["password"] = new_password
+                    # Generar hash de la nueva contraseña
+                    usuario["password_hash"] = User.hash_password(new_password)
+                    # Eliminar contraseña en texto plano si existe
+                    if "password" in usuario:
+                        del usuario["password"]
                 break
         
         # Guardar cambios
@@ -644,48 +706,48 @@ def ejemplos():
     ejemplos_data = [
         {
             "id": 1,
-            "titulo": "Problema de Producción Industrial",
-            "descripcion": "Una fábrica de muebles produce dos tipos de productos: mesas (Producto A) y sillas (Producto B). La empresa cuenta con recursos limitados de madera y tiempo de producción. Cada mesa genera una ganancia de $3 y cada silla $2. La empresa necesita determinar cuántas unidades de cada producto fabricar para maximizar sus ganancias, considerando que tiene disponibles 18 unidades de madera y 12 horas de tiempo de producción diarias.",
-            "tipo": "Maximización",
-            "variables": ["x1 (Mesas producidas)", "x2 (Sillas producidas)"],
+            "titulo": _("Problema de Producción Industrial"),
+            "descripcion": _("Una fábrica de muebles produce dos tipos de productos: mesas (Producto A) y sillas (Producto B). La empresa cuenta con recursos limitados de madera y tiempo de producción. Cada mesa genera una ganancia de $3 y cada silla $2. La empresa necesita determinar cuántas unidades de cada producto fabricar para maximizar sus ganancias, considerando que tiene disponibles 18 unidades de madera y 12 horas de tiempo de producción diarias."),
+            "tipo": _("Maximización"),
+            "variables": [_("x1 (Mesas producidas)"), _("x2 (Sillas producidas)")],
             "funcion_objetivo": "3x1 + 2x2",
             "restricciones": [
-                "2x1 + x2 ≤ 18 (Limitación de madera: cada mesa usa 2 unidades, cada silla 1)",
-                "x1 + 3x2 ≤ 12 (Limitación de tiempo: cada mesa toma 1 hora, cada silla 3 horas)"
+                _("2x1 + x2 ≤ 18 (Limitación de madera: cada mesa usa 2 unidades, cada silla 1)"),
+                _("x1 + 3x2 ≤ 12 (Limitación de tiempo: cada mesa toma 1 hora, cada silla 3 horas)")
             ],
             "solucion_optima": "x1 = 8.40, x2 = 1.20, Z = 27.60",
-            "categoria": "Producción"
+            "categoria": _("Producción")
         },
         {
             "id": 2,
-            "titulo": "Problema de Planificación Nutricional",
-            "descripcion": "Un nutricionista necesita diseñar una dieta económica que cumpla con los requerimientos mínimos de nutrientes para un hospital. Dispone de dos tipos de alimentos: Alimento 1 (cuesta $4 por unidad) y Alimento 2 (cuesta $3 por unidad). La dieta debe garantizar al menos 10 unidades de proteína, 8 unidades de vitaminas y 12 unidades de minerales. El objetivo es minimizar el costo total de la dieta mientras se satisfacen todos los requerimientos nutricionales.",
-            "tipo": "Minimización", 
-            "variables": ["x1 (Unidades de Alimento 1)", "x2 (Unidades de Alimento 2)"],
+            "titulo": _("Problema de Planificación Nutricional"),
+            "descripcion": _("Un nutricionista necesita diseñar una dieta económica que cumpla con los requerimientos mínimos de nutrientes para un hospital. Dispone de dos tipos de alimentos: Alimento 1 (cuesta $4 por unidad) y Alimento 2 (cuesta $3 por unidad). La dieta debe garantizar al menos 10 unidades de proteína, 8 unidades de vitaminas y 12 unidades de minerales. El objetivo es minimizar el costo total de la dieta mientras se satisfacen todos los requerimientos nutricionales."),
+            "tipo": _("Minimización"), 
+            "variables": [_("x1 (Unidades de Alimento 1)"), _("x2 (Unidades de Alimento 2)")],
             "funcion_objetivo": "4x1 + 3x2",
             "restricciones": [
-                "2x1 + x2 ≥ 10 (Requerimiento mínimo de proteína)",
-                "x1 + x2 ≥ 8 (Requerimiento mínimo de vitaminas)",
-                "x1 + 3x2 ≥ 12 (Requerimiento mínimo de minerales)"
+                _("2x1 + x2 ≥ 10 (Requerimiento mínimo de proteína)"),
+                _("x1 + x2 ≥ 8 (Requerimiento mínimo de vitaminas)"),
+                _("x1 + 3x2 ≥ 12 (Requerimiento mínimo de minerales)")
             ],
             "solucion_optima": "x1 = 2, x2 = 6, Z = 26",
-            "categoria": "Dieta"
+            "categoria": _("Dieta")
         },
         {
             "id": 3,
-            "titulo": "Problema de Optimización Logística",
-            "descripcion": "Una empresa distribuidora debe transportar productos desde dos almacenes hacia dos tiendas para minimizar los costos de transporte. Cuenta con tres rutas posibles: Ruta 1 (costo $8 por unidad), Ruta 2 (costo $6 por unidad) y Ruta 3 (costo $10 por unidad). El almacén 1 puede enviar máximo 15 unidades por las rutas 1 y 2, el almacén 2 puede enviar máximo 25 unidades por la ruta 3. La tienda 1 necesita al menos 5 unidades y la tienda 2 necesita al menos 15 unidades. ¿Cómo distribuir el transporte para minimizar costos?",
-            "tipo": "Minimización",
-            "variables": ["x1 (Unidades por Ruta 1)", "x2 (Unidades por Ruta 2)", "x3 (Unidades por Ruta 3)"],
+            "titulo": _("Problema de Optimización Logística"),
+            "descripcion": _("Una empresa distribuidora debe transportar productos desde dos almacenes hacia dos tiendas para minimizar los costos de transporte. Cuenta con tres rutas posibles: Ruta 1 (costo $8 por unidad), Ruta 2 (costo $6 por unidad) y Ruta 3 (costo $10 por unidad). El almacén 1 puede enviar máximo 15 unidades por las rutas 1 y 2, el almacén 2 puede enviar máximo 25 unidades por la ruta 3. La tienda 1 necesita al menos 5 unidades y la tienda 2 necesita al menos 15 unidades. ¿Cómo distribuir el transporte para minimizar costos?"),
+            "tipo": _("Minimización"),
+            "variables": [_("x1 (Unidades por Ruta 1)"), _("x2 (Unidades por Ruta 2)"), _("x3 (Unidades por Ruta 3)")],
             "funcion_objetivo": "8x1 + 6x2 + 10x3",
             "restricciones": [
-                "x1 + x2 ≤ 15 (Capacidad máxima del almacén 1)",
-                "x3 ≤ 25 (Capacidad máxima del almacén 2)",
-                "x1 + x3 ≥ 5 (Demanda mínima de la tienda 1)",
-                "x2 + x3 ≥ 15 (Demanda mínima de la tienda 2)"
+                _("x1 + x2 ≤ 15 (Capacidad máxima del almacén 1)"),
+                _("x3 ≤ 25 (Capacidad máxima del almacén 2)"),
+                _("x1 + x3 ≥ 5 (Demanda mínima de la tienda 1)"),
+                _("x2 + x3 ≥ 15 (Demanda mínima de la tienda 2)")
             ],
             "solucion_optima": "x1 = 0, x2 = 10, x3 = 5, Z = 110",
-            "categoria": "Transporte"
+            "categoria": _("Transporte")
         }
     ]
     

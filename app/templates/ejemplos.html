@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('Ejemplos') }} - LP Solver{% endblock %}
+{% block title %} {{ _('Ejemplos') }} - LP Solver{% endblock %}
 
 {% block main %}
 <div class="min-h-screen bg-gradient-to-br from-base-200 to-base-300">
@@ -104,7 +104,7 @@
                                 {{ ejemplo.titulo }}
                             </h2>
                             <p class="text-sm opacity-80 leading-relaxed">
-                                {{ ejemplo.descripcion[:150] }}{% if ejemplo.descripcion|length > 150 %}...{% endif %}
+                                {{ ejemplo.descripcion }}
                             </p>
                         </div>
                     </div>

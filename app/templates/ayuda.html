@@ -1,237 +1,682 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('Ayuda') }} - LP Solver{% endblock %}
+{% block title %} {{ _('Ayuda') }} - LP Solver{% endblock %}
 
 {% block main %}
-<div class="container mx-auto px-4 py-8">
-    <!-- Header -->
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-primary mb-4">
-            <i class="fas fa-question-circle"></i>
-            {{ _('Centro de Ayuda') }}
-        </h1>
-        <p class="text-lg text-base-content/70 max-w-2xl mx-auto">
-            {{ _('Encuentra toda la información que necesitas para usar eficientemente nuestro solucionador de programación lineal.') }}
-        </p>
-    </div>
-
-    <!-- Búsqueda rápida -->
-    <div class="max-w-2xl mx-auto mb-12">
-        <div class="card bg-base-100 shadow-lg border border-primary/10">
-            <div class="card-body p-6">
-                <div class="text-center mb-4">
-                    <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
-                        <i class="fas fa-search text-primary text-lg"></i>
+<div class="min-h-screen bg-gradient-to-br from-base-200 to-base-300">
+    <!-- Hero Section -->
+    <div class="hero min-h-[60vh] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
+        <div class="hero-content text-center max-w-6xl mx-auto px-4">
+            <div class="max-w-4xl">
+                <div class="mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-xl mb-6">
+                        <i class="fas fa-question-circle text-3xl text-white"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-primary mb-1">{{ _('Buscar en la Ayuda') }}</h3>
-                    <p class="text-sm text-base-content/60">{{ _('Encuentra rápidamente la información que necesitas') }}</p>
-                </div>
-                
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-base-content/40"></i>
-                    </div>
-                    <input type="text" 
-                           placeholder="{{ _('Escribe tu consulta aquí...') }}" 
-                           class="input input-bordered w-full pl-12 pr-4 h-12 bg-base-50 border-base-300 focus:border-primary focus:outline-none transition-colors duration-200" 
-                           id="search-input">
-                </div>
-                
-                <div class="mt-3 text-center">
-                    <span id="search-results" class="text-sm text-base-content/50 hidden">
-                        <span id="results-count">0</span> {{ _('resultados encontrados') }}
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navegación por secciones -->
-    <div class="flex flex-wrap justify-center gap-2 mb-8">
-        {% for section in ayuda_sections %}
-        <a href="#{{ section.id }}" class="btn btn-sm btn-outline btn-primary scroll-link">
-            <i class="{{ section.icono }}"></i>
-            {{ section.titulo }}
-        </a>
-        {% endfor %}
-    </div>
-
-    <!-- Contenido de ayuda -->
-    <div class="max-w-4xl mx-auto">
-        <div class="grid grid-cols-1 gap-6">
-            {% for section in ayuda_sections %}
-            <div id="{{ section.id }}" class="card bg-base-100 shadow-lg ayuda-section">
-                <div class="card-body">
-                    <h2 class="card-title text-2xl text-primary mb-4">
-                        <i class="{{ section.icono }}"></i>
-                        {{ section.titulo }}
-                    </h2>
-                    <div class="prose max-w-none">
-                        {{ section.contenido | safe }}
-                    </div>
-                    
-                    {% if section.id == 'introduccion' %}
-                    <!-- Sección especial para introducción -->
-                    <div class="mt-6 p-4 bg-info/10 border-l-4 border-info rounded">
-                        <h4 class="font-semibold text-info mb-2">
-                            <i class="fas fa-lightbulb"></i>
-                            {{ _('¿Sabías que...?') }}
-                        </h4>
-                        <p class="text-sm">
-                            {{ _('La programación lineal fue desarrollada durante la Segunda Guerra Mundial para optimizar recursos militares y se ha convertido en una herramienta fundamental en la investigación de operaciones.') }}
-                        </p>
-                    </div>
-                    {% endif %}
-                    
-                    {% if section.id == 'uso-sistema' %}
-                    <!-- Sección especial para uso del sistema -->
-                    <div class="mt-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="card bg-success/10 border border-success/20">
-                                <div class="card-body p-4">
-                                    <h4 class="font-semibold text-success mb-2">
-                                        <i class="fas fa-check"></i>
-                                        {{ _('Consejos Rápidos') }}
-                                    </h4>
-                                    <ul class="text-sm space-y-1">
-                                        <li>• {{ _('Usa nombres descriptivos para variables') }}</li>
-                                        <li>• {{ _('Verifica las unidades de medida') }}</li>
-                                        <li>• {{ _('Revisa la coherencia de restricciones') }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card bg-warning/10 border border-warning/20">
-                                <div class="card-body p-4">
-                                    <h4 class="font-semibold text-warning mb-2">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        {{ _('Errores Comunes') }}
-                                    </h4>
-                                    <ul class="text-sm space-y-1">
-                                        <li>• {{ _('Olvidar restricciones de no negatividad') }}</li>
-                                        <li>• {{ _('Confundir maximización con minimización') }}</li>
-                                        <li>• {{ _('Sintaxis incorrecta en expresiones') }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    {% if section.id == 'sintaxis' %}
-                    <!-- Ejemplos de sintaxis -->
-                    <div class="mt-6">
-                        <h4 class="font-semibold text-accent mb-3">{{ _('Ejemplos de Sintaxis') }}</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <span class="badge badge-primary mb-1">{{ _('Función Objetivo') }}</span>
-                                <div class="bg-base-200 p-3 rounded">
-                                    <code>3x1 + 2x2 + 5x3</code>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="badge badge-secondary mb-1">{{ _('Restricción de Desigualdad') }}</span>
-                                <div class="bg-base-200 p-3 rounded">
-                                    <code>2x1 + 4x2 <= 100</code>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="badge badge-accent mb-1">{{ _('Restricción de Igualdad') }}</span>
-                                <div class="bg-base-200 p-3 rounded">
-                                    <code>x1 + x2 + x3 = 50</code>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-4 bg-error/10 border-l-4 border-error rounded">
-                            <h5 class="font-semibold text-error mb-2">⚠️ Importante</h5>
-                            <p class="text-sm">NO uses asteriscos (*) en las expresiones. Escribe directamente: <code>2x1</code> en lugar de <code>2*x1</code></p>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- FAQ -->
-        <div class="mt-12">
-            <h2 class="text-3xl font-bold text-primary text-center mb-8">
-                <i class="fas fa-comments"></i>
-                {{ _('Preguntas Frecuentes') }}
-            </h2>
-            
-            <div class="space-y-4">
-                <div class="collapse collapse-plus bg-base-100 shadow">
-                    <input type="radio" name="faq-accordion" checked="checked">
-                    <div class="collapse-title text-lg font-medium">
-                        {{ _('¿Qué tipos de problemas puede resolver el sistema?') }}
-                    </div>
-                    <div class="collapse-content">
-                        <p>{{ _('El sistema puede resolver problemas de programación lineal estándar, incluyendo maximización y minimización, con restricciones lineales de igualdad y desigualdad.') }}</p>
-                    </div>
-                </div>
-                
-                <div class="collapse collapse-plus bg-base-100 shadow">
-                    <input type="radio" name="faq-accordion">
-                    <div class="collapse-title text-lg font-medium">
-                        {{ _('¿Hay límite en el número de variables?') }}
-                    </div>
-                    <div class="collapse-content">
-                        <p>{{ _('Técnicamente no hay límite estricto, pero por razones de rendimiento y usabilidad, recomendamos hasta 20 variables para una experiencia óptima.') }}</p>
-                    </div>
-                </div>
-                
-                <div class="collapse collapse-plus bg-base-100 shadow">
-                    <input type="radio" name="faq-accordion">
-                    <div class="collapse-title text-lg font-medium">
-                        {{ _('¿Puedo guardar mis problemas resueltos?') }}
-                    </div>
-                    <div class="collapse-content">
-                        <p>{{ _('Sí, todos tus problemas se guardan automáticamente en tu historial personal. Puedes acceder a ellos desde tu perfil de usuario.') }}</p>
-                    </div>
-                </div>
-                
-                <div class="collapse collapse-plus bg-base-100 shadow">
-                    <input type="radio" name="faq-accordion">
-                    <div class="collapse-title text-lg font-medium">
-                        {{ _('¿Qué hago si obtengo una solución "No factible"?') }}
-                    </div>
-                    <div class="collapse-content">
-                        <p>{{ _('Una solución no factible significa que las restricciones son contradictorias. Revisa tus restricciones para asegurarte de que sean consistentes y que exista al menos una solución que las satisfaga todas.') }}</p>
-                    </div>
-                </div>
-                
-                <div class="collapse collapse-plus bg-base-100 shadow">
-                    <input type="radio" name="faq-accordion">
-                    <div class="collapse-title text-lg font-medium">
-                        {{ _('¿Cómo interpreto los resultados del análisis de sensibilidad?') }}
-                    </div>
-                    <div class="collapse-content">
-                        <p>{{ _('El análisis de sensibilidad te muestra cómo cambios en los coeficientes afectan la solución óptima. Los valores duales indican cuánto mejora la función objetivo al relajar una restricción en una unidad.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contacto -->
-        <div class="mt-12 text-center">
-            <div class="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20">
-                <div class="card-body">
-                    <h3 class="text-2xl font-bold text-primary mb-4">
-                        <i class="fas fa-envelope"></i>
-                        {{ _('¿Necesitas más ayuda?') }}
-                    </h3>
-                    <p class="text-base-content/70 mb-6">
-                        {{ _('Si no encontraste la respuesta que buscabas, no dudes en contactarnos.') }}
+                    <h1 class="text-5xl md:text-6xl font-black text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text mb-6">
+                        {{ _('Centro de Ayuda') }}
+                    </h1>
+                    <p class="text-xl md:text-2xl text-base-content opacity-80 max-w-3xl mx-auto leading-relaxed">
+                        {{ _('Encuentra toda la información que necesitas para usar eficientemente nuestro solucionador de programación lineal.') }}
                     </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="{{ url_for('main.ejemplos') }}" class="btn btn-outline btn-primary">
+                </div>
+                
+                <!-- Quick Search -->
+                <div class="max-w-lg mx-auto">
+                    <div class="join w-full shadow-lg">
+                        <div class="relative flex-1">
+                            <input type="text" 
+                                   placeholder="{{ _('Buscar en la ayuda...') }}" 
+                                   class="input input-bordered join-item w-full"
+                                   id="search-input">
+                        </div>
+                        <button class="btn btn-primary join-item">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+        <!-- Quick Navigation -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <a href="#inicio-rapido" class="btn btn-outline btn-primary btn-sm">
+                <i class="fas fa-rocket"></i>
+                {{ _('Inicio Rápido') }}
+            </a>
+            <a href="#sintaxis" class="btn btn-outline btn-secondary btn-sm">
+                <i class="fas fa-code"></i>
+                {{ _('Sintaxis') }}
+            </a>
+            <a href="#ejemplos-uso" class="btn btn-outline btn-accent btn-sm">
+                <i class="fas fa-lightbulb"></i>
+                {{ _('Ejemplos') }}
+            </a>
+            <a href="#faq" class="btn btn-outline btn-info btn-sm">
+                <i class="fas fa-comments"></i>
+                {{ _('FAQ') }}
+            </a>
+            <a href="#teoria" class="btn btn-outline btn-warning btn-sm">
+                <i class="fas fa-graduation-cap"></i>
+                {{ _('Teoría') }}
+            </a>
+            <a href="#aplicaciones" class="btn btn-outline btn-success btn-sm">
+                <i class="fas fa-globe"></i>
+                {{ _('Aplicaciones') }}
+            </a>
+        </div>
+
+        <!-- Content Sections -->
+        <div class="grid grid-cols-1 gap-8">
+            <!-- Inicio Rápido -->
+            <div id="inicio-rapido" class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-3xl text-primary mb-6">
+                        <i class="fas fa-rocket"></i>
+                        {{ _('Inicio Rápido') }}
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card bg-primary/5 border border-primary/20">
+                            <div class="card-body text-center">
+                                <div class="text-primary mb-4">
+                                    <i class="fas fa-plus-circle text-4xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2">{{ _('1. Crear Problema') }}</h3>
+                                <p class="text-sm opacity-70">{{ _('Define tu función objetivo y restricciones usando nuestra interfaz intuitiva') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card bg-secondary/5 border border-secondary/20">
+                            <div class="card-body text-center">
+                                <div class="text-secondary mb-4">
+                                    <i class="fas fa-play-circle text-4xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2">{{ _('2. Resolver') }}</h3>
+                                <p class="text-sm opacity-70">{{ _('Selecciona el método de solución y ejecuta el algoritmo') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card bg-accent/5 border border-accent/20">
+                            <div class="card-body text-center">
+                                <div class="text-accent mb-4">
+                                    <i class="fas fa-chart-line text-4xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2">{{ _('3. Analizar') }}</h3>
+                                <p class="text-sm opacity-70">{{ _('Revisa los resultados y el análisis de sensibilidad') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sintaxis -->
+            <div id="sintaxis" class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-3xl text-secondary mb-6">
+                        <i class="fas fa-code"></i>
+                        {{ _('Guía de Sintaxis') }}
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <span>{{ _('Usa variables como x1, x2, x3... sin asteriscos para multiplicación') }}</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Función Objetivo -->
+                            <div class="card bg-primary/5 border border-primary/20">
+                                <div class="card-body">
+                                    <h3 class="card-title text-primary">
+                                        <i class="fas fa-bullseye"></i>
+                                        {{ _('Función Objetivo') }}
+                                    </h3>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <div class="badge badge-primary mb-2">{{ _('Maximizar') }}</div>
+                                            <div class="mockup-code text-sm">
+                                                <pre><code>3x1 + 2x2 + 5x3</code></pre>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="badge badge-secondary mb-2">{{ _('Minimizar') }}</div>
+                                            <div class="mockup-code text-sm">
+                                                <pre><code>4x1 + x2 + 2x3</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Restricciones -->
+                            <div class="card bg-secondary/5 border border-secondary/20">
+                                <div class="card-body">
+                                    <h3 class="card-title text-secondary">
+                                        <i class="fas fa-lock"></i>
+                                        {{ _('Restricciones') }}
+                                    </h3>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <div class="badge badge-success mb-2">≤</div>
+                                            <div class="mockup-code text-sm">
+                                                <pre><code>2x1 + 3x2 ≤ 100</code></pre>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="badge badge-warning mb-2">≥</div>
+                                            <div class="mockup-code text-sm">
+                                                <pre><code>x1 + x2 ≥ 10</code></pre>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="badge badge-error mb-2">=</div>
+                                            <div class="mockup-code text-sm">
+                                                <pre><code>x1 + 2x2 = 50</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <h4 class="font-bold">{{ _('Importante:') }}</h4>
+                                <p>{{ _('NO uses asteriscos (*). Escribe "2x1" en lugar de "2*x1"') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplos de Uso -->
+            <div id="ejemplos-uso" class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-3xl text-accent mb-6">
+                        <i class="fas fa-lightbulb"></i>
+                        {{ _('Ejemplos Prácticos') }}
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Ejemplo 1 -->
+                        <div class="card bg-gradient-to-br from-success/10 to-success/5 border border-success/20">
+                            <div class="card-body">
+                                <h3 class="card-title text-success">
+                                    <i class="fas fa-industry"></i>
+                                    {{ _('Problema de Producción') }}
+                                </h3>
+                                <div class="space-y-3 text-sm">
+                                    <p><strong>{{ _('Objetivo:') }}</strong> Maximizar 3x1 + 2x2</p>
+                                    <p><strong>{{ _('Restricciones:') }}</strong></p>
+                                    <ul class="list-disc list-inside space-y-1 ml-4">
+                                        <li>2x1 + x2 ≤ 18</li>
+                                        <li>x1 + 3x2 ≤ 12</li>
+                                        <li>x1, x2 ≥ 0</li>
+                                    </ul>
+                                </div>
+                                <div class="card-actions justify-end mt-4">
+                                    <a href="{{ url_for('main.ejemplos') }}" class="btn btn-success btn-sm">
+                                        {{ _('Ver Completo') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ejemplo 2 -->
+                        <div class="card bg-gradient-to-br from-info/10 to-info/5 border border-info/20">
+                            <div class="card-body">
+                                <h3 class="card-title text-info">
+                                    <i class="fas fa-apple-alt"></i>
+                                    {{ _('Problema de Dieta') }}
+                                </h3>
+                                <div class="space-y-3 text-sm">
+                                    <p><strong>{{ _('Objetivo:') }}</strong> Minimizar 4x1 + 3x2</p>
+                                    <p><strong>{{ _('Restricciones:') }}</strong></p>
+                                    <ul class="list-disc list-inside space-y-1 ml-4">
+                                        <li>2x1 + x2 ≥ 10</li>
+                                        <li>x1 + x2 ≥ 8</li>
+                                        <li>x1, x2 ≥ 0</li>
+                                    </ul>
+                                </div>
+                                <div class="card-actions justify-end mt-4">
+                                    <a href="{{ url_for('main.ejemplos') }}" class="btn btn-info btn-sm">
+                                        {{ _('Ver Completo') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-6">
+                        <a href="{{ url_for('main.ejemplos') }}" class="btn btn-accent btn-wide">
                             <i class="fas fa-book-open"></i>
-                            {{ _('Ver Ejemplos') }}
+                            {{ _('Ver Todos los Ejemplos') }}
                         </a>
-                        <a href="{{ url_for('main.index') }}" class="btn btn-primary">
-                            <i class="fas fa-play"></i>
-                            {{ _('Probar Ahora') }}
-                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teoría y Fundamentos -->
+            <div id="teoria" class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-3xl text-warning mb-6">
+                        <i class="fas fa-graduation-cap"></i>
+                        {{ _('Teoría y Fundamentos') }}
+                    </h2>
+                    
+                    <div class="space-y-8">
+                        <!-- Historia -->
+                        <div class="card bg-gradient-to-r from-warning/10 to-warning/5 border border-warning/20">
+                            <div class="card-body">
+                                <h3 class="card-title text-warning mb-4">
+                                    <i class="fas fa-history"></i>
+                                    {{ _('Historia de la Programación Lineal') }}
+                                </h3>
+                                <div class="space-y-4 text-sm">
+                                    <div class="steps steps-vertical lg:steps-horizontal">
+                                        <div class="step step-warning">
+                                            <div class="text-left">
+                                                <h4 class="font-bold">1939 - {{ _('Origen Militar') }}</h4>
+                                                <p class="text-xs">{{ _('Leonid Kantorovich desarrolla los primeros conceptos para optimizar recursos militares en la URSS durante la Segunda Guerra Mundial.') }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="step step-secondary">
+                                            <div class="text-left">
+                                                <h4 class="font-bold">1947 - {{ _('Método Simplex') }}</h4>
+                                                <p class="text-xs">{{ _('George Dantzig inventa el algoritmo Simplex en Estados Unidos, revolucionando la resolución de problemas de optimización.') }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="step step-success">
+                                            <div class="text-left">
+                                                <h4 class="font-bold">1975 - {{ _('Premio Nobel') }}</h4>
+                                                <p class="text-xs">{{ _('Kantorovich y Tjalling Koopmans reciben el Premio Nobel de Economía por sus contribuciones a la teoría de optimización.') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Conceptos Fundamentales -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="card bg-primary/5 border border-primary/20">
+                                <div class="card-body">
+                                    <h3 class="card-title text-primary">
+                                        <i class="fas fa-cube"></i>
+                                        {{ _('Región Factible') }}
+                                    </h3>
+                                    <p class="text-sm mb-4">{{ _('El conjunto de todas las soluciones que satisfacen todas las restricciones del problema.') }}</p>
+                                    <div class="bg-base-200 p-3 rounded text-xs">
+                                        <strong>{{ _('Propiedades:') }}</strong>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>{{ _('Es un poliedro convexo') }}</li>
+                                            <li>{{ _('Puede ser acotada o no acotada') }}</li>
+                                            <li>{{ _('Los vértices son candidatos a solución óptima') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-secondary/5 border border-secondary/20">
+                                <div class="card-body">
+                                    <h3 class="card-title text-secondary">
+                                        <i class="fas fa-target"></i>
+                                        {{ _('Teorema Fundamental') }}
+                                    </h3>
+                                    <p class="text-sm mb-4">{{ _('Si existe una solución óptima, entonces existe al menos una solución óptima en un vértice de la región factible.') }}</p>
+                                    <div class="bg-base-200 p-3 rounded text-xs">
+                                        <strong>{{ _('Implicaciones:') }}</strong>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>{{ _('Solo necesitamos examinar los vértices') }}</li>
+                                            <li>{{ _('El algoritmo Simplex es finito') }}</li>
+                                            <li>{{ _('Garantiza encontrar la solución óptima') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-accent/5 border border-accent/20">
+                                <div class="card-body">
+                                    <h3 class="card-title text-accent">
+                                        <i class="fas fa-balance-scale"></i>
+                                        {{ _('Dualidad') }}
+                                    </h3>
+                                    <p class="text-sm mb-4">{{ _('Todo problema de programación lineal tiene asociado un problema dual con propiedades complementarias.') }}</p>
+                                    <div class="bg-base-200 p-3 rounded text-xs">
+                                        <strong>{{ _('Teorema de Dualidad Fuerte:') }}</strong>
+                                        <p class="mt-2">{{ _('Si tanto el problema primal como el dual tienen solución óptima, entonces sus valores objetivos son iguales.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-info/5 border border-info/20">
+                                <div class="card-body">
+                                    <h3 class="card-title text-info">
+                                        <i class="fas fa-chart-line"></i>
+                                        {{ _('Análisis de Sensibilidad') }}
+                                    </h3>
+                                    <p class="text-sm mb-4">{{ _('Estudia cómo cambios en los parámetros afectan la solución óptima.') }}</p>
+                                    <div class="bg-base-200 p-3 rounded text-xs">
+                                        <strong>{{ _('Información proporcionada:') }}</strong>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>{{ _('Rangos de validez de la solución') }}</li>
+                                            <li>{{ _('Precios sombra (valores duales)') }}</li>
+                                            <li>{{ _('Costos reducidos') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Métodos de Solución -->
+                        <div class="card bg-gradient-to-r from-success/10 to-success/5 border border-success/20">
+                            <div class="card-body">
+                                <h3 class="card-title text-success mb-4">
+                                    <i class="fas fa-cogs"></i>
+                                    {{ _('Métodos de Solución') }}
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="text-center">
+                                        <div class="bg-success/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <i class="fas fa-route text-success text-xl"></i>
+                                        </div>
+                                        <h4 class="font-bold mb-2">{{ _('Método Simplex') }}</h4>
+                                        <p class="text-xs">{{ _('Algoritmo clásico que se mueve entre vértices adyacentes de la región factible hasta encontrar el óptimo.') }}</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="bg-info/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <i class="fas fa-vector-square text-info text-xl"></i>
+                                        </div>
+                                        <h4 class="font-bold mb-2">{{ _('Métodos de Punto Interior') }}</h4>
+                                        <p class="text-xs">{{ _('Algoritmos modernos que atraviesan el interior de la región factible, muy eficientes para problemas grandes.') }}</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="bg-warning/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <i class="fas fa-layer-group text-warning text-xl"></i>
+                                        </div>
+                                        <h4 class="font-bold mb-2">{{ _('Métodos de Descomposición') }}</h4>
+                                        <p class="text-xs">{{ _('Técnicas para resolver problemas muy grandes dividiendo en subproblemas más manejables.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aplicaciones en el Mundo Real -->
+            <div id="aplicaciones" class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-3xl text-success mb-6">
+                        <i class="fas fa-globe"></i>
+                        {{ _('Aplicaciones en el Mundo Real') }}
+                    </h2>
+                    
+                    <div class="space-y-8">
+                        <!-- Industrias Principales -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="card bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 hover:shadow-lg transition-all">
+                                <div class="card-body text-center">
+                                    <div class="text-blue-600 mb-4">
+                                        <i class="fas fa-plane text-4xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg mb-2">{{ _('Aerolíneas') }}</h3>
+                                    <ul class="text-sm space-y-1 text-left">
+                                        <li>• {{ _('Programación de vuelos') }}</li>
+                                        <li>• {{ _('Asignación de tripulaciones') }}</li>
+                                        <li>• {{ _('Gestión de combustible') }}</li>
+                                        <li>• {{ _('Pricing dinámico') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/20 hover:shadow-lg transition-all">
+                                <div class="card-body text-center">
+                                    <div class="text-green-600 mb-4">
+                                        <i class="fas fa-industry text-4xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg mb-2">{{ _('Manufactura') }}</h3>
+                                    <ul class="text-sm space-y-1 text-left">
+                                        <li>• {{ _('Planificación de producción') }}</li>
+                                        <li>• {{ _('Control de inventarios') }}</li>
+                                        <li>• {{ _('Asignación de recursos') }}</li>
+                                        <li>• {{ _('Optimización de cadena de suministro') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card bg-gradient-to-br from-purple-500/10 to-purple-600/5 border border-purple-500/20 hover:shadow-lg transition-all">
+                                <div class="card-body text-center">
+                                    <div class="text-purple-600 mb-4">
+                                        <i class="fas fa-chart-line text-4xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg mb-2">{{ _('Finanzas') }}</h3>
+                                    <ul class="text-sm space-y-1 text-left">
+                                        <li>• {{ _('Optimización de portafolios') }}</li>
+                                        <li>• {{ _('Gestión de riesgos') }}</li>
+                                        <li>• {{ _('Asignación de activos') }}</li>
+                                        <li>• {{ _('Trading algorítmico') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card bg-gradient-to-br from-red-500/10 to-red-600/5 border border-red-500/20 hover:shadow-lg transition-all">
+                                <div class="card-body text-center">
+                                    <div class="text-red-600 mb-4">
+                                        <i class="fas fa-truck text-4xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg mb-2">{{ _('Logística') }}</h3>
+                                    <ul class="text-sm space-y-1 text-left">
+                                        <li>• {{ _('Ruteo de vehículos') }}</li>
+                                        <li>• {{ _('Localización de almacenes') }}</li>
+                                        <li>• {{ _('Distribución óptima') }}</li>
+                                        <li>• {{ _('Gestión de flotas') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 border border-yellow-500/20 hover:shadow-lg transition-all">
+                                <div class="card-body text-center">
+                                    <div class="text-yellow-600 mb-4">
+                                        <i class="fas fa-bolt text-4xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg mb-2">{{ _('Energía') }}</h3>
+                                    <ul class="text-sm space-y-1 text-left">
+                                        <li>• {{ _('Despacho económico') }}</li>
+                                        <li>• {{ _('Planificación energética') }}</li>
+                                        <li>• {{ _('Distribución eléctrica') }}</li>
+                                        <li>• {{ _('Energías renovables') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card bg-gradient-to-br from-teal-500/10 to-teal-600/5 border border-teal-500/20 hover:shadow-lg transition-all">
+                                <div class="card-body text-center">
+                                    <div class="text-teal-600 mb-4">
+                                        <i class="fas fa-heartbeat text-4xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg mb-2">{{ _('Salud') }}</h3>
+                                    <ul class="text-sm space-y-1 text-left">
+                                        <li>• {{ _('Programación de quirófanos') }}</li>
+                                        <li>• {{ _('Asignación de recursos médicos') }}</li>
+                                        <li>• {{ _('Planificación de tratamientos') }}</li>
+                                        <li>• {{ _('Gestión hospitalaria') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Casos de Estudio Destacados -->
+                        <div class="space-y-6">
+                            <h3 class="text-2xl font-bold text-center text-success">{{ _('Casos de Estudio Destacados') }}</h3>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div class="card bg-gradient-to-r from-info/10 to-info/5 border border-info/20">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-info">
+                                            <i class="fas fa-shipping-fast"></i>
+                                            {{ _('UPS: Optimización de Rutas') }}
+                                        </h4>
+                                        <p class="text-sm mb-3">{{ _('UPS utiliza algoritmos de programación lineal para optimizar las rutas de entrega, reduciendo:') }}</p>
+                                        <div class="stats stats-vertical shadow text-xs">
+                                            <div class="stat">
+                                                <div class="stat-title text-xs">{{ _('Distancia recorrida') }}</div>
+                                                <div class="stat-value text-lg text-success">-10%</div>
+                                                <div class="stat-desc">{{ _('Millones de millas anuales') }}</div>
+                                            </div>
+                                            <div class="stat">
+                                                <div class="stat-title text-xs">{{ _('Emisiones CO2') }}</div>
+                                                <div class="stat-value text-lg text-success">-100k</div>
+                                                <div class="stat-desc">{{ _('Toneladas por año') }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card bg-gradient-to-r from-warning/10 to-warning/5 border border-warning/20">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-warning">
+                                            <i class="fas fa-utensils"></i>
+                                            {{ _('USDA: Programa de Alimentación Escolar') }}
+                                        </h4>
+                                        <p class="text-sm mb-3">{{ _('El Departamento de Agricultura de EE.UU. optimiza menús escolares balanceando:') }}</p>
+                                        <ul class="text-sm space-y-1 list-disc list-inside">
+                                            <li>{{ _('Requisitos nutricionales mínimos') }}</li>
+                                            <li>{{ _('Restricciones presupuestarias') }}</li>
+                                            <li>{{ _('Preferencias de los estudiantes') }}</li>
+                                            <li>{{ _('Disponibilidad estacional de alimentos') }}</li>
+                                        </ul>
+                                        <div class="badge badge-success mt-2">{{ _('30M+ estudiantes beneficiados') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Impacto Económico -->
+                        <div class="card bg-gradient-to-r from-accent/10 to-accent/5 border border-accent/20">
+                            <div class="card-body">
+                                <h3 class="card-title text-accent text-xl mb-4">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    {{ _('Impacto Económico Global') }}
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                                    <div>
+                                        <div class="text-3xl font-bold text-accent mb-2">$50B+</div>
+                                        <p class="text-sm">{{ _('Ahorros anuales estimados en costos operativos globalmente') }}</p>
+                                    </div>
+                                    <div>
+                                        <div class="text-3xl font-bold text-accent mb-2">75%</div>
+                                        <p class="text-sm">{{ _('De las empresas Fortune 500 utilizan optimización matemática') }}</p>
+                                    </div>
+                                    <div>
+                                        <div class="text-3xl font-bold text-accent mb-2">15-25%</div>
+                                        <p class="text-sm">{{ _('Mejora típica en eficiencia operacional tras implementar PL') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- FAQ -->
+            <div id="faq" class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-3xl text-info mb-6">
+                        <i class="fas fa-comments"></i>
+                        {{ _('Preguntas Frecuentes') }}
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="collapse collapse-plus bg-base-200 shadow-sm">
+                            <input type="radio" name="faq-accordion" checked="checked">
+                            <div class="collapse-title text-lg font-medium">
+                                <i class="fas fa-question-circle text-primary mr-2"></i>
+                                {{ _('¿Qué tipos de problemas puede resolver el sistema?') }}
+                            </div>
+                            <div class="collapse-content">
+                                <p class="pt-2">{{ _('El sistema puede resolver problemas de programación lineal estándar, incluyendo maximización y minimización, con restricciones lineales de igualdad y desigualdad.') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse collapse-plus bg-base-200 shadow-sm">
+                            <input type="radio" name="faq-accordion">
+                            <div class="collapse-title text-lg font-medium">
+                                <i class="fas fa-calculator text-secondary mr-2"></i>
+                                {{ _('¿Hay límite en el número de variables?') }}
+                            </div>
+                            <div class="collapse-content">
+                                <p class="pt-2">{{ _('Técnicamente no hay límite estricto, pero por razones de rendimiento y usabilidad, recomendamos hasta 20 variables para una experiencia óptima.') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse collapse-plus bg-base-200 shadow-sm">
+                            <input type="radio" name="faq-accordion">
+                            <div class="collapse-title text-lg font-medium">
+                                <i class="fas fa-save text-accent mr-2"></i>
+                                {{ _('¿Puedo guardar mis problemas resueltos?') }}
+                            </div>
+                            <div class="collapse-content">
+                                <p class="pt-2">{{ _('Sí, todos tus problemas se guardan automáticamente en tu historial personal. Puedes acceder a ellos desde tu perfil de usuario.') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse collapse-plus bg-base-200 shadow-sm">
+                            <input type="radio" name="faq-accordion">
+                            <div class="collapse-title text-lg font-medium">
+                                <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+                                {{ _('¿Qué hago si obtengo una solución "No factible"?') }}
+                            </div>
+                            <div class="collapse-content">
+                                <p class="pt-2">{{ _('Una solución no factible significa que las restricciones son contradictorias. Revisa tus restricciones para asegurarte de que sean consistentes y que exista al menos una solución que las satisfaga todas.') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse collapse-plus bg-base-200 shadow-sm">
+                            <input type="radio" name="faq-accordion">
+                            <div class="collapse-title text-lg font-medium">
+                                <i class="fas fa-chart-line text-info mr-2"></i>
+                                {{ _('¿Cómo interpreto los resultados del análisis de sensibilidad?') }}
+                            </div>
+                            <div class="collapse-content">
+                                <p class="pt-2">{{ _('El análisis de sensibilidad te muestra cómo cambios en los coeficientes afectan la solución óptima. Los valores duales indican cuánto mejora la función objetivo al relajar una restricción en una unidad.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="mt-16">
+            <div class="card bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20 shadow-2xl">
+                <div class="card-body text-center py-12">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-xl mb-6">
+                            <i class="fas fa-rocket text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-3xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text mb-4">
+                            {{ _('¿Listo para empezar?') }}
+                        </h3>
+                        
+                        <p class="text-lg opacity-80 mb-8 leading-relaxed">
+                            {{ _('Ahora que conoces las bases, es momento de crear y resolver tu primer problema de programación lineal.') }}
+                        </p>
+                        
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-lg gap-2 shadow-lg">
+                                <i class="fas fa-play"></i>
+                                {{ _('Crear Problema') }}
+                            </a>
+                            <a href="{{ url_for('main.ejemplos') }}" class="btn btn-outline btn-secondary btn-lg gap-2 shadow-lg">
+                                <i class="fas fa-book-open"></i>
+                                {{ _('Ver Ejemplos') }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,61 +688,30 @@
 {% block customScript %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Funcionalidad de búsqueda mejorada
+    // Simple search functionality
     const searchInput = document.getElementById('search-input');
-    const sections = document.querySelectorAll('.ayuda-section');
-    const resultsIndicator = document.getElementById('search-results');
-    const resultsCount = document.getElementById('results-count');
+    const sections = document.querySelectorAll('.card');
     
-    function performSearch(searchTerm) {
-        let visibleCount = 0;
-        
-        sections.forEach(section => {
-            const content = section.textContent.toLowerCase();
-            if (content.includes(searchTerm) || searchTerm === '') {
-                section.style.display = 'block';
-                section.classList.add('animate-fade-in');
-                visibleCount++;
-            } else {
-                section.style.display = 'none';
-                section.classList.remove('animate-fade-in');
-            }
-        });
-        
-        // Mostrar/ocultar indicador de resultados
-        if (searchTerm !== '' && searchTerm.length > 1) {
-            resultsIndicator.classList.remove('hidden');
-            resultsCount.textContent = visibleCount;
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
             
-            if (visibleCount === 0) {
-                resultsIndicator.className = 'text-sm text-error mt-2';
-                resultsIndicator.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i>No se encontraron resultados';
-            } else {
-                resultsIndicator.className = 'text-sm text-success mt-2';
-                resultsIndicator.innerHTML = `<i class="fas fa-check-circle mr-1"></i><span id="results-count">${visibleCount}</span> resultados encontrados`;
-            }
-        } else {
-            resultsIndicator.classList.add('hidden');
-        }
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm) || searchTerm === '') {
+                    section.style.display = 'block';
+                    section.classList.add('animate-fade-in');
+                } else {
+                    section.style.display = 'none';
+                    section.classList.remove('animate-fade-in');
+                }
+            });
+        });
     }
     
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        performSearch(searchTerm);
-    });
-    
-    // Efecto visual al enfocar el input
-    searchInput.addEventListener('focus', function() {
-        this.parentElement.classList.add('ring-2', 'ring-primary/20');
-    });
-    
-    searchInput.addEventListener('blur', function() {
-        this.parentElement.classList.remove('ring-2', 'ring-primary/20');
-    });
-    
-    // Scroll suave para links internos
-    const scrollLinks = document.querySelectorAll('.scroll-link');
-    scrollLinks.forEach(link => {
+    // Smooth scroll for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
@@ -308,49 +722,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth',
                     block: 'start'
                 });
-                
-                // Highlight temporal
-                targetElement.classList.add('highlight-section');
-                setTimeout(() => {
-                    targetElement.classList.remove('highlight-section');
-                }, 2000);
             }
         });
     });
 });
-
-// Estilos CSS adicionales
-const style = document.createElement('style');
-style.textContent = `
-    .animate-fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .highlight-section {
-        transform: scale(1.02);
-        transition: transform 0.3s ease;
-        box-shadow: 0 0 30px rgba(var(--p), 0.3);
-    }
-    
-    .prose p {
-        margin-bottom: 1rem;
-        line-height: 1.6;
-    }
-    
-    .prose strong {
-        color: hsl(var(--p));
-        font-weight: 600;
-    }
-    
-    .prose br {
-        margin-bottom: 0.5rem;
-    }
-`;
-document.head.appendChild(style);
 </script>
 {% endblock %}
