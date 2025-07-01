@@ -31,17 +31,12 @@
         </a>
       </div>
       
-      <div class="flex gap-2">
-        <select class="select select-bordered select-sm">
-          <option>{{ _('Todos los métodos') }}</option>
-          <option>SciPy</option>
-          <option>Gran M</option>
-          <option>{{ _('Simplex Clásico') }}</option>
-        </select>
-        <select class="select select-bordered select-sm">
-          <option>{{ _('Todos los tipos') }}</option>
-          <option>{{ _('Maximización') }}</option>
-          <option>{{ _('Minimización') }}</option>
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-base-content/70">{{ _('Filtrar por:') }}</span>
+        <select id="filtroTipo" class="select select-bordered select-sm" onchange="aplicarFiltro()">
+          <option value="todos" {% if filtro_actual == 'todos' %}selected{% endif %}>{{ _('Todos los tipos') }}</option>
+          <option value="maximizar" {% if filtro_actual == 'maximizar' %}selected{% endif %}>{{ _('Maximización') }}</option>
+          <option value="minimizar" {% if filtro_actual == 'minimizar' %}selected{% endif %}>{{ _('Minimización') }}</option>
         </select>
       </div>
     </div>
@@ -57,29 +52,6 @@
         <div class="stat-desc">{{ ngettext('problema en total', 'problemas en total', historial.problemas|length if historial.problemas else 0) }}</div>
       </div>
       
-      <div class="stat">
-        <div class="stat-figure text-secondary">
-          <i class="fas fa-chart-line text-2xl"></i>
-        </div>
-        <div class="stat-title">{{ _('Método Favorito') }}</div>
-        <div class="stat-value text-secondary">SciPy</div>
-        <div class="stat-desc">{{ _('más utilizado') }}</div>
-      </div>
-      
-      <div class="stat">
-        <div class="stat-figure text-accent">
-          <i class="fas fa-clock text-2xl"></i>
-        </div>
-        <div class="stat-title">{{ _('Último Problema') }}</div>
-        <div class="stat-value text-accent text-sm">
-          {% if historial.problemas %}
-            {{ _('Hace 2 días') }}
-          {% else %}
-            --
-          {% endif %}
-        </div>
-        <div class="stat-desc">{{ _('resuelto') }}</div>
-      </div>
     </div>
 
     <!-- Grid de problemas -->
@@ -173,6 +145,23 @@
 </style>
 
 <script>
+// Función para aplicar filtro
+function aplicarFiltro() {
+  const select = document.getElementById('filtroTipo');
+  const tipoSeleccionado = select.value;
+  
+  // Construir URL con parámetro de filtro
+  const currentUrl = new URL(window.location);
+  if (tipoSeleccionado === 'todos') {
+    currentUrl.searchParams.delete('tipo');
+  } else {
+    currentUrl.searchParams.set('tipo', tipoSeleccionado);
+  }
+  
+  // Redirigir con el filtro aplicado
+  window.location.href = currentUrl.toString();
+}
+
 // Animaciones de entrada
 document.addEventListener('DOMContentLoaded', function() {
   const cards = document.querySelectorAll('.card');

@@ -608,11 +608,28 @@ def historial():
         
         historial_usuario = cargar_historial(current_user.id)
         
-        # Ordenar por fecha (más recientes primero)
-        if historial_usuario["problemas"]:
-            historial_usuario["problemas"].sort(key=lambda x: x["fecha"], reverse=True)
+        # Obtener parámetros de filtro
+        filtro_tipo = request.args.get('tipo', 'todos')
         
-        return render_template("historial.html", historial=historial_usuario)
+        # Filtrar problemas según el tipo
+        problemas_filtrados = historial_usuario["problemas"]
+        if filtro_tipo != 'todos':
+            problemas_filtrados = [
+                problema for problema in problemas_filtrados 
+                if problema.get("resumen", {}).get("tipo", "").lower() == filtro_tipo.lower()
+            ]
+        
+        # Ordenar por fecha (más recientes primero)
+        if problemas_filtrados:
+            problemas_filtrados.sort(key=lambda x: x["fecha"], reverse=True)
+        
+        # Actualizar el historial con los problemas filtrados
+        historial_filtrado = {
+            "user_id": historial_usuario["user_id"],
+            "problemas": problemas_filtrados
+        }
+        
+        return render_template("historial.html", historial=historial_filtrado, filtro_actual=filtro_tipo)
         
     except Exception as e:
         flash(f"Error al cargar el historial: {str(e)}", "error")
