@@ -1,9 +1,9 @@
 import json
 import os
 
-
-
 def guardar_usuario(user, RUTA_ARCHIVO):
+
+    os.makedirs(os.path.dirname(RUTA_ARCHIVO), exist_ok=True)
     # Intentamos cargar usuarios existentes
     if os.path.exists(RUTA_ARCHIVO):
         with open(RUTA_ARCHIVO, "r", encoding="utf-8") as archivo:

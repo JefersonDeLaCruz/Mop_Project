@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Ejemplos') }} - LP Solver{% endblock %}
+
+{% block main %}
+<div class="min-h-screen bg-gradient-to-br from-base-200 to-base-300">
+  
+    <div class="hero min-h-[70vh] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 relative overflow-hidden pt-40">
+        
+        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        
+        <div class="hero-content text-center max-w-7xl mx-auto px-4 relative z-1">
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- Content section with improved spacing -->
+                <div class="space-y-10 mt-16">
+                    <!-- Main title with enhanced effects -->
+                    <div class="space-y-4">
+                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text leading-tight tracking-tight">
+                            {{ _('Ejemplos de Programación Lineal') }}
+                        </h1>
+                        
+                        <!-- Decorative underline -->
+                        <div class="flex justify-center">
+                            <div class="h-1 w-32 bg-gradient-to-r from-primary via-secondary to-accent rounded-full shadow-lg"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced description -->
+                    <p class="text-xl md:text-2xl lg:text-3xl opacity-90 max-w-5xl mx-auto leading-relaxed font-medium text-base-content/80">
+                        {{ _('Explora problemas reales resueltos paso a paso. Cada ejemplo incluye su formulación matemática completa y puedes cargar los datos directamente en la calculadora para experimentar.') }}
+                    </p>
+                    
+                    <!-- Feature badges -->
+                    <div class="flex flex-wrap justify-center gap-4 mt-8">
+                        <div class="badge badge-lg badge-primary gap-2 py-4 px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-lightbulb text-sm"></i>
+                            {{ _('Problemas Reales') }}
+                        </div>
+                        <div class="badge badge-lg badge-secondary gap-2 py-4 px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-calculator text-sm"></i>
+                            {{ _('Calculadora Integrada') }}
+                        </div>
+                        <div class="badge badge-lg badge-accent gap-2 py-4 px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-graduation-cap text-sm"></i>
+                            {{ _('Paso a Paso') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros Section -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <div class="join shadow-lg">
+                <button class="btn join-item btn-primary filter-btn" data-filter="all">
+                    <i class="fas fa-th-large mr-2"></i>
+                    {{ _('Todos') }}
+                </button>
+                <button class="btn join-item btn-outline btn-primary filter-btn" data-filter="Producción">
+                    <i class="fas fa-industry mr-2"></i>
+                    {{ _('Producción') }}
+                </button>
+                <button class="btn join-item btn-outline btn-primary filter-btn" data-filter="Dieta">
+                    <i class="fas fa-apple-alt mr-2"></i>
+                    {{ _('Dieta') }}
+                </button>
+                <button class="btn join-item btn-outline btn-primary filter-btn" data-filter="Transporte">
+                    <i class="fas fa-truck mr-2"></i>
+                    {{ _('Transporte') }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Ejemplos Grid -->
+        <div class="flex justify-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl w-full">
+            {% for ejemplo in ejemplos %}
+            <div class="ejemplo-card card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2" data-categoria="{{ ejemplo.categoria }}">
+                <!-- Card Header -->
+                <div class="card-body p-0">
+                    <!-- Hero Header -->
+                    <div class="bg-gradient-to-br from-primary/20 to-secondary/20 p-6 rounded-t-2xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="badge badge-lg badge-outline badge-primary font-bold">
+                                    #{{ loop.index }}
+                                </div>
+                                <div class="flex gap-2">
+                                    <div class="badge badge-{{ 'success' if ejemplo.tipo == 'Maximización' else 'warning' }} gap-2">
+                                        <i class="fas fa-{{ 'arrow-up' if ejemplo.tipo == 'Maximización' else 'arrow-down' }}"></i>
+                                        {{ ejemplo.tipo }}
+                                    </div>
+                                    <div class="badge badge-secondary gap-2">
+                                        <i class="fas fa-tag"></i>
+                                        {{ ejemplo.categoria }}
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="card-title text-2xl font-bold text-primary mb-3">
+                                {{ ejemplo.titulo }}
+                            </h2>
+                            <p class="text-sm opacity-80 leading-relaxed">
+                                {{ ejemplo.descripcion[:150] }}{% if ejemplo.descripcion|length > 150 %}...{% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Content Tabs -->
+                    <div class="p-6">
+                        <div role="tablist" class="tabs tabs-bordered">
+                            <!-- Variables Tab -->
+                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab" aria-label="{{ _('Variables') }}" checked />
+                            <div role="tabpanel" class="tab-content p-4">
+                                <div class="space-y-3">
+                                    {% for variable in ejemplo.variables %}
+                                    <div class="flex items-center gap-4 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                                        <div class="flex-shrink-0">
+                                            <div class="badge badge-primary badge-lg font-bold text-white shadow-lg">
+                                                x{{ loop.index }}
+                                            </div>
+                                        </div>
+                                        <span class="text-sm font-medium flex-1 leading-relaxed">{{ variable }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Función Objetivo Tab -->
+                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab" aria-label="{{ _('Objetivo') }}" />
+                            <div role="tabpanel" class="tab-content p-4">
+                                <div class="text-center space-y-4">
+                                    <div class="badge badge-secondary badge-lg gap-2 shadow-md">
+                                        <i class="fas fa-{{ 'arrow-up' if ejemplo.tipo == 'Maximización' else 'arrow-down' }}"></i>
+                                        {{ ejemplo.tipo }}
+                                    </div>
+                                    <div class="mockup-code bg-secondary/10 border border-secondary/20 shadow-md">
+                                        <pre class="text-secondary font-bold text-lg px-4 py-2"><code>Z = {{ ejemplo.funcion_objetivo.replace('*', '') }}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Restricciones Tab -->
+                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab" aria-label="{{ _('Restricciones') }}" />
+                            <div role="tabpanel" class="tab-content p-4">
+                                <div class="space-y-3">
+                                    {% for restriccion in ejemplo.restricciones %}
+                                    <div class="flex items-center gap-4 p-3 bg-accent/5 rounded-lg border border-accent/10">
+                                        <div class="flex-shrink-0">
+                                            <div class="badge badge-accent badge-lg text-white font-bold shadow-lg">
+                                                R{{ loop.index }}
+                                            </div>
+                                        </div>
+                                        <code class="text-sm font-mono flex-1 bg-white/50 p-2 rounded border">{{ restriccion.replace('*', '') }}</code>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Solution Section -->
+                        <div class="divider"></div>
+                        <div class="bg-gradient-to-r from-success/10 to-success/20 p-6 rounded-xl border border-success/20">
+                            <div class="text-center space-y-4">
+                                <h3 class="font-bold text-success flex items-center justify-center gap-3 text-lg">
+                                    <i class="fas fa-trophy text-xl text-success"></i>
+                                    {{ _('Solución Óptima') }}
+                                </h3>
+                                <div class="bg-success/20 p-4 rounded-lg border border-success/30 shadow-sm">
+                                    <code class="text-success font-bold text-lg">{{ ejemplo.solucion_optima }}</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="card-actions justify-center mt-6">
+                            <button class="btn btn-primary btn-wide gap-2 group" onclick="calcularEjemplo({{ ejemplo.id }})">
+                                <i class="fas fa-calculator group-hover:scale-110 transition-transform"></i>
+                                {{ _('Calcular Ejemplo') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="mt-20">
+            <div class="w-full">
+                <div class="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 py-20">
+                    <div class="container mx-auto px-4">
+                        <div class="max-w-6xl mx-auto space-y-8">
+                            <!-- Icon and Title Section -->
+                            <div class="space-y-6 text-center">
+                                <div class="flex justify-center">
+                                    <div class="bg-gradient-to-br from-primary to-secondary p-6 rounded-2xl shadow-xl">
+                                        <i class="fas fa-rocket text-4xl text-white"></i>
+                                    </div>
+                                </div>
+                                <h2 class="text-3xl md:text-5xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text">
+                                    {{ _('¡Practica con tus propios problemas!') }}
+                                </h2>
+                                <p class="text-lg md:text-xl opacity-70 leading-relaxed max-w-3xl mx-auto">
+                                    {{ _('Ahora que has explorado los ejemplos, es momento de crear y resolver tus propios problemas de programación lineal usando nuestra calculadora interactiva.') }}
+                                </p>
+                            </div>
+
+                            <!-- Features Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
+                                <div class="card bg-base-100/50 border border-primary/20 hover:shadow-lg transition-all duration-300">
+                                    <div class="card-body text-center p-6">
+                                        <div class="flex justify-center mb-4">
+                                            <div class="bg-primary/20 p-3 rounded-full">
+                                                <i class="fas fa-calculator text-2xl text-primary"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-bold text-lg mb-2">{{ _('Calculadora Intuitiva') }}</h3>
+                                        <p class="text-sm opacity-70">{{ _('Interfaz fácil de usar para crear tus problemas') }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="card bg-base-100/50 border border-secondary/20 hover:shadow-lg transition-all duration-300">
+                                    <div class="card-body text-center p-6">
+                                        <div class="flex justify-center mb-4">
+                                            <div class="bg-secondary/20 p-3 rounded-full">
+                                                <i class="fas fa-chart-line text-2xl text-secondary"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-bold text-lg mb-2">{{ _('Soluciones Detalladas') }}</h3>
+                                        <p class="text-sm opacity-70">{{ _('Resultados paso a paso con explicaciones') }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="card bg-base-100/50 border border-accent/20 hover:shadow-lg transition-all duration-300">
+                                    <div class="card-body text-center p-6">
+                                        <div class="flex justify-center mb-4">
+                                            <div class="bg-accent/20 p-3 rounded-full">
+                                                <i class="fas fa-save text-2xl text-accent"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-bold text-lg mb-2">{{ _('Historial Completo') }}</h3>
+                                        <p class="text-sm opacity-70">{{ _('Guarda y revisa tus problemas anteriores') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-lg gap-3 group shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <i class="fas fa-calculator group-hover:scale-110 transition-transform"></i>
+                                    {{ _('Crear Nuevo Problema') }}
+                                </a>
+                                <a href="{{ url_for('main.ayuda') }}" class="btn btn-outline btn-primary btn-lg gap-3 group shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <i class="fas fa-question-circle group-hover:scale-110 transition-transform"></i>
+                                    {{ _('Ver Ayuda') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block customScript %}
+<script>
+// Inicialización de la página
+document.addEventListener('DOMContentLoaded', function() {
+    initializeFilters();
+    initializeAnimations();
+});
+
+// Sistema de filtros mejorado
+function initializeFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const ejemploCards = document.querySelectorAll('.ejemplo-card');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Actualizar botones activos
+            filterButtons.forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline', 'btn-primary');
+            });
+            this.classList.add('btn-primary');
+            this.classList.remove('btn-outline');
+            
+            // Filtrar tarjetas con animación
+            ejemploCards.forEach((card, index) => {
+                if (filter === 'all' || card.dataset.categoria === filter) {
+                    card.style.display = 'block';
+                    card.classList.add('animate-fade-in');
+                    setTimeout(() => {
+                        card.classList.remove('animate-fade-in');
+                    }, 500);
+                } else {
+                    card.classList.add('animate-fade-out');
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                        card.classList.remove('animate-fade-out');
+                    }, 300);
+                }
+            });
+        });
+    });
+}
+
+// Animaciones de entrada
+function initializeAnimations() {
+    const cards = document.querySelectorAll('.ejemplo-card');
+    
+    // Intersection Observer para animaciones al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('animate-slide-up');
+                }, index * 100);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    cards.forEach(card => observer.observe(card));
+}
+
+// Función para cargar ejemplos en la calculadora
+function calcularEjemplo(ejemploId) {
+    const ejemplosData = {
+        1: {
+            tipoOperacion: "Maximizar",
+            funcionObjetivo: "3x1 + 2x2",
+            restricciones: [
+                { expr: "2x1 + x2", op: "≤", val: 18 },
+                { expr: "x1 + 3x2", op: "≤", val: 12 }
+            ],
+            metodo: "SciPy"
+        },
+        2: {
+            tipoOperacion: "Minimizar",
+            funcionObjetivo: "4x1 + 3x2",
+            restricciones: [
+                { expr: "2x1 + x2", op: "≥", val: 10 },
+                { expr: "x1 + x2", op: "≥", val: 8 },
+                { expr: "x1 + 3x2", op: "≥", val: 12 }
+            ],
+            metodo: "SciPy"
+        },
+        3: {
+            tipoOperacion: "Minimizar",
+            funcionObjetivo: "8x1 + 6x2 + 10x3",
+            restricciones: [
+                { expr: "x1 + x2", op: "≤", val: 15 },
+                { expr: "x3", op: "≤", val: 25 },
+                { expr: "x1 + x3", op: "≥", val: 5 },
+                { expr: "x2 + x3", op: "≥", val: 15 }
+            ],
+            metodo: "SciPy"
+        }
+    };
+    
+    const datos = ejemplosData[ejemploId];
+    if (!datos) {
+        showToast('Ejemplo no encontrado', 'error');
+        return;
+    }
+    
+    // Mostrar estado de carga
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<span class="loading loading-spinner loading-sm mr-2"></span>Cargando...';
+    button.disabled = true;
+    
+    // Preparar parámetros y redirigir
+    const params = new URLSearchParams({
+        edit: '1',
+        tipoOperacion: datos.tipoOperacion,
+        funcionObjetivo: datos.funcionObjetivo,
+        restricciones: JSON.stringify(datos.restricciones),
+        metodo: datos.metodo
+    });
+    
+    setTimeout(() => {
+        window.location.href = `{{ url_for('main.index') }}?${params.toString()}`;
+    }, 500);
+}
+
+// Función para mostrar notificaciones toast
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} fixed top-4 right-4 z-50 max-w-sm shadow-lg`;
+    toast.innerHTML = `<span>${message}</span>`;
+    
+    document.body.appendChild(toast);
+    
+    // Auto-remover después de 3 segundos
+    setTimeout(() => {
+        toast.classList.add('animate-fade-out');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+</script>
+
+<style>
+/* Fix navbar z-index para que esté siempre por encima del contenido */
+.navbar {
+    z-index: 9999 !important;
+}
+
+/* Ajustar z-index del hero para que no compita con navbar */
+.hero .relative {
+    z-index: 1 !important;
+}
+
+/* Animaciones CSS minimalistas usando Tailwind y DaisyUI */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+
+@keyframes slide-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+    0%, 100% { filter: brightness(1) saturate(1); }
+    50% { filter: brightness(1.2) saturate(1.3); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-fade-out {
+    animation: fade-out 0.3s ease-in forwards;
+}
+
+.animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-glow {
+    animation: glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Patrón de rejilla decorativo */
+.bg-grid-pattern {
+    background-image: 
+        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Mejoras para gradientes de texto */
+.bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* Estados iniciales para animaciones */
+.ejemplo-card {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.ejemplo-card.animate-slide-up {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Efectos hover suaves para iconos */
+.group:hover .fas {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Scrollbar personalizada minimal */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: hsl(var(--b2));
+}
+
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--bc) / 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--bc) / 0.5);
+}
+</style>
+{% endblock %}

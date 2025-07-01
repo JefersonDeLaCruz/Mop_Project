@@ -30,8 +30,8 @@
                 <ul tabindex="0"
                     class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-accent-content rounded-box w-52">
                     <li><a href="{{ url_for('main.index') }}" >{{ _('Nuevo Problema') }}</a></li>
-                    <li><a href="#">{{ _('Ejemplos') }}</a></li>
-                    <li><a href="#">{{ _('Ayuda') }}</a></li>
+                    <li><a href="{{ url_for('main.ejemplos') }}">{{ _('Ejemplos') }}</a></li>
+                    <li><a href="{{ url_for('main.ayuda') }}">{{ _('Ayuda') }}</a></li>
                     <div class="divider my-1"></div>
                     <li class="menu-title">
                         <span class="text-primary font-semibold text-xs">{{ _('Idioma') }}</span>
@@ -56,8 +56,8 @@
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
                 <li><a href="{{ url_for('main.index') }}" class="hover:text-primary transition-colors">{{ _('Nuevo Problema') }}</a></li>
-                <li><a class="hover:text-primary transition-colors">{{ _('Ejemplos') }}</a></li>
-                <li><a class="hover:text-primary transition-colors">{{ _('Ayuda') }}</a></li>
+                <li><a href="{{ url_for('main.ejemplos') }}" class="hover:text-primary transition-colors">{{ _('Ejemplos') }}</a></li>
+                <li><a href="{{ url_for('main.ayuda') }}" class="hover:text-primary transition-colors">{{ _('Ayuda') }}</a></li>
             </ul>
         </div>
         <div class="navbar-end">
