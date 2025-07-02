@@ -18,26 +18,22 @@
 
         <h1 class="text-center text-2xl mb-8">{{ _("Crear una cuenta") }}</h1>
 
-
-        <label class="input input-secondary rounded-full">
-          <i class="fas fa-envelope opacity-50 h-[1em] w-[1em]"></i>
-          <input id="email" name="name" type="text" placeholder="{{ _('Nombre') }}" />
+        <!-- campo para el nombre -->
+        <label class="input input-ghost rounded-full bg-transparent border-secondary/30 flex items-center gap-2 h-12">
+          <i class="fas fa-envelope text-secondary flex-shrink-0"></i>
+          <input id="email" name="name" type="text" placeholder="{{ _('Nombre') }}" class="bg-transparent text-white placeholder:text-gray-300 border-none outline-none flex-1" />
         </label>
 
-
-
-        <label class="input input-secondary rounded-full">
-          <i class="fas fa-user opacity-50 h-[1em] w-[1em]"></i>
-          <input id="username" name="username" type="text" placeholder="{{ _('Usuario') }}" />
+        <!-- campo para el username -->
+        <label class="input input-ghost rounded-full bg-transparent border-secondary/30 flex items-center gap-2 h-12">
+          <i class="fas fa-user text-secondary flex-shrink-0"></i>
+          <input id="username" name="username" type="text" placeholder="{{ _('Usuario') }}" class="bg-transparent text-white placeholder:text-gray-300 border-none outline-none flex-1" />
         </label>
 
-
-
-
-
-        <label class="input input-secondary rounded-full">
-          <i class="fas fa-lock opacity-50 h-[1em] w-[1em]"></i>
-          <input id="password" name="password" type="password" placeholder="{{ _('Contraseña') }}" />
+        <!-- campo para la contraseña -->
+        <label class="input input-ghost rounded-full bg-transparent border-secondary/30 flex items-center gap-2 h-12">
+          <i class="fas fa-lock text-secondary flex-shrink-0"></i>
+          <input id="password" name="password" type="password" placeholder="{{ _('Contraseña') }}" class="bg-transparent text-white placeholder:text-gray-300 border-none outline-none flex-1" />
         </label>
 
 
@@ -72,7 +68,7 @@
             class="w-24 h-24 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 animate-pulse">
             <i class="fas fa-chart-line text-4xl text-white"></i>
           </div>
-          <h2 class="text-3xl font-bold mb-2">OptimizeFlow</h2>
+          <h2 class="text-3xl font-bold mb-2">LP Solver</h2>
           <p class="text-xl opacity-90">{{ _('Solver de Programación Lineal') }}</p>
         </div>
 
