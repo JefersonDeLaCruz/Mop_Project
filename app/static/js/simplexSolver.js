@@ -1,4 +1,5 @@
 // simplexSolver.js
+import { translateTerm, t } from './i18n.js';
 
 export async function resolverSimplex(payload) {
   try {
@@ -26,7 +27,7 @@ export function mostrarResultadoSimplex(data) {
   document.getElementById("valorOptimo").textContent =
     solucion.optimo.toFixed(2);
   document.getElementById("estadoSolucion").textContent =
-    solucion.status === "ok" ? "Óptimo" : solucion.status;
+    solucion.status === "ok" ? translateTerm("óptimo") : solucion.status;
 
   const tablaVariables = document.getElementById("tablaVariables");
   tablaVariables.innerHTML = "";
@@ -51,7 +52,7 @@ export function mostrarResultadoSimplex(data) {
   );
   
   metodoDiv.innerHTML = `
-    <h3 class="font-bold text-lg mb-2 text-primary">Método Utilizado: Simplex Clásico</h3>
+    <h3 class="font-bold text-lg mb-2 text-primary">${translateTerm("Método Utilizado: Simplex Clásico")}</h3>
   `;
   resultadosEl.appendChild(metodoDiv);
 
@@ -78,17 +79,17 @@ export function mostrarResultadoSimplex(data) {
   const modeloVariables = modelo.variables.map((v) => `<li>${v}</li>`).join("");
 
   planteamientoDiv.innerHTML = `
-    <h3 class="font-bold text-lg mb-2 text-primary">Planteamiento del problema</h3>
-    <p><strong>Tipo:</strong> ${tipo}</p>
-    <p><strong>Función objetivo:</strong> ${funcion_objetivo}</p>
-    <p><strong>Restricciones:</strong></p>
+    <h3 class="font-bold text-lg mb-2 text-primary">${translateTerm("Planteamiento del problema")}</h3>
+    <p><strong>${translateTerm("Tipo")}:</strong> ${tipo}</p>
+    <p><strong>${translateTerm("Función objetivo")}:</strong> ${funcion_objetivo}</p>
+    <p><strong>${translateTerm("Restricciones")}:</strong></p>
     <ul class="list-disc pl-5">${restriccionesHTML}</ul>
 
-    <h4 class="mt-4 font-bold text-base">Modelo estándar:</h4>
-    <p><strong>Función objetivo:</strong> ${modelo.funcion_objetivo}</p>
-    <p><strong>Restricciones:</strong></p>
+    <h4 class="mt-4 font-bold text-base">${translateTerm("Modelo estándar")}:</h4>
+    <p><strong>${translateTerm("Función objetivo")}:</strong> ${modelo.funcion_objetivo}</p>
+    <p><strong>${translateTerm("Restricciones")}:</strong></p>
     <ul class="list-disc pl-5">${modeloRestricciones}</ul>
-    <p><strong>Restricciones de no negatividad:</strong></p>
+    <p><strong>${translateTerm("Restricciones de no negatividad")}:</strong></p>
     <ul class="list-disc pl-5">${modeloVariables}</ul>
   `;
   resultadosEl.appendChild(planteamientoDiv);
@@ -103,20 +104,20 @@ export function mostrarResultadoSimplex(data) {
   );
   
   modeloExtendidoDiv.innerHTML = `
-    <h3 class="font-bold text-lg mb-3 text-primary">Construcción del Modelo Estándar</h3>
+    <h3 class="font-bold text-lg mb-3 text-primary">${translateTerm("Construcción del Modelo Estándar")}</h3>
     <div class="space-y-3">
       <div class="bg-base-100 p-3 rounded">
-        <h4 class="font-bold text-base mb-2">Pasos de transformación:</h4>
+        <h4 class="font-bold text-base mb-2">${translateTerm("Pasos de transformación")}:</h4>
         <ol class="list-decimal pl-5 text-sm space-y-1">
-          <li><strong>Variables originales:</strong> Se mantienen tal como están en el problema</li>
-          <li><strong>Variables de holgura (s):</strong> Se agregan para restricciones ≤ (coeficiente +1)</li>
-          <li><strong>Variables de exceso (H):</strong> Se agregan para restricciones ≥ (coeficiente -1)</li>
-          <li><strong>Variables artificiales (a):</strong> Se agregan para restricciones ≥ y = (coeficiente +1)</li>
-          <li><strong>Función objetivo:</strong> Se modifica para incluir penalización M a variables artificiales</li>
+          <li><strong>${translateTerm("Variables originales")}:</strong> ${translateTerm("Se mantienen tal como están en el problema")}</li>
+          <li><strong>${translateTerm("Variables de holgura (s)")}:</strong> ${translateTerm("Se agregan para restricciones ≤ (coeficiente +1)")}</li>
+          <li><strong>${translateTerm("Variables de exceso (H)")}:</strong> ${translateTerm("Se agregan para restricciones ≥ (coeficiente -1)")}</li>
+          <li><strong>${translateTerm("Variables artificiales (a)")}:</strong> ${translateTerm("Se agregan para restricciones ≥ y = (coeficiente +1)")}</li>
+          <li><strong>${translateTerm("Función objetivo")}:</strong> ${translateTerm("Se modifica para incluir penalización M a variables artificiales")}</li>
         </ol>
       </div>
       <div class="bg-base-100 p-3 rounded border-l-4 border-info">
-        <p class="text-sm"><strong>Objetivo:</strong> Convertir el problema a la forma estándar para poder aplicar el algoritmo simplex.</p>
+        <p class="text-sm"><strong>${translateTerm("Objetivo")}:</strong> ${translateTerm("Convertir el problema a la forma estándar para poder aplicar el algoritmo simplex")}.</p>
       </div>
     </div>
   `;
@@ -138,7 +139,7 @@ export function mostrarResultadoSimplex(data) {
 
     const titulo = document.createElement("h3");
     titulo.classList.add("font-bold", "text-lg", "mb-4", "text-primary");
-    titulo.textContent = `Iteración ${index}`;
+    titulo.textContent = `${translateTerm("Iteración")} ${index}`;
     divIteracion.appendChild(titulo);
 
     // Agregar criterio de optimalidad antes de la tabla
@@ -146,12 +147,12 @@ export function mostrarResultadoSimplex(data) {
       const criterioDiv = document.createElement("div");
       criterioDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200", "border-l-4", "border-accent");
       criterioDiv.innerHTML = `
-        <h4 class="font-bold text-base mb-2 text-accent">Criterio de Optimalidad:</h4>
-        <p class="text-sm">Se revisa la fila Z en busca de coeficientes negativos:</p>
+        <h4 class="font-bold text-base mb-2 text-accent">${translateTerm("Criterio de Optimalidad")}:</h4>
+        <p class="text-sm">${translateTerm("Se revisa la fila Z en busca de coeficientes negativos")}:</p>
         <ul class="list-disc pl-5 text-sm mt-2">
-          <li>Si hay coeficientes negativos, la solución actual NO es óptima</li>
-          <li>Se selecciona la variable con el coeficiente más negativo para entrar a la base</li>
-          <li>Si todos los coeficientes son no negativos, se ha alcanzado la solución óptima</li>
+          <li>${translateTerm("Si hay coeficientes negativos, la solución actual NO es óptima")}</li>
+          <li>${translateTerm("Se selecciona la variable con el coeficiente más negativo para entrar a la base")}</li>
+          <li>${translateTerm("Si todos los coeficientes son no negativos, se ha alcanzado la solución óptima")}</li>
         </ul>
       `;
       divIteracion.appendChild(criterioDiv);
@@ -225,19 +226,19 @@ export function mostrarResultadoSimplex(data) {
       const leyendaDiv = document.createElement("div");
       leyendaDiv.classList.add("mt-3", "p-3", "rounded", "bg-base-100", "border");
       leyendaDiv.innerHTML = `
-        <h6 class="font-bold text-sm mb-2">Leyenda de colores:</h6>
+        <h6 class="font-bold text-sm mb-2">${translateTerm("Leyenda de colores")}:</h6>
         <div class="flex flex-wrap gap-4 text-xs">
           <div class="flex items-center gap-2">
             <span class="w-4 h-4 bg-error border border-error rounded"></span>
-            <span>Elemento pivote (${iteracion.pivot_info.elemento_pivote})</span>
+            <span>${translateTerm("Elemento pivote")} (${iteracion.pivot_info.elemento_pivote})</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="w-4 h-4 bg-warning bg-opacity-30 border border-warning rounded"></span>
-            <span>Fila pivote (${iteracion.pivot_info.variable_saliente} sale)</span>
+            <span>${translateTerm("Fila pivote")} (${iteracion.pivot_info.variable_saliente} ${translateTerm("sale")})</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="w-4 h-4 bg-info bg-opacity-30 border border-info rounded"></span>
-            <span>Columna pivote (${iteracion.pivot_info.variable_entrante} entra)</span>
+            <span>${translateTerm("Columna pivote")} (${iteracion.pivot_info.variable_entrante} ${translateTerm("entra")})</span>
           </div>
         </div>
       `;
@@ -255,14 +256,14 @@ export function mostrarResultadoSimplex(data) {
       const analisisDiv = document.createElement("div");
       analisisDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-200");
       analisisDiv.innerHTML = `
-        <h4 class="font-bold text-lg mb-3 text-primary">Análisis de la Iteración ${index}</h4>
-        <p class="text-sm mb-2">En esta iteración se realizan los siguientes pasos:</p>
+        <h4 class="font-bold text-lg mb-3 text-primary">${translateTerm("Análisis de la Iteración")} ${index}</h4>
+        <p class="text-sm mb-2">${translateTerm("En esta iteración se realizan los siguientes pasos")}:</p>
         <ol class="list-decimal pl-5 text-sm space-y-1">
-          <li><strong>Verificar optimalidad:</strong> Revisar si existen coeficientes negativos en la fila Z</li>
-          <li><strong>Seleccionar variable entrante:</strong> Elegir la variable con el coeficiente más negativo</li>
-          <li><strong>Seleccionar variable saliente:</strong> Aplicar la prueba de la razón mínima</li>
-          <li><strong>Realizar pivoteo:</strong> Normalizar fila pivote y transformar las demás filas</li>
-          <li><strong>Actualizar base:</strong> Cambiar la variable básica en la posición correspondiente</li>
+          <li><strong>${translateTerm("Verificar optimalidad")}:</strong> ${translateTerm("Revisar si existen coeficientes negativos en la fila Z")}</li>
+          <li><strong>${translateTerm("Seleccionar variable entrante")}:</strong> ${translateTerm("Elegir la variable con el coeficiente más negativo")}</li>
+          <li><strong>${translateTerm("Seleccionar variable saliente")}:</strong> ${translateTerm("Aplicar la prueba de la razón mínima")}</li>
+          <li><strong>${translateTerm("Realizar pivoteo")}:</strong> ${translateTerm("Normalizar fila pivote y transformar las demás filas")}</li>
+          <li><strong>${translateTerm("Actualizar base")}:</strong> ${translateTerm("Cambiar la variable básica en la posición correspondiente")}</li>
         </ol>
       `;
 
@@ -270,22 +271,22 @@ export function mostrarResultadoSimplex(data) {
       const pivoteoDiv = document.createElement("div");
       pivoteoDiv.classList.add("mb-6", "p-4", "rounded", "bg-base-200", "border-l-4", "border-primary");
       pivoteoDiv.innerHTML = `
-        <h4 class="font-bold text-lg mb-3 text-primary">Detalles del Pivoteo</h4>
+        <h4 class="font-bold text-lg mb-3 text-primary">${translateTerm("Detalles del Pivoteo")}</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
           <div class="bg-base-100 p-3 rounded border-l-4 border-success">
-            <p class="font-bold text-sm mb-1">Variable Entrante</p>
+            <p class="font-bold text-sm mb-1">${translateTerm("Variable Entrante")}</p>
             <span class="badge badge-success text-lg">${iteracion.pivot_info?.variable_entrante || d.columna_pivote.variable || 'N/A'}</span>
-            <p class="text-xs mt-1">Mejora la función objetivo</p>
+            <p class="text-xs mt-1">${translateTerm("Mejora la función objetivo")}</p>
           </div>
           <div class="bg-base-100 p-3 rounded border-l-4 border-error">
-            <p class="font-bold text-sm mb-1">Variable Saliente</p>
-            <span class="badge badge-error text-lg">${iteracion.pivot_info?.variable_saliente || d.fila_pivote.variable_sale || 'Variable saliente'}</span>
-            <p class="text-xs mt-1">Abandona la base</p>
+            <p class="font-bold text-sm mb-1">${translateTerm("Variable Saliente")}</p>
+            <span class="badge badge-error text-lg">${iteracion.pivot_info?.variable_saliente || d.fila_pivote.variable_sale || translateTerm("Variable saliente")}</span>
+            <p class="text-xs mt-1">${translateTerm("Abandona la base")}</p>
           </div>
           <div class="bg-base-100 p-3 rounded border-l-4 border-warning">
-            <p class="font-bold text-sm mb-1">Elemento Pivote</p>
+            <p class="font-bold text-sm mb-1">${translateTerm("Elemento Pivote")}</p>
             <span class="badge badge-warning text-lg">${iteracion.pivot_info?.elemento_pivote || d.normalizacion?.pivote || 'N/A'}</span>
-            <p class="text-xs mt-1">Punto de intersección</p>
+            <p class="text-xs mt-1">${translateTerm("Punto de intersección")}</p>
           </div>
         </div>
       `;
@@ -294,14 +295,14 @@ export function mostrarResultadoSimplex(data) {
       const colPivoteDiv = document.createElement("div");
       colPivoteDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       colPivoteDiv.innerHTML = `
-        <h5 class="font-bold text-base mb-2 text-primary">Paso 1: Selección de la Variable Entrante (Columna Pivote)</h5>
+        <h5 class="font-bold text-base mb-2 text-primary">${translateTerm("Paso 1: Selección de la Variable Entrante (Columna Pivote)")}</h5>
         <div class="bg-base-100 p-3 rounded mb-3">
-          <p class="text-sm mb-2"><strong>Criterio:</strong> Se busca el coeficiente más negativo en la fila Z.</p>
-          <p class="text-sm mb-2"><strong>Justificación matemática:</strong> Un coeficiente negativo en la fila Z indica que incrementar esa variable mejorará el valor de la función objetivo.</p>
-          <p class="text-sm"><strong>Resultado:</strong> ${d.columna_pivote.explicacion}</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Criterio")}:</strong> ${translateTerm("Se busca el coeficiente más negativo en la fila Z")}.</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Justificación matemática")}:</strong> ${translateTerm("Un coeficiente negativo en la fila Z indica que incrementar esa variable mejorará el valor de la función objetivo")}.</p>
+          <p class="text-sm"><strong>${translateTerm("Resultado")}:</strong> ${d.columna_pivote.explicacion}</p>
         </div>
         <div class="bg-base-100 p-2 rounded border-l-4 border-warning">
-          <p class="text-xs"><strong>Nota:</strong> Si no hay coeficientes negativos, la solución actual es óptima.</p>
+          <p class="text-xs"><strong>${translateTerm("Nota")}:</strong> ${translateTerm("Si no hay coeficientes negativos, la solución actual es óptima")}.</p>
         </div>
       `;
 
@@ -322,33 +323,33 @@ export function mostrarResultadoSimplex(data) {
               <td class="px-2 py-1 border">${r.razon}</td>
               <td class="px-2 py-1 border">
                 <span class="badge ${factibilidad ? 'badge-success' : 'badge-error'} badge-sm">
-                  ${factibilidad ? 'Sí' : 'No'}
+                  ${factibilidad ? translateTerm("Sí") : translateTerm("No")}
                 </span>
               </td>
-              <td class="px-2 py-1 border text-xs">${esMinima ? '← Seleccionada' : ''}</td>
+              <td class="px-2 py-1 border text-xs">${esMinima ? `← ${translateTerm("Seleccionada")}` : ''}</td>
             </tr>
           `;
         })
         .join("");
 
       razonesDiv.innerHTML = `
-        <h5 class="font-bold text-base mb-2 text-primary">Paso 2: Prueba de la Razón Mínima (Selección de Variable Saliente)</h5>
+        <h5 class="font-bold text-base mb-2 text-primary">${translateTerm("Paso 2: Prueba de la Razón Mínima (Selección de Variable Saliente)")}</h5>
         <div class="bg-base-100 p-3 rounded mb-3">
-          <p class="text-sm mb-2"><strong>Objetivo:</strong> Determinar cuál variable básica debe salir de la base para mantener la factibilidad.</p>
-          <p class="text-sm mb-2"><strong>Fórmula:</strong> Razón = bj / Coeficiente de la columna pivote (solo si coeficiente > 0)</p>
-          <p class="text-sm mb-2"><strong>Criterio:</strong> Se selecciona la fila con la menor razón positiva.</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Objetivo")}:</strong> ${translateTerm("Determinar cuál variable básica debe salir de la base para mantener la factibilidad")}.</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Fórmula")}:</strong> ${translateTerm("Razón = bj / Coeficiente de la columna pivote (solo si coeficiente > 0)")}</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Criterio")}:</strong> ${translateTerm("Se selecciona la fila con la menor razón positiva")}.</p>
           <p class="text-sm">${d.fila_pivote.explicacion}</p>
         </div>
         <div class="overflow-x-auto">
           <table class="table table-sm w-full text-center text-xs border-collapse">
             <thead>
               <tr>
-                <th class="bg-base-200 px-2 py-1 border">Variable Básica</th>
+                <th class="bg-base-200 px-2 py-1 border">${translateTerm("Variable Básica")}</th>
                 <th class="bg-base-200 px-2 py-1 border">bj</th>
-                <th class="bg-base-200 px-2 py-1 border">Coef. Pivote</th>
-                <th class="bg-base-200 px-2 py-1 border">Razón</th>
-                <th class="bg-base-200 px-2 py-1 border">Factible</th>
-                <th class="bg-base-200 px-2 py-1 border">Selección</th>
+                <th class="bg-base-200 px-2 py-1 border">${translateTerm("Coef. Pivote")}</th>
+                <th class="bg-base-200 px-2 py-1 border">${translateTerm("Razón")}</th>
+                <th class="bg-base-200 px-2 py-1 border">${translateTerm("Factible")}</th>
+                <th class="bg-base-200 px-2 py-1 border">${translateTerm("Selección")}</th>
               </tr>
             </thead>
             <tbody>
@@ -357,7 +358,7 @@ export function mostrarResultadoSimplex(data) {
           </table>
         </div>
         <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-info">
-          <p class="text-xs"><strong>Interpretación:</strong> La variable básica seleccionada será la primera en alcanzar cero cuando se incremente la variable entrante, garantizando que no se violen las restricciones de no negatividad.</p>
+          <p class="text-xs"><strong>${translateTerm("Interpretación")}:</strong> ${translateTerm("La variable básica seleccionada será la primera en alcanzar cero cuando se incremente la variable entrante, garantizando que no se violen las restricciones de no negatividad")}.</p>
         </div>
       `;
 
@@ -385,22 +386,22 @@ export function mostrarResultadoSimplex(data) {
           .join("");
 
         normalizacionDiv.innerHTML = `
-          <h5 class="font-bold text-base mb-2 text-primary">Paso 3: Normalización de la Fila Pivote</h5>
+          <h5 class="font-bold text-base mb-2 text-primary">${translateTerm("Paso 3: Normalización de la Fila Pivote")}</h5>
           <div class="bg-base-100 p-3 rounded mb-3">
-            <p class="text-sm mb-2"><strong>Objetivo:</strong> Convertir el elemento pivote en 1 dividiendo toda la fila por su valor.</p>
-            <p class="text-sm mb-2"><strong>Operación:</strong> Nueva_Fila_Pivote = Fila_Pivote ÷ Elemento_Pivote</p>
-            <p class="text-sm"><strong>Resultado:</strong> ${d.normalizacion.explicacion}</p>
+            <p class="text-sm mb-2"><strong>${translateTerm("Objetivo")}:</strong> ${translateTerm("Convertir el elemento pivote en 1 dividiendo toda la fila por su valor")}.</p>
+            <p class="text-sm mb-2"><strong>${translateTerm("Operación")}:</strong> ${translateTerm("Nueva_Fila_Pivote = Fila_Pivote ÷ Elemento_Pivote")}</p>
+            <p class="text-sm"><strong>${translateTerm("Resultado")}:</strong> ${d.normalizacion.explicacion}</p>
           </div>
           <div class="overflow-x-auto">
             <table class="table table-sm w-full text-center text-xs border-collapse">
               <thead>
                 <tr>
-                  <th class="bg-base-200 px-2 py-1 border">Variable</th>
-                  <th class="bg-base-200 px-2 py-1 border">Valor Original</th>
-                  <th class="bg-base-200 px-2 py-1 border">Operación</th>
+                  <th class="bg-base-200 px-2 py-1 border">${translateTerm("Variable")}</th>
+                  <th class="bg-base-200 px-2 py-1 border">${translateTerm("Valor Original")}</th>
+                  <th class="bg-base-200 px-2 py-1 border">${translateTerm("Operación")}</th>
                   <th class="bg-base-200 px-2 py-1 border">Pivote</th>
                   <th class="bg-base-200 px-2 py-1 border"></th>
-                  <th class="bg-base-200 px-2 py-1 border">Nuevo Valor</th>
+                  <th class="bg-base-200 px-2 py-1 border">${translateTerm("Nuevo Valor")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -409,7 +410,7 @@ export function mostrarResultadoSimplex(data) {
             </table>
           </div>
           <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-success">
-            <p class="text-xs"><strong>Verificación:</strong> El elemento pivote ahora tiene valor 1, lo que permite eliminar la variable correspondiente de las otras ecuaciones.</p>
+            <p class="text-xs"><strong>${translateTerm("Verificación")}:</strong> ${translateTerm("El elemento pivote ahora tiene valor 1, lo que permite eliminar la variable correspondiente de las otras ecuaciones")}.</p>
           </div>
         `;
       }
@@ -445,18 +446,18 @@ export function mostrarResultadoSimplex(data) {
 
           return `
             <div class="mb-4 p-3 bg-base-100 rounded border-l-4 border-primary">
-              <h6 class="font-bold text-sm mb-2 text-primary">Transformación de la Fila ${t.fila}:</h6>
+              <h6 class="font-bold text-sm mb-2 text-primary">${translateTerm("Transformación de la Fila")} ${t.fila}:</h6>
               <p class="text-xs mb-2">${t.explicacion}</p>
               <div class="overflow-x-auto">
                 <table class="table table-sm w-full text-center text-xs border-collapse">
                   <thead>
                     <tr>
-                      <th class="bg-base-200 px-1 py-1 border">Variable</th>
-                      <th class="bg-base-200 px-1 py-1 border">Valor Original</th>
-                      <th class="bg-base-200 px-1 py-1 border">Op</th>
-                      <th class="bg-base-200 px-1 py-1 border">Factor × Pivote</th>
+                      <th class="bg-base-200 px-1 py-1 border">${translateTerm("Variable")}</th>
+                      <th class="bg-base-200 px-1 py-1 border">${translateTerm("Valor Original")}</th>
+                      <th class="bg-base-200 px-1 py-1 border">${translateTerm("Op")}</th>
+                      <th class="bg-base-200 px-1 py-1 border">${translateTerm("Factor × Pivote")}</th>
                       <th class="bg-base-200 px-1 py-1 border"></th>
-                      <th class="bg-base-200 px-1 py-1 border">Nuevo Valor</th>
+                      <th class="bg-base-200 px-1 py-1 border">${translateTerm("Nuevo Valor")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -470,15 +471,15 @@ export function mostrarResultadoSimplex(data) {
         .join("");
 
       transformacionesDiv.innerHTML = `
-        <h5 class="font-bold text-base mb-3 text-primary">Paso 4: Eliminación Gaussiana (Transformación de Otras Filas)</h5>
+        <h5 class="font-bold text-base mb-3 text-primary">${translateTerm("Paso 4: Eliminación Gaussiana (Transformación de Otras Filas)")}</h5>
         <div class="bg-base-100 p-3 rounded mb-3">
-          <p class="text-sm mb-2"><strong>Objetivo:</strong> Hacer cero todos los elementos de la columna pivote excepto el elemento normalizado.</p>
-          <p class="text-sm mb-2"><strong>Fórmula:</strong> Nueva_Fila_i = Fila_i - (Elemento_Columna_Pivote_i × Fila_Pivote_Normalizada)</p>
-          <p class="text-sm">Para cada fila i ≠ fila pivote:</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Objetivo")}:</strong> ${translateTerm("Hacer cero todos los elementos de la columna pivote excepto el elemento normalizado")}.</p>
+          <p class="text-sm mb-2"><strong>${translateTerm("Fórmula")}:</strong> ${translateTerm("Nueva_Fila_i = Fila_i - (Elemento_Columna_Pivote_i × Fila_Pivote_Normalizada)")}</p>
+          <p class="text-sm">${translateTerm("Para cada fila i ≠ fila pivote")}:</p>
         </div>
         ${transformacionesHTML}
         <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-info">
-          <p class="text-xs"><strong>Resultado:</strong> Ahora la columna de la variable entrante tiene 1 en la posición de la variable básica y 0 en todas las demás posiciones.</p>
+          <p class="text-xs"><strong>${translateTerm("Resultado")}:</strong> ${translateTerm("Ahora la columna de la variable entrante tiene 1 en la posición de la variable básica y 0 en todas las demás posiciones")}.</p>
         </div>
       `;
 
@@ -486,21 +487,21 @@ export function mostrarResultadoSimplex(data) {
       const baseDiv = document.createElement("div");
       baseDiv.classList.add("mb-4", "p-3", "rounded", "bg-base-200");
       baseDiv.innerHTML = `
-        <h5 class="font-bold text-base mb-3">Paso 5: Actualización de la Base</h5>
+        <h5 class="font-bold text-base mb-3">${translateTerm("Paso 5: Actualización de la Base")}</h5>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-base-100 p-3 rounded border-l-4 border-error">
-            <p class="font-bold text-sm mb-1 text-error">Variable Saliente:</p>
-            <span class="badge badge-error">${iteracion.pivot_info?.variable_saliente || d.fila_pivote.variable_sale || 'Variable saliente'}</span>
-            <p class="text-xs mt-2">Esta variable deja de ser básica y se vuelve no básica (valor = 0)</p>
+            <p class="font-bold text-sm mb-1 text-error">${translateTerm("Variable Saliente")}:</p>
+            <span class="badge badge-error">${iteracion.pivot_info?.variable_saliente || d.fila_pivote.variable_sale || translateTerm("Variable saliente")}</span>
+            <p class="text-xs mt-2">${translateTerm("Esta variable deja de ser básica y se vuelve no básica (valor = 0)")}</p>
           </div>
           <div class="bg-base-100 p-3 rounded border-l-4 border-success">
-            <p class="font-bold text-sm mb-1 text-success">Variable Entrante:</p>
-            <span class="badge badge-success">${iteracion.pivot_info?.variable_entrante || d.columna_pivote.variable || 'Variable entrante'}</span>
-            <p class="text-xs mt-2">Esta variable se vuelve básica y tendrá un valor positivo</p>
+            <p class="font-bold text-sm mb-1 text-success">${translateTerm("Variable Entrante")}:</p>
+            <span class="badge badge-success">${iteracion.pivot_info?.variable_entrante || d.columna_pivote.variable || translateTerm("Variable entrante")}</span>
+            <p class="text-xs mt-2">${translateTerm("Esta variable se vuelve básica y tendrá un valor positivo")}</p>
           </div>
         </div>
         <div class="bg-base-100 p-2 rounded mt-3 border-l-4 border-info">
-          <p class="text-xs"><strong>Resultado:</strong> La nueva base está formada por las variables que tienen exactamente un coeficiente 1 en su columna y 0 en todas las demás filas.</p>
+          <p class="text-xs"><strong>${translateTerm("Resultado")}:</strong> ${translateTerm("La nueva base está formada por las variables que tienen exactamente un coeficiente 1 en su columna y 0 en todas las demás filas")}.</p>
         </div>
       `;
 
@@ -540,13 +541,13 @@ export function mostrarResultadoSimplex(data) {
     .join(", ");
 
   interpretacionDiv.innerHTML = `
-    <h3 class="font-bold text-lg mb-2 text-success">Conclusión e interpretación</h3>
-    <p>Se alcanzó una solución óptima con un valor de <strong>Z = ${valorZ}</strong>.</p>
-    <p>Las variables que contribuyen a este óptimo son: <strong>${
-      variablesActivas || "ninguna (todas son 0)"
+    <h3 class="font-bold text-lg mb-2 text-success">${translateTerm("Conclusión e interpretación")}</h3>
+    <p>${translateTerm("Se alcanzó una solución óptima con un valor de")} <strong>Z = ${valorZ}</strong>.</p>
+    <p>${translateTerm("Las variables que contribuyen a este óptimo son")}: <strong>${
+      variablesActivas || translateTerm("ninguna (todas son 0)")
     }</strong>.</p>
     <p class="mt-2">
-      Esto significa que, bajo las restricciones dadas, esta combinación de variables maximiza el valor de la función objetivo.
+      ${translateTerm("Esto significa que, bajo las restricciones dadas, esta combinación de variables maximiza el valor de la función objetivo")}.
     </p>
   `;
 

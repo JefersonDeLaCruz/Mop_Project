@@ -1296,136 +1296,138 @@ msgstr "Already have an account?"
 msgid "Inicia sesión"
 msgstr "Log in"
 
-#~ msgid "Linear Programming Solver"
-#~ msgstr "Linear Programming Solver"
+# Step-by-step solution translations
+msgid "Transformación a Forma Estándar para el Algoritmo Simplex"
+msgstr "Transformation to Standard Form for the Simplex Algorithm"
 
-#~ msgid "Login"
-#~ msgstr "Login"
+msgid "Conversión de Desigualdades"
+msgstr "Inequality Conversion"
 
-#~ msgid "Perfil de Usuario"
-#~ msgstr "User Profile"
+msgid "Ecuación"
+msgstr "Equation"
 
-#~ msgid "¡Hola, %(name)s!"
-#~ msgstr "Hello, %(name)s!"
+msgid "Introducir variable de holgura"
+msgstr "Introduce slack variable"
 
-#~ msgid "Gestiona tu información y revisa tu historial"
-#~ msgstr "Manage your information and review your history"
+msgid "para convertir a igualdad"
+msgstr "to convert to equality"
 
-#~ msgid "Información Personal"
-#~ msgstr "Personal Information"
+msgid "Introducir variable de exceso"
+msgstr "Introduce surplus variable"
 
-#~ msgid "Nombre completo"
-#~ msgstr "Full name"
+msgid "Requerir variable artificial"
+msgstr "Require artificial variable"
 
-#~ msgid "No disponible"
-#~ msgstr "Not available"
+msgid "para solución básica inicial"
+msgstr "for initial basic solution"
 
-#~ msgid "Editar perfil"
-#~ msgstr "Edit profile"
+msgid "Introducir variable artificial"
+msgstr "Introduce artificial variable"
 
-#~ msgid "Problemas resueltos"
-#~ msgstr "Problems solved"
+msgid "para obtener base factible"
+msgstr "to obtain feasible basis"
 
-#~ msgid "Total histórico"
-#~ msgstr "Total history"
+msgid "Problema en Forma Estándar"
+msgstr "Problem in Standard Form"
 
-#~ msgid "Ver Historial Completo"
-#~ msgstr "View Full History"
+msgid "Minimizar"
+msgstr "Minimize"
 
-#~ msgid "Problemas Resueltos"
-#~ msgstr "Solved Problems"
+msgid "Maximizar"
+msgstr "Maximize"
 
-#~ msgid "Problema de Maximización"
-#~ msgstr "Maximization Problem"
+msgid "Sujeto a"
+msgstr "Subject to"
 
-#~ msgid "Problema de Minimización"
-#~ msgstr "Minimization Problem"
+msgid "Criterio de Optimalidad"
+msgstr "Optimality Criterion"
 
-#~ msgid "Función objetivo"
-#~ msgstr "Objective function"
+msgid "Analizando la fila Z para determinar si se ha alcanzado la solución óptima o si se requiere otra iteración"
+msgstr "Analyzing the Z-row to determine if the optimal solution has been reached or if another iteration is required"
 
-#~ msgid "variable"
-#~ msgid_plural "variables"
-#~ msgstr[0] "variable"
-#~ msgstr[1] "variables"
+msgid "Iteración"
+msgstr "Iteration"
 
-#~ msgid "restricción"
-#~ msgid_plural "restricciones"
-#~ msgstr[0] "constraint"
-#~ msgstr[1] "constraints"
+msgid "Base"
+msgstr "Basis"
 
-#~ msgid "No hay problemas resueltos aún"
-#~ msgstr "No problems solved yet"
+msgid "Se selecciona la fila"
+msgstr "Row is selected"
 
-#~ msgid "Resuelve tu primer problema de programación lineal para verlo aquí"
-#~ msgstr "Solve your first linear programming problem to see it here"
+msgid "porque tiene la menor razón positiva"
+msgstr "because it has the smallest positive ratio"
 
-#~ msgid "Register"
-#~ msgstr "Register"
+msgid "Paso 1: Normalización de la Fila Pivote"
+msgstr "Step 1: Pivot Row Normalization"
 
-# Dashboard translations
-#~ msgid "Panel de Control"
-#~ msgstr "Dashboard"
+msgid "Dividir toda la fila"
+msgstr "Divide the entire row"
 
-#~ msgid "Bienvenido al LP Solver"
-#~ msgstr "Welcome to LP Solver"
+msgid "entre el elemento pivote"
+msgstr "by the pivot element"
 
-#~ msgid ""
-#~ "Tu plataforma completa para resolver "
-#~ "problemas de programación lineal de "
-#~ "manera eficiente y precisa."
-#~ msgstr ""
-#~ "Your complete platform for solving "
-#~ "linear programming problems efficiently and"
-#~ " accurately."
+msgid "para que el elemento pivote sea 1"
+msgstr "so that the pivot element becomes 1"
 
-#~ msgid "Explorar Ejemplos"
-#~ msgstr "Explore Examples"
+msgid "Variable"
+msgstr "Variable"
 
-#~ msgid "Problemas Recientes"
-#~ msgstr "Recent Problems"
+msgid "Valor Original"
+msgstr "Original Value"
 
-#~ msgid "Tus últimos problemas resueltos"
-#~ msgstr "Your latest solved problems"
+msgid "Pivote"
+msgstr "Pivot"
 
-#~ msgid "Estadísticas Rápidas"
-#~ msgstr "Quick Statistics"
+msgid "Nuevo Valor"
+msgstr "New Value"
 
-#~ msgid "Resumen de tu actividad"
-#~ msgstr "Summary of your activity"
+msgid "Paso 2: Actualización de las Otras Filas"
+msgstr "Step 2: Updating Other Rows"
 
-#~ msgid "Completados"
-#~ msgstr "Completed"
+msgid "Para cada fila i ≠ fila pivote"
+msgstr "For each row i ≠ pivot row"
 
-#~ msgid "Revisa tus problemas"
-#~ msgstr "Review your problems"
+msgid "Nueva_Fila_i = Fila_i - (Factor × Fila_Pivote_Normalizada)"
+msgstr "New_Row_i = Row_i - (Factor × Normalized_Pivot_Row)"
 
-#~ msgid "Resueltos"
-#~ msgstr "Solved"
+msgid "Fila Z"
+msgstr "Z Row"
 
-#~ msgid "Ver Todos"
-#~ msgstr "View All"
+msgid "normalizada"
+msgstr "normalized"
 
-#~ msgid "Problema sin título"
-#~ msgstr "Untitled problem"
+msgid "Original"
+msgstr "Original"
 
-#~ msgid "Sin descripción"
-#~ msgstr "No description"
+msgid "Factor × Pivote"
+msgstr "Factor × Pivot"
 
-#~ msgid "Resuelto"
-#~ msgstr "Solved"
+msgid "Nuevo"
+msgstr "New"
 
-#~ msgid "Tasa de Éxito"
-#~ msgstr "Success Rate"
+msgid "Todos los coeficientes de la fila Z son no negativos. Se ha alcanzado la solución óptima"
+msgstr "All coefficients in the Z-row are non-negative. The optimal solution has been reached"
 
-#~ msgid "¡Comienza tu primer problema!"
-#~ msgstr "Start your first problem!"
+msgid "Solución óptima encontrada"
+msgstr "Optimal solution found"
 
-#~ msgid "Pendiente"
-#~ msgstr "Pending"
+msgid "Solución Final"
+msgstr "Final Solution"
 
-#~ msgid "Lineal"
-#~ msgstr "Linear"
+msgid "Se alcanzó una solución óptima con un valor"
+msgstr "An optimal solution was reached with a value"
+
+msgid "mínimo"
+msgstr "minimum"
+
+msgid "máximo"
+msgstr "maximum"
+
+msgid "de Z"
+msgstr "of Z"
+
+msgid "Valores de las variables"
+msgstr "Variable values"
 
 #~ msgid "Nuevo usuario"
 #~ msgstr "New user"
