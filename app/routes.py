@@ -497,7 +497,58 @@ def resolver_gran_m():
         print(f"Número de variables detectadas automáticamente: {n}")
         
         # 7. Resolver
-        solver = GranMSimplexExtended()
+        # Crear diccionario de traducciones para el solver
+        from .test import TranslationHelper
+        
+        step_translations = {
+            "Transformación a Forma Estándar para el Algoritmo Simplex": _("Transformación a Forma Estándar para el Algoritmo Simplex"),
+            "Conversión de Desigualdades": _("Conversión de Desigualdades"),
+            "Ecuación": _("Ecuación"),
+            "Introducir variable de holgura": _("Introducir variable de holgura"),
+            "para convertir a igualdad": _("para convertir a igualdad"),
+            "Introducir variable de exceso": _("Introducir variable de exceso"),
+            "Requerir variable artificial": _("Requerir variable artificial"),
+            "para solución básica inicial": _("para solución básica inicial"),
+            "Introducir variable artificial": _("Introducir variable artificial"),
+            "para obtener base factible": _("para obtener base factible"),
+            "Problema en Forma Estándar": _("Problema en Forma Estándar"),
+            "Minimizar": _("Minimizar"),
+            "Maximizar": _("Maximizar"),
+            "Sujeto a": _("Sujeto a"),
+            "Criterio de Optimalidad": _("Criterio de Optimalidad"),
+            "Analizando la fila Z para determinar si se ha alcanzado la solución óptima o si se requiere otra iteración": _("Analizando la fila Z para determinar si se ha alcanzado la solución óptima o si se requiere otra iteración"),
+            "Iteración": _("Iteración"),
+            "Base": _("Base"),
+            "Se selecciona la fila": _("Se selecciona la fila"),
+            "porque tiene la menor razón positiva": _("porque tiene la menor razón positiva"),
+            "Paso 1: Normalización de la Fila Pivote": _("Paso 1: Normalización de la Fila Pivote"),
+            "Dividir toda la fila": _("Dividir toda la fila"),
+            "entre el elemento pivote": _("entre el elemento pivote"),
+            "para que el elemento pivote sea 1": _("para que el elemento pivote sea 1"),
+            "Variable": _("Variable"),
+            "Valor Original": _("Valor Original"),
+            "Pivote": _("Pivote"),
+            "Nuevo Valor": _("Nuevo Valor"),
+            "Paso 2: Actualización de las Otras Filas": _("Paso 2: Actualización de las Otras Filas"),
+            "Para cada fila i ≠ fila pivote": _("Para cada fila i ≠ fila pivote"),
+            "Nueva_Fila_i = Fila_i - (Factor × Fila_Pivote_Normalizada)": _("Nueva_Fila_i = Fila_i - (Factor × Fila_Pivote_Normalizada)"),
+            "Fila Z": _("Fila Z"),
+            "normalizada": _("normalizada"),
+            "Original": _("Original"),
+            "Factor × Pivote": _("Factor × Pivote"),
+            "Nuevo": _("Nuevo"),
+            "Todos los coeficientes de la fila Z son no negativos. Se ha alcanzado la solución óptima": _("Todos los coeficientes de la fila Z son no negativos. Se ha alcanzado la solución óptima"),
+            "Solución óptima encontrada": _("Solución óptima encontrada"),
+            "Solución Final": _("Solución Final"),
+            "Se alcanzó una solución óptima con un valor": _("Se alcanzó una solución óptima con un valor"),
+            "mínimo": _("mínimo"),
+            "máximo": _("máximo"),
+            "de Z": _("de Z"),
+            "Valores de las variables": _("Valores de las variables")
+        }
+        
+        translation_helper = TranslationHelper(step_translations)
+        solver = GranMSimplexExtended(translation_helper)
         html = solver.solve(funcion_objetivo, restricciones, tipos, minimize=minimizar)
         
         # 8. Devolver HTML en JSON
