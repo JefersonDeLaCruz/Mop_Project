@@ -5,32 +5,32 @@
 {% block main %}
 <div class="min-h-screen bg-gradient-to-br from-base-200 to-base-300">
     <!-- Hero Section -->
-    <div class="hero min-h-[60vh] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
+    <div class="hero min-h-[50vh] sm:min-h-[60vh] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <div class="hero-content text-center max-w-6xl mx-auto px-4">
             <div class="max-w-4xl">
-                <div class="mb-8">
-                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-xl mb-6">
-                        <i class="fas fa-question-circle text-3xl text-white"></i>
+                <div class="mb-6 sm:mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-xl mb-4 sm:mb-6">
+                        <i class="fas fa-question-circle text-2xl sm:text-3xl text-white"></i>
                     </div>
-                    <h1 class="text-5xl md:text-6xl font-black text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text mb-6">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text mb-4 sm:mb-6">
                         {{ _('Centro de Ayuda') }}
                     </h1>
-                    <p class="text-xl md:text-2xl text-base-content opacity-80 max-w-3xl mx-auto leading-relaxed">
+                    <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-base-content opacity-80 max-w-3xl mx-auto leading-relaxed px-4">
                         {{ _('Encuentra toda la información que necesitas para usar eficientemente nuestro solucionador de programación lineal.') }}
                     </p>
                 </div>
                 
                 <!-- Quick Search -->
-                <div class="max-w-lg mx-auto">
+                <div class="max-w-lg mx-auto px-4">
                     <div class="join w-full shadow-lg">
                         <div class="relative flex-1">
                             <input type="text" 
                                    placeholder="{{ _('Buscar en la ayuda...') }}" 
-                                   class="input input-bordered join-item w-full"
+                                   class="input input-sm sm:input input-bordered join-item w-full"
                                    id="search-input">
                         </div>
-                        <button class="btn btn-primary join-item">
-                            <i class="fas fa-search"></i>
+                        <button class="btn btn-sm sm:btn btn-primary join-item">
+                            <i class="fas fa-search text-xs sm:text-sm"></i>
                         </button>
                     </div>
                 </div>
@@ -41,30 +41,32 @@
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-12 max-w-6xl">
         <!-- Quick Navigation -->
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-            <a href="#inicio-rapido" class="btn btn-outline btn-primary btn-sm">
-                <i class="fas fa-rocket"></i>
-                {{ _('Inicio Rápido') }}
+        <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 px-4">
+            <a href="#inicio-rapido" class="btn btn-outline btn-primary btn-xs sm:btn-sm">
+                <i class="fas fa-rocket text-xs"></i>
+                <span class="hidden sm:inline">{{ _('Inicio Rápido') }}</span>
+                <span class="sm:hidden">{{ _('Inicio') }}</span>
             </a>
-            <a href="#sintaxis" class="btn btn-outline btn-secondary btn-sm">
-                <i class="fas fa-code"></i>
+            <a href="#sintaxis" class="btn btn-outline btn-secondary btn-xs sm:btn-sm">
+                <i class="fas fa-code text-xs"></i>
                 {{ _('Sintaxis') }}
             </a>
-            <a href="#ejemplos-uso" class="btn btn-outline btn-accent btn-sm">
-                <i class="fas fa-lightbulb"></i>
+            <a href="#ejemplos-uso" class="btn btn-outline btn-accent btn-xs sm:btn-sm">
+                <i class="fas fa-lightbulb text-xs"></i>
                 {{ _('Ejemplos') }}
             </a>
-            <a href="#faq" class="btn btn-outline btn-info btn-sm">
-                <i class="fas fa-comments"></i>
+            <a href="#faq" class="btn btn-outline btn-info btn-xs sm:btn-sm">
+                <i class="fas fa-comments text-xs"></i>
                 {{ _('FAQ') }}
             </a>
-            <a href="#teoria" class="btn btn-outline btn-warning btn-sm">
-                <i class="fas fa-graduation-cap"></i>
+            <a href="#teoria" class="btn btn-outline btn-warning btn-xs sm:btn-sm">
+                <i class="fas fa-graduation-cap text-xs"></i>
                 {{ _('Teoría') }}
             </a>
-            <a href="#aplicaciones" class="btn btn-outline btn-success btn-sm">
-                <i class="fas fa-globe"></i>
-                {{ _('Aplicaciones') }}
+            <a href="#aplicaciones" class="btn btn-outline btn-success btn-xs sm:btn-sm">
+                <i class="fas fa-globe text-xs"></i>
+                <span class="hidden sm:inline">{{ _('Aplicaciones') }}</span>
+                <span class="sm:hidden">{{ _('Apps') }}</span>
             </a>
         </div>
 
@@ -137,14 +139,14 @@
                                     <div class="space-y-3">
                                         <div>
                                             <div class="badge badge-primary mb-2">{{ _('Maximizar') }}</div>
-                                            <div class="mockup-code text-sm">
-                                                <pre><code>3x1 + 2x2 + 5x3</code></pre>
+                                            <div class="bg-base-200 rounded-lg p-2 sm:p-3 border border-primary/20 overflow-x-auto">
+                                                <code class="text-primary font-bold text-xs sm:text-sm md:text-base whitespace-nowrap block">3x1 + 2x2 + 5x3</code>
                                             </div>
                                         </div>
                                         <div>
                                             <div class="badge badge-secondary mb-2">{{ _('Minimizar') }}</div>
-                                            <div class="mockup-code text-sm">
-                                                <pre><code>4x1 + x2 + 2x3</code></pre>
+                                            <div class="bg-base-200 rounded-lg p-2 sm:p-3 border border-secondary/20 overflow-x-auto">
+                                                <code class="text-secondary font-bold text-xs sm:text-sm md:text-base whitespace-nowrap block">4x1 + x2 + 2x3</code>
                                             </div>
                                         </div>
                                     </div>
@@ -161,20 +163,20 @@
                                     <div class="space-y-3">
                                         <div>
                                             <div class="badge badge-success mb-2">≤</div>
-                                            <div class="mockup-code text-sm">
-                                                <pre><code>2x1 + 3x2 ≤ 100</code></pre>
+                                            <div class="bg-base-200 rounded-lg p-2 sm:p-3 border border-success/20 overflow-x-auto">
+                                                <code class="text-success font-bold text-xs sm:text-sm md:text-base whitespace-nowrap block">2x1 + 3x2 ≤ 100</code>
                                             </div>
                                         </div>
                                         <div>
                                             <div class="badge badge-warning mb-2">≥</div>
-                                            <div class="mockup-code text-sm">
-                                                <pre><code>x1 + x2 ≥ 10</code></pre>
+                                            <div class="bg-base-200 rounded-lg p-2 sm:p-3 border border-warning/20 overflow-x-auto">
+                                                <code class="text-warning font-bold text-xs sm:text-sm md:text-base whitespace-nowrap block">x1 + x2 ≥ 10</code>
                                             </div>
                                         </div>
                                         <div>
                                             <div class="badge badge-error mb-2">=</div>
-                                            <div class="mockup-code text-sm">
-                                                <pre><code>x1 + 2x2 = 50</code></pre>
+                                            <div class="bg-base-200 rounded-lg p-2 sm:p-3 border border-error/20 overflow-x-auto">
+                                                <code class="text-error font-bold text-xs sm:text-sm md:text-base whitespace-nowrap block">x1 + 2x2 = 50</code>
                                             </div>
                                         </div>
                                     </div>

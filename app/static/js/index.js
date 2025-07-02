@@ -4,7 +4,7 @@ import {
   resolverSimplex,
   mostrarResultadoSimplex,
 } from "./simplexSolver.js";
-import { normalizePayload, I18N_DEBUG } from "./i18n.js";
+import { normalizePayload, I18N_DEBUG, translateTerm } from "./i18n.js";
 
 // Usar la instancia global de Notyf definida en base.js
 // La variable 'alerta' estará disponible globalmente
@@ -89,18 +89,19 @@ function subIndice(num) {
 // Crear una restricción (con número de orden)
 function crearRestriccion(numero) {
   const div = document.createElement("div");
-  div.className = "flex gap-2 items-center p-3 bg-base-200 rounded-lg";
+  div.className = "flex flex-col sm:flex-row gap-2 items-stretch sm:items-center p-3 bg-base-200 rounded-lg";
 
   div.innerHTML = `
-      <input name="restriccion_${numero}" id="restriccion_${numero}" type="text" placeholder="ej: x1 + x2" class="input input-sm input-bordered flex-grow" />
-      <select name="operadorRestriccion_${numero}" id="operadorRestriccion_${numero}" class="select select-sm select-bordered flex-shrink-0 w-fit">
+      <input name="restriccion_${numero}" id="restriccion_${numero}" type="text" placeholder="ej: x1 + x2" class="input input-sm input-bordered flex-1 min-w-0" />
+      <select name="operadorRestriccion_${numero}" id="operadorRestriccion_${numero}" class="select select-sm select-bordered w-full sm:w-auto">
         <option>≤</option>
         <option>≥</option>
         <option>=</option>
       </select>
-      <input name="valorRes_${numero}" id="valorRes_${numero}" type="number" placeholder="valor" required class="input input-sm input-bordered sm:w-20"/>
-      <span class="btn btn-xs sm:btn-sm btn-error btn-outline btnEliminar">
+      <input name="valorRes_${numero}" id="valorRes_${numero}" type="number" placeholder="valor" required class="input input-sm input-bordered w-full sm:w-20"/>
+      <span class="btn btn-sm btn-error btn-outline btnEliminar self-stretch sm:self-auto">
         <i class="fas fa-trash"></i>
+        <span class="sm:hidden ml-2">${translateTerm('Eliminar')}</span>
       </span>
     `;
 

@@ -5,7 +5,7 @@
 {% block main %}
 <div class="min-h-screen bg-gradient-to-br from-base-200 to-base-300">
   
-    <div class="hero min-h-[70vh] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 relative overflow-hidden pt-40">
+    <div class="hero min-h-[50vh] sm:min-h-[60vh] lg:min-h-[70vh] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 relative overflow-hidden pt-20 sm:pt-32 lg:pt-40">
         
         <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
@@ -13,37 +13,37 @@
             <div class="max-w-6xl mx-auto">
                 
                 <!-- Content section with improved spacing -->
-                <div class="space-y-10 mt-16">
+                <div class="space-y-6 sm:space-y-8 lg:space-y-10 mt-8 sm:mt-12 lg:mt-16">
                     <!-- Main title with enhanced effects -->
                     <div class="space-y-4">
-                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text leading-tight tracking-tight">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text leading-tight tracking-tight">
                             {{ _('Ejemplos de Programación Lineal') }}
                         </h1>
                         
                         <!-- Decorative underline -->
                         <div class="flex justify-center">
-                            <div class="h-1 w-32 bg-gradient-to-r from-primary via-secondary to-accent rounded-full shadow-lg"></div>
+                            <div class="h-1 w-20 sm:w-24 md:w-32 bg-gradient-to-r from-primary via-secondary to-accent rounded-full shadow-lg"></div>
                         </div>
                     </div>
                     
                     <!-- Enhanced description -->
-                    <p class="text-xl md:text-2xl lg:text-3xl opacity-90 max-w-5xl mx-auto leading-relaxed font-medium text-base-content/80">
+                    <p class="text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 max-w-5xl mx-auto leading-relaxed font-medium text-base-content/80 px-4">
                         {{ _('Explora problemas reales resueltos paso a paso. Cada ejemplo incluye su formulación matemática completa y puedes cargar los datos directamente en la calculadora para experimentar.') }}
                     </p>
                     
                     <!-- Feature badges -->
-                    <div class="flex flex-wrap justify-center gap-4 mt-8">
-                        <div class="badge badge-lg badge-primary gap-2 py-4 px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            <i class="fas fa-lightbulb text-sm"></i>
-                            {{ _('Problemas Reales') }}
+                    <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 px-4">
+                        <div class="badge badge-md sm:badge-lg badge-primary gap-2 py-2 sm:py-4 px-3 sm:px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-lightbulb text-xs sm:text-sm"></i>
+                            <span class="text-xs sm:text-sm">{{ _('Problemas Reales') }}</span>
                         </div>
-                        <div class="badge badge-lg badge-secondary gap-2 py-4 px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            <i class="fas fa-calculator text-sm"></i>
-                            {{ _('Calculadora Integrada') }}
+                        <div class="badge badge-md sm:badge-lg badge-secondary gap-2 py-2 sm:py-4 px-3 sm:px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-calculator text-xs sm:text-sm"></i>
+                            <span class="text-xs sm:text-sm">{{ _('Calculadora Integrada') }}</span>
                         </div>
-                        <div class="badge badge-lg badge-accent gap-2 py-4 px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            <i class="fas fa-graduation-cap text-sm"></i>
-                            {{ _('Paso a Paso') }}
+                        <div class="badge badge-md sm:badge-lg badge-accent gap-2 py-2 sm:py-4 px-3 sm:px-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-graduation-cap text-xs sm:text-sm"></i>
+                            <span class="text-xs sm:text-sm">{{ _('Paso a Paso') }}</span>
                         </div>
                     </div>
                 </div>
@@ -52,109 +52,109 @@
     </div>
 
     <!-- Filtros Section -->
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <div class="flex flex-wrap justify-center gap-4 mb-12">
-            <div class="join shadow-lg">
-                <button class="btn join-item btn-primary filter-btn" data-filter="all">
-                    <i class="fas fa-th-large mr-2"></i>
-                    {{ _('Todos') }}
+    <div class="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+        <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12">
+            <div class="join join-vertical sm:join-horizontal shadow-lg">
+                <button class="btn join-item btn-sm sm:btn btn-primary filter-btn" data-filter="all">
+                    <i class="fas fa-th-large mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                    <span class="text-xs sm:text-sm">{{ _('Todos') }}</span>
                 </button>
-                <button class="btn join-item btn-outline btn-primary filter-btn" data-filter="Producción">
-                    <i class="fas fa-industry mr-2"></i>
-                    {{ _('Producción') }}
+                <button class="btn join-item btn-sm sm:btn btn-outline btn-primary filter-btn" data-filter="Producción">
+                    <i class="fas fa-industry mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                    <span class="text-xs sm:text-sm">{{ _('Producción') }}</span>
                 </button>
-                <button class="btn join-item btn-outline btn-primary filter-btn" data-filter="Dieta">
-                    <i class="fas fa-apple-alt mr-2"></i>
-                    {{ _('Dieta') }}
+                <button class="btn join-item btn-sm sm:btn btn-outline btn-primary filter-btn" data-filter="Dieta">
+                    <i class="fas fa-apple-alt mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                    <span class="text-xs sm:text-sm">{{ _('Dieta') }}</span>
                 </button>
-                <button class="btn join-item btn-outline btn-primary filter-btn" data-filter="Transporte">
-                    <i class="fas fa-truck mr-2"></i>
-                    {{ _('Transporte') }}
+                <button class="btn join-item btn-sm sm:btn btn-outline btn-primary filter-btn" data-filter="Transporte">
+                    <i class="fas fa-truck mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                    <span class="text-xs sm:text-sm">{{ _('Transporte') }}</span>
                 </button>
             </div>
         </div>
 
         <!-- Ejemplos Grid -->
         <div class="flex justify-center">
-            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-7xl w-full">
             {% for ejemplo in ejemplos %}
             <div class="ejemplo-card card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2" data-categoria="{{ ejemplo.categoria }}">
                 <!-- Card Header -->
                 <div class="card-body p-0">
                     <!-- Hero Header -->
-                    <div class="bg-gradient-to-br from-primary/20 to-secondary/20 p-6 rounded-t-2xl relative overflow-hidden">
+                    <div class="bg-gradient-to-br from-primary/20 to-secondary/20 p-4 sm:p-6 rounded-t-2xl relative overflow-hidden">
                         <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
                         <div class="relative z-10">
-                            <div class="flex items-center justify-between mb-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
                                 <div class="badge badge-lg badge-outline badge-primary font-bold">
                                     #{{ loop.index }}
                                 </div>
-                                <div class="flex gap-2">
-                                    <div class="badge badge-{{ 'success' if ejemplo.tipo == 'Maximización' else 'warning' }} gap-2">
-                                        <i class="fas fa-{{ 'arrow-up' if ejemplo.tipo == 'Maximización' else 'arrow-down' }}"></i>
-                                        {{ ejemplo.tipo }}
+                                <div class="flex flex-wrap gap-2">
+                                    <div class="badge badge-sm sm:badge badge-{{ 'success' if ejemplo.tipo == 'Maximización' else 'warning' }} gap-2">
+                                        <i class="fas fa-{{ 'arrow-up' if ejemplo.tipo == 'Maximización' else 'arrow-down' }} text-xs"></i>
+                                        <span class="text-xs sm:text-sm">{{ ejemplo.tipo }}</span>
                                     </div>
-                                    <div class="badge badge-secondary gap-2">
-                                        <i class="fas fa-tag"></i>
-                                        {{ ejemplo.categoria }}
+                                    <div class="badge badge-sm sm:badge badge-secondary gap-2">
+                                        <i class="fas fa-tag text-xs"></i>
+                                        <span class="text-xs sm:text-sm">{{ ejemplo.categoria }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <h2 class="card-title text-2xl font-bold text-primary mb-3">
+                            <h2 class="card-title text-lg sm:text-xl lg:text-2xl font-bold text-primary mb-3">
                                 {{ ejemplo.titulo }}
                             </h2>
-                            <p class="text-sm opacity-80 leading-relaxed">
+                            <p class="text-xs sm:text-sm opacity-80 leading-relaxed">
                                 {{ ejemplo.descripcion }}
                             </p>
                         </div>
                     </div>
 
                     <!-- Content Tabs -->
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
                         <div role="tablist" class="tabs tabs-bordered">
                             <!-- Variables Tab -->
-                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab" aria-label="{{ _('Variables') }}" checked />
-                            <div role="tabpanel" class="tab-content p-4">
-                                <div class="space-y-3">
+                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab text-xs sm:text-sm" aria-label="{{ _('Variables') }}" checked />
+                            <div role="tabpanel" class="tab-content p-2 sm:p-4">
+                                <div class="space-y-2 sm:space-y-3">
                                     {% for variable in ejemplo.variables %}
-                                    <div class="flex items-center gap-4 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                                    <div class="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 bg-primary/5 rounded-lg border border-primary/10">
                                         <div class="flex-shrink-0">
-                                            <div class="badge badge-primary badge-lg font-bold text-white shadow-lg">
+                                            <div class="badge badge-primary badge-sm sm:badge-lg font-bold text-white shadow-lg">
                                                 x{{ loop.index }}
                                             </div>
                                         </div>
-                                        <span class="text-sm font-medium flex-1 leading-relaxed">{{ variable }}</span>
+                                        <span class="text-xs sm:text-sm font-medium flex-1 leading-relaxed">{{ variable }}</span>
                                     </div>
                                     {% endfor %}
                                 </div>
                             </div>
 
                             <!-- Función Objetivo Tab -->
-                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab" aria-label="{{ _('Objetivo') }}" />
-                            <div role="tabpanel" class="tab-content p-4">
-                                <div class="text-center space-y-4">
-                                    <div class="badge badge-secondary badge-lg gap-2 shadow-md">
-                                        <i class="fas fa-{{ 'arrow-up' if ejemplo.tipo == 'Maximización' else 'arrow-down' }}"></i>
-                                        {{ ejemplo.tipo }}
+                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab text-xs sm:text-sm" aria-label="{{ _('Objetivo') }}" />
+                            <div role="tabpanel" class="tab-content p-2 sm:p-4">
+                                <div class="text-center space-y-2 sm:space-y-3">
+                                    <div class="badge badge-secondary badge-sm sm:badge-lg gap-2 shadow-md">
+                                        <i class="fas fa-{{ 'arrow-up' if ejemplo.tipo == 'Maximización' else 'arrow-down' }} text-xs"></i>
+                                        <span class="text-xs sm:text-sm">{{ ejemplo.tipo }}</span>
                                     </div>
-                                    <div class="mockup-code bg-secondary/10 border border-secondary/20 shadow-md">
-                                        <pre class="text-secondary font-bold text-lg px-4 py-2"><code>Z = {{ ejemplo.funcion_objetivo.replace('*', '') }}</code></pre>
+                                    <div class="bg-secondary/10 border border-secondary/20 shadow-md rounded-lg p-2 sm:p-4 overflow-x-auto">
+                                        <code class="text-secondary font-bold text-xs sm:text-sm md:text-base lg:text-lg whitespace-nowrap block">Z = {{ ejemplo.funcion_objetivo.replace('*', '') }}</code>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Restricciones Tab -->
-                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab" aria-label="{{ _('Restricciones') }}" />
-                            <div role="tabpanel" class="tab-content p-4">
-                                <div class="space-y-3">
+                            <input type="radio" name="ejemplo_{{ loop.index }}_tabs" role="tab" class="tab text-xs sm:text-sm" aria-label="{{ _('Restricciones') }}" />
+                            <div role="tabpanel" class="tab-content p-2 sm:p-4">
+                                <div class="space-y-2 sm:space-y-3">
                                     {% for restriccion in ejemplo.restricciones %}
-                                    <div class="flex items-center gap-4 p-3 bg-accent/5 rounded-lg border border-accent/10">
+                                    <div class="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 bg-accent/5 rounded-lg border border-accent/10">
                                         <div class="flex-shrink-0">
-                                            <div class="badge badge-accent badge-lg text-white font-bold shadow-lg">
+                                            <div class="badge badge-accent badge-sm sm:badge-lg text-white font-bold shadow-lg">
                                                 R{{ loop.index }}
                                             </div>
                                         </div>
-                                        <code class="text-sm font-mono flex-1 bg-white/50 p-2 rounded border">{{ restriccion.replace('*', '') }}</code>
+                                        <code class="text-xs sm:text-sm font-mono flex-1 bg-white/50 p-1 sm:p-2 rounded border overflow-x-auto">{{ restriccion.replace('*', '') }}</code>
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -163,23 +163,23 @@
 
                         <!-- Solution Section -->
                         <div class="divider"></div>
-                        <div class="bg-gradient-to-r from-success/10 to-success/20 p-6 rounded-xl border border-success/20">
-                            <div class="text-center space-y-4">
-                                <h3 class="font-bold text-success flex items-center justify-center gap-3 text-lg">
-                                    <i class="fas fa-trophy text-xl text-success"></i>
+                        <div class="bg-gradient-to-r from-success/10 to-success/20 p-4 sm:p-6 rounded-xl border border-success/20">
+                            <div class="text-center space-y-3 sm:space-y-4">
+                                <h3 class="font-bold text-success flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg">
+                                    <i class="fas fa-trophy text-lg sm:text-xl text-success"></i>
                                     {{ _('Solución Óptima') }}
                                 </h3>
-                                <div class="bg-success/20 p-4 rounded-lg border border-success/30 shadow-sm">
-                                    <code class="text-success font-bold text-lg">{{ ejemplo.solucion_optima }}</code>
+                                <div class="bg-success/20 p-3 sm:p-4 rounded-lg border border-success/30 shadow-sm">
+                                    <code class="text-success font-bold text-sm sm:text-lg break-all">{{ ejemplo.solucion_optima }}</code>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Action Button -->
-                        <div class="card-actions justify-center mt-6">
-                            <button class="btn btn-primary btn-wide gap-2 group" onclick="calcularEjemplo({{ ejemplo.id }})">
-                                <i class="fas fa-calculator group-hover:scale-110 transition-transform"></i>
-                                {{ _('Calcular Ejemplo') }}
+                        <div class="card-actions justify-center mt-4 sm:mt-6">
+                            <button class="btn btn-primary btn-sm sm:btn-wide gap-2 group" onclick="calcularEjemplo({{ ejemplo.id }})">
+                                <i class="fas fa-calculator group-hover:scale-110 transition-transform text-xs sm:text-sm"></i>
+                                <span class="text-xs sm:text-sm">{{ _('Calcular Ejemplo') }}</span>
                             </button>
                         </div>
                     </div>
@@ -190,74 +190,74 @@
         </div>
 
         <!-- CTA Section -->
-        <div class="mt-20">
+        <div class="mt-12 sm:mt-16 lg:mt-20">
             <div class="w-full">
-                <div class="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 py-20">
+                <div class="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 py-12 sm:py-16 lg:py-20">
                     <div class="container mx-auto px-4">
-                        <div class="max-w-6xl mx-auto space-y-8">
+                        <div class="max-w-6xl mx-auto space-y-6 sm:space-y-8">
                             <!-- Icon and Title Section -->
-                            <div class="space-y-6 text-center">
+                            <div class="space-y-4 sm:space-y-6 text-center">
                                 <div class="flex justify-center">
-                                    <div class="bg-gradient-to-br from-primary to-secondary p-6 rounded-2xl shadow-xl">
-                                        <i class="fas fa-rocket text-4xl text-white"></i>
+                                    <div class="bg-gradient-to-br from-primary to-secondary p-4 sm:p-6 rounded-2xl shadow-xl">
+                                        <i class="fas fa-rocket text-2xl sm:text-3xl lg:text-4xl text-white"></i>
                                     </div>
                                 </div>
-                                <h2 class="text-3xl md:text-5xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text">
+                                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text px-4">
                                     {{ _('¡Practica con tus propios problemas!') }}
                                 </h2>
-                                <p class="text-lg md:text-xl opacity-70 leading-relaxed max-w-3xl mx-auto">
+                                <p class="text-sm sm:text-base md:text-lg lg:text-xl opacity-70 leading-relaxed max-w-3xl mx-auto px-4">
                                     {{ _('Ahora que has explorado los ejemplos, es momento de crear y resolver tus propios problemas de programación lineal usando nuestra calculadora interactiva.') }}
                                 </p>
                             </div>
 
                             <!-- Features Grid -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 py-6 sm:py-8">
                                 <div class="card bg-base-100/50 border border-primary/20 hover:shadow-lg transition-all duration-300">
-                                    <div class="card-body text-center p-6">
-                                        <div class="flex justify-center mb-4">
-                                            <div class="bg-primary/20 p-3 rounded-full">
-                                                <i class="fas fa-calculator text-2xl text-primary"></i>
+                                    <div class="card-body text-center p-4 sm:p-6">
+                                        <div class="flex justify-center mb-3 sm:mb-4">
+                                            <div class="bg-primary/20 p-2 sm:p-3 rounded-full">
+                                                <i class="fas fa-calculator text-lg sm:text-xl lg:text-2xl text-primary"></i>
                                             </div>
                                         </div>
-                                        <h3 class="font-bold text-lg mb-2">{{ _('Calculadora Intuitiva') }}</h3>
-                                        <p class="text-sm opacity-70">{{ _('Interfaz fácil de usar para crear tus problemas') }}</p>
+                                        <h3 class="font-bold text-base sm:text-lg mb-2">{{ _('Calculadora Intuitiva') }}</h3>
+                                        <p class="text-xs sm:text-sm opacity-70">{{ _('Interfaz fácil de usar para crear tus problemas') }}</p>
                                     </div>
                                 </div>
                                 
                                 <div class="card bg-base-100/50 border border-secondary/20 hover:shadow-lg transition-all duration-300">
-                                    <div class="card-body text-center p-6">
-                                        <div class="flex justify-center mb-4">
-                                            <div class="bg-secondary/20 p-3 rounded-full">
-                                                <i class="fas fa-chart-line text-2xl text-secondary"></i>
+                                    <div class="card-body text-center p-4 sm:p-6">
+                                        <div class="flex justify-center mb-3 sm:mb-4">
+                                            <div class="bg-secondary/20 p-2 sm:p-3 rounded-full">
+                                                <i class="fas fa-chart-line text-lg sm:text-xl lg:text-2xl text-secondary"></i>
                                             </div>
                                         </div>
-                                        <h3 class="font-bold text-lg mb-2">{{ _('Soluciones Detalladas') }}</h3>
-                                        <p class="text-sm opacity-70">{{ _('Resultados paso a paso con explicaciones') }}</p>
+                                        <h3 class="font-bold text-base sm:text-lg mb-2">{{ _('Soluciones Detalladas') }}</h3>
+                                        <p class="text-xs sm:text-sm opacity-70">{{ _('Resultados paso a paso con explicaciones') }}</p>
                                     </div>
                                 </div>
                                 
                                 <div class="card bg-base-100/50 border border-accent/20 hover:shadow-lg transition-all duration-300">
-                                    <div class="card-body text-center p-6">
-                                        <div class="flex justify-center mb-4">
-                                            <div class="bg-accent/20 p-3 rounded-full">
-                                                <i class="fas fa-save text-2xl text-accent"></i>
+                                    <div class="card-body text-center p-4 sm:p-6">
+                                        <div class="flex justify-center mb-3 sm:mb-4">
+                                            <div class="bg-accent/20 p-2 sm:p-3 rounded-full">
+                                                <i class="fas fa-save text-lg sm:text-xl lg:text-2xl text-accent"></i>
                                             </div>
                                         </div>
-                                        <h3 class="font-bold text-lg mb-2">{{ _('Historial Completo') }}</h3>
-                                        <p class="text-sm opacity-70">{{ _('Guarda y revisa tus problemas anteriores') }}</p>
+                                        <h3 class="font-bold text-base sm:text-lg mb-2">{{ _('Historial Completo') }}</h3>
+                                        <p class="text-xs sm:text-sm opacity-70">{{ _('Guarda y revisa tus problemas anteriores') }}</p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="flex flex-wrap justify-center gap-4">
-                                <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-lg gap-3 group shadow-lg hover:shadow-xl transition-all duration-300">
-                                    <i class="fas fa-calculator group-hover:scale-110 transition-transform"></i>
-                                    {{ _('Crear Nuevo Problema') }}
+                            <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4">
+                                <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-sm sm:btn-lg gap-2 sm:gap-3 group shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <i class="fas fa-calculator group-hover:scale-110 transition-transform text-xs sm:text-base"></i>
+                                    <span class="text-xs sm:text-base">{{ _('Crear Nuevo Problema') }}</span>
                                 </a>
-                                <a href="{{ url_for('main.ayuda') }}" class="btn btn-outline btn-primary btn-lg gap-3 group shadow-lg hover:shadow-xl transition-all duration-300">
-                                    <i class="fas fa-question-circle group-hover:scale-110 transition-transform"></i>
-                                    {{ _('Ver Ayuda') }}
+                                <a href="{{ url_for('main.ayuda') }}" class="btn btn-outline btn-primary btn-sm sm:btn-lg gap-2 sm:gap-3 group shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <i class="fas fa-question-circle group-hover:scale-110 transition-transform text-xs sm:text-base"></i>
+                                    <span class="text-xs sm:text-base">{{ _('Ver Ayuda') }}</span>
                                 </a>
                             </div>
                         </div>
