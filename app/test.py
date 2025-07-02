@@ -701,7 +701,8 @@ class GranMSimplexExtended:
                 ratio = rhs.coefficient / coef_pivote.coefficient
                 factible = "Sí" if ratio >= 0 else "No"
                 css_class = "bg-warning bg-opacity-30 border-warning" if i == pivot_row else ""
-                self.html_output += f'<tr class="{css_class}"><td class="px-1 py-1">F{i+1}</td><td class="px-1 py-1">{self.mixed_value_to_html(rhs)}</td><td class="px-1 py-1">{self.mixed_value_to_html(coef_pivote)}</td><td class="px-1 py-1">{ratio:.3f}</td><td class="px-1 py-1">{factible}</td></tr>'
+                ratio_float = float(ratio)
+                self.html_output += f'<tr class="{css_class}"><td class="px-1 py-1">F{i+1}</td><td class="px-1 py-1">{self.mixed_value_to_html(rhs)}</td><td class="px-1 py-1">{self.mixed_value_to_html(coef_pivote)}</td><td class="px-1 py-1">{ratio_float:.3f}</td><td class="px-1 py-1">{factible}</td></tr>'
             else:
                 self.html_output += f'<tr><td class="px-1 py-1">F{i+1}</td><td class="px-1 py-1">{self.mixed_value_to_html(rhs)}</td><td class="px-1 py-1">{self.mixed_value_to_html(coef_pivote)}</td><td class="px-1 py-1">N/A</td><td class="px-1 py-1">No</td></tr>'
         
