@@ -1,0 +1,20 @@
+comando 1
+comando para escanear archivos y generar el archivo donde se definen las traducciones
+'pybabel extract -F babel_config/babel.cfg -o babel_config/messages.pot .' (ejecutar estando dentro de la carperta 'app')
+
+comando 2
+"pybabel init -i babel_config/messages.pot -d translations -l en"
+
+esto escane el archivo .pot y genera un arcxhivo .po dentro de translations que es donde iran las traducciones
+
+comando 3
+"pybabel compile -d translations"
+
+compila las traducciones
+
+(-- FLUJO DE TRABAJO APARTIR DE AHORA --)
+ahora para cuando se agregue mas contenido y se necesiten agregar mas traduciiones 
+1. se vuele a generar el archivo de entrada es decir el comando 1 
+2.se ejecuta el comando 2 con un 'update' en lugar de 'init'
+3 ejecutar el 3er comando
+listo
