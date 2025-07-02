@@ -212,6 +212,7 @@ export function translateTerm(term) {
     // Términos básicos
     'Maximizar': 'Maximize',
     'Minimizar': 'Minimize',
+    'Eliminar': 'Delete',
     'variable': 'variable',
     'restricción': 'constraint',
     'objetivo': 'objective',

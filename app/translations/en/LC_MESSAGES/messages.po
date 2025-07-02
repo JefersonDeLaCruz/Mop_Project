@@ -1429,6 +1429,9 @@ msgstr "of Z"
 msgid "Valores de las variables"
 msgstr "Variable values"
 
+msgid "Eliminar"
+msgstr "Delete"
+
 #~ msgid "Nuevo usuario"
 #~ msgstr "New user"
 

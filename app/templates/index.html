@@ -112,44 +112,33 @@
           <!-- Card de restricciones -->
           <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-accent/10">
             <div class="card-body">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <i class="fas fa-lock text-accent"></i>
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-lock text-accent text-sm sm:text-base"></i>
                   </div>
-                  <h2 class="card-title text-xs sm:text-xl">{{ _('Restricciones') }}</h2>
+                  <h2 class="card-title text-base sm:text-xl truncate">{{ _('Restricciones') }}</h2>
                 </div>
-                <span id="addResBtn" class="btn btn-xs btn-accent btn-outline sm:btn">
+                <span id="addResBtn" class="btn btn-sm btn-accent btn-outline sm:btn flex-shrink-0">
                   <i class="fas fa-plus"></i>
-                  {{ _('Agregar') }}
+                  <span class="hidden sm:inline">{{ _('Agregar') }}</span>
+                  <span class="sm:hidden">+</span>
                 </span>
               </div>
 
               <div id="resWrapper" class="space-y-3">
-                <!-- input restriccion numero 1 -->
-                <!-- <div class="flex gap-2 items-center p-3 bg-base-200 rounded-lg">
-                  <input name="restriccion_1" id="restriccion_1" type="text" placeholder="ej: 2x1 + 3x2" class="input input-sm input-bordered flex-1" />
-                  <select name="operadorRestriccion_1" id="operadorRestriccion_1" class="select select-sm select-bordered">
+                <!-- Template for constraint inputs - improved responsive design -->
+                <!-- <div class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center p-3 bg-base-200 rounded-lg">
+                  <input name="restriccion_1" id="restriccion_1" type="text" placeholder="ej: 2x1 + 3x2" class="input input-sm input-bordered flex-1 min-w-0" />
+                  <select name="operadorRestriccion_1" id="operadorRestriccion_1" class="select select-sm select-bordered w-full sm:w-auto">
                     <option>≤</option>
                     <option>≥</option>
                     <option>=</option>
                   </select>
-                  <input name="valorResUno" id="valorRes_1" type="number" placeholder="valor" required class="input input-sm input-bordered w-20" />
-                  <button class="btn btn-sm btn-error btn-outline">
+                  <input name="valorResUno" id="valorRes_1" type="number" placeholder="valor" required class="input input-sm input-bordered w-full sm:w-20" />
+                  <button class="btn btn-sm btn-error btn-outline self-stretch sm:self-auto">
                     <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-                input restriccion numero2 
-                <div class="flex gap-2 items-center p-3 bg-base-200 rounded-lg">
-                  <input name="restriccion_2" id="restriccion_2" type="text" placeholder="ej: x1 + x2" class="input input-sm input-bordered flex-1" />
-                  <select name="operadorRestriccion_2" id="operadorRestriccion_2" class="select select-sm select-bordered">
-                    <option>≤</option>
-                    <option>≥</option>
-                    <option>=</option>
-                  </select>
-                  <input name="valorResDos" id="valorRes_2" type="number" placeholder="valor" required class="input input-sm input-bordered w-20" />
-                  <button class="btn btn-sm btn-error btn-outline">
-                    <i class="fas fa-trash"></i>
+                    <span class="sm:hidden ml-2">{{ _('Eliminar') }}</span>
                   </button>
                 </div> -->
 
