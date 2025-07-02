@@ -126,7 +126,7 @@ def register():
         user_obj = User(created_user["id"], created_user["username"], created_user["name"], created_user.get("password_hash"))
         login_user(user_obj)
         
-        flash("¡Cuenta creada exitosamente! Bienvenido/a a OptimizeFlow.", "success")
+        flash("¡Cuenta creada exitosamente! Bienvenido/a a LP Solver.", "success")
         # En lugar de redirigir al login, renderizar register.html con flag para ir al index
         return render_template("register.html", register_success=True)
     else:
