@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Frontend Translation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Frontend Translation Test</h1>
+        
+        <div class="mb-6">
+            <label class="label cursor-pointer">
+                <span class="label-text">Language:</span>
+                <select id="languageSelect" class="select select-bordered">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title">Translation Tests</h2>
+                    <div id="translationTests" class="space-y-2">
+                        <!-- Tests will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title">Mock Simplex Output</h2>
+                    <button id="testSimplex" class="btn btn-primary">Generate Mock Solution</button>
+                    <div id="mockResults" class="mt-4">
+                        <!-- Mock results will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { translateTerm, t, getCurrentLanguage } from './app/static/js/i18n.js';
+        
+        // Set initial language
+        document.documentElement.lang = 'es';
+        
+        function updateLanguage() {
+            const select = document.getElementById('languageSelect');
+            const newLang = select.value;
+            document.documentElement.lang = newLang;
+            
+            // Update translation tests
+            updateTranslationTests();
+        }
+        
+        function updateTranslationTests() {
+            const testsContainer = document.getElementById('translationTests');
+            const testTerms = [
+                'Método Utilizado: Simplex Clásico',
+                'Planteamiento del problema',
+                'Función objetivo',
+                'Restricciones',
+                'Iteración',
+                'Criterio de Optimalidad',
+                'Variable Entrante',
+                'Variable Saliente',
+                'Elemento Pivote',
+                'Conclusión e interpretación'
+            ];
+            
+            testsContainer.innerHTML = testTerms.map(term => `
+                <div class="p-2 border rounded">
+                    <strong>Original:</strong> ${term}<br>
+                    <strong>Translated:</strong> ${translateTerm(term)}
+                </div>
+            `).join('');
+        }
+        
+        function generateMockSolution() {
+            const mockData = {
+                resultado: {
+                    optimo: 150.5,
+                    status: "ok",
+                    valores: [10, 20, 0],
+                    planteamiento: {
+                        tipo: "Maximizar",
+                        funcion_objetivo: "3x1 + 2x2",
+                        restricciones: [
+                            { expr: "x1 + x2", op: "≤", val: "30" }
+                        ]
+                    },
+                    modelo_estandar: {
+                        funcion_objetivo: "3x1 + 2x2 + 0s1",
+                        restricciones: ["x1 + x2 + s1 = 30"],
+                        variables: ["x1, x2, s1 ≥ 0"]
+                    },
+                    iteraciones: [
+                        {
+                            encabezados: ["VB", "x1", "x2", "s1", "bj"],
+                            filas: [
+                                ["s1", "1", "1", "1", "30"],
+                                ["Z", "-3", "-2", "0", "0"]
+                            ],
+                            pivot_info: {
+                                fila: 0,
+                                columna: 0,
+                                elemento_pivote: "1",
+                                variable_entrante: "x1",
+                                variable_saliente: "s1"
+                            },
+                            detalles: {
+                                columna_pivote: {
+                                    variable: "x1",
+                                    explicacion: "x1 tiene el coeficiente más negativo (-3)"
+                                },
+                                fila_pivote: {
+                                    variable_sale: "s1",
+                                    explicacion: "Razón mínima encontrada",
+                                    razones: [
+                                        { variable_basica: "s1", rhs: "30", coef_pivote: "1", razon: "30", fila: 0 }
+                                    ],
+                                    fila_seleccionada: 0
+                                },
+                                normalizacion: {
+                                    pivote: "1",
+                                    original: ["1", "1", "1", "30"],
+                                    resultado: ["1", "1", "1", "30"],
+                                    explicacion: "La fila ya está normalizada"
+                                },
+                                transformaciones: [
+                                    {
+                                        fila: 1,
+                                        factor: -3,
+                                        original: ["-3", "-2", "0", "0"],
+                                        resultado: ["0", "1", "3", "90"],
+                                        explicacion: "Se elimina x1 de la fila Z"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            };
+            
+            // Clear previous results
+            const resultsContainer = document.getElementById('mockResults');
+            resultsContainer.innerHTML = '';
+            
+            // Create a container that simulates the actual solution display
+            const valorOptimo = document.createElement('div');
+            valorOptimo.innerHTML = `<strong>Valor Óptimo:</strong> ${mockData.resultado.optimo.toFixed(2)}`;
+            resultsContainer.appendChild(valorOptimo);
+            
+            const estadoSolucion = document.createElement('div');
+            estadoSolucion.innerHTML = `<strong>Estado:</strong> ${mockData.resultado.status === "ok" ? translateTerm("óptimo") : mockData.resultado.status}`;
+            resultsContainer.appendChild(estadoSolucion);
+            
+            // Test method section
+            const metodoDiv = document.createElement('div');
+            metodoDiv.classList.add('mt-4', 'p-3', 'border', 'rounded');
+            metodoDiv.innerHTML = `<h3 class="font-bold">${translateTerm("Método Utilizado: Simplex Clásico")}</h3>`;
+            resultsContainer.appendChild(metodoDiv);
+            
+            // Test problem statement
+            const planteamientoDiv = document.createElement('div');
+            planteamientoDiv.classList.add('mt-4', 'p-3', 'border', 'rounded');
+            planteamientoDiv.innerHTML = `
+                <h3 class="font-bold">${translateTerm("Planteamiento del problema")}</h3>
+                <p><strong>${translateTerm("Tipo")}:</strong> ${mockData.resultado.planteamiento.tipo}</p>
+                <p><strong>${translateTerm("Función objetivo")}:</strong> ${mockData.resultado.planteamiento.funcion_objetivo}</p>
+                <p><strong>${translateTerm("Restricciones")}:</strong></p>
+                <ul class="list-disc pl-5">
+                    ${mockData.resultado.planteamiento.restricciones.map(r => `<li>${r.expr} ${r.op} ${r.val}</li>`).join('')}
+                </ul>
+            `;
+            resultsContainer.appendChild(planteamientoDiv);
+            
+            // Test iteration
+            const iteracionDiv = document.createElement('div');
+            iteracionDiv.classList.add('mt-4', 'p-3', 'border', 'rounded');
+            iteracionDiv.innerHTML = `
+                <h3 class="font-bold">${translateTerm("Iteración")} 0</h3>
+                <h4 class="font-bold mt-2">${translateTerm("Criterio de Optimalidad")}:</h4>
+                <p>${translateTerm("Se revisa la fila Z en busca de coeficientes negativos")}:</p>
+                <ul class="list-disc pl-5">
+                    <li>${translateTerm("Si hay coeficientes negativos, la solución actual NO es óptima")}</li>
+                    <li>${translateTerm("Se selecciona la variable con el coeficiente más negativo para entrar a la base")}</li>
+                </ul>
+            `;
+            resultsContainer.appendChild(iteracionDiv);
+        }
+        
+        // Initialize
+        document.getElementById('languageSelect').addEventListener('change', updateLanguage);
+        document.getElementById('testSimplex').addEventListener('click', generateMockSolution);
+        
+        // Initial load
+        updateTranslationTests();
+    </script>
+</body>
+</html>

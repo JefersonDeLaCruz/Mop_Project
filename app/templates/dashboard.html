@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %} {{ _('Inicio') }} - LP Solver{% endblock %}
+
+{% block main %}
+<!-- Dashboard moderno con DaisyUI -->
+<div class="min-h-screen bg-base-200">
+    
+    <!-- Header con saludo -->
+    <div class="hero bg-gradient-to-r from-primary to-secondary text-primary-content py-16 pt-24">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <div class="avatar mb-6">
+                    <div class="w-24 rounded-full bg-base-100/20">
+                        <div class="w-full h-full rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-circle text-4xl text-white"></i>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">
+                    {% if current_user.is_authenticated %}
+                        {{ _('¡Bienvenido, %(name)s!', name=current_user.username) }}
+                    {% else %}
+                        {{ _('¡Bienvenido, Usuario!') }}
+                    {% endif %}
+                </h1>
+                <p class="text-lg opacity-90">{{ _('Tu centro de soluciones para programación lineal') }}</p>
+                <div class="mt-4">
+                    <div class="badge badge-ghost badge-lg">
+                        <i class="fas fa-clock mr-2"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container mx-auto px-4 py-8">
+        
+        <!-- Grid principal de acciones -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Resolver Problema -->
+            <div class="card bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-calculator text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-white">{{ _('Resolver Problema') }}</h2>
+                            <div class="badge badge-ghost badge-sm">{{ _('Principal') }}</div>
+                        </div>
+                    </div>
+                    <p class="text-blue-100 mb-4">{{ _('Utiliza nuestro solucionador para encontrar la solución óptima.') }}</p>
+                    <div class="card-actions justify-end">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-white">
+                            <i class="fas fa-play mr-2"></i>
+                            {{ _('Comenzar') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mi Perfil -->
+            <div class="card bg-gradient-to-br from-green-500 to-green-700 text-white shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-white">{{ _('Mi Perfil') }}</h2>
+                            <div class="badge badge-ghost badge-sm">{{ _('Configuración') }}</div>
+                        </div>
+                    </div>
+                    <p class="text-green-100 mb-4">{{ _('Gestiona tu información personal y configuraciones.') }}</p>
+                    <div class="card-actions justify-end">
+                        <a href="{{ url_for('main.perfil') }}" class="btn btn-white">
+                            <i class="fas fa-cog mr-2"></i>
+                            {{ _('Ver Perfil') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplos -->
+            <div class="card bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-book text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-white">{{ _('Ejemplos') }}</h2>
+                            <div class="badge badge-ghost badge-sm">{{ _('Aprender') }}</div>
+                        </div>
+                    </div>
+                    <p class="text-purple-100 mb-4">{{ _('Explora casos reales y aprende con ejemplos.') }}</p>
+                    <div class="card-actions justify-end">
+                        <a href="{{ url_for('main.ejemplos') }}" class="btn btn-white">
+                            <i class="fas fa-search mr-2"></i>
+                            {{ _('Explorar') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de estadísticas -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            
+            <!-- Métricas -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body text-center">
+                    <h3 class="card-title mb-6 justify-center">
+                        <i class="fas fa-chart-bar text-primary mr-2"></i>
+                        {{ _('Estadísticas') }}
+                    </h3>
+                    <div class="stats stats-vertical lg:stats-horizontal justify-center">
+                        <div class="stat place-items-center">
+                            <div class="stat-figure text-primary">
+                                <i class="fas fa-file-alt text-2xl"></i>
+                            </div>
+                            <div class="stat-title">{{ _('Problemas') }}</div>
+                            <div class="stat-value text-primary">{{ user_stats.total_problemas }}</div>
+                            <div class="stat-desc">{{ _('Total creados') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div class="grid grid-cols-1 gap-4">
+                <div class="card bg-gradient-to-r from-cyan-400 to-cyan-600 text-white shadow-lg">
+                    <div class="card-body p-6 text-center">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto">
+                                <i class="fas fa-question-circle text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">{{ _('Ayuda') }}</h3>
+                                <p class="text-cyan-100 text-sm">{{ _('Documentación') }}</p>
+                            </div>
+                            <a href="{{ url_for('main.ayuda') }}" class="btn btn-white btn-sm">
+                                <i class="fas fa-book mr-2"></i>
+                                {{ _('Ver Guía') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block customScript %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Actualizar tiempo
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('es-ES', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+        });
+        const dateString = now.toLocaleDateString('es-ES', { 
+            weekday: 'long',
+            day: 'numeric',
+            month: 'short'
+        });
+        
+        const timeElement = document.getElementById('current-time');
+        if (timeElement) {
+            timeElement.textContent = `${timeString} - ${dateString}`;
+        }
+    }
+    
+    updateTime();
+    setInterval(updateTime, 60000);
+    
+    // Animaciones suaves para las cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+
+<style>
+/* Estilos mínimos adicionales */
+.btn-white {
+    background-color: white;
+    color: #1f2937;
+    border: none;
+}
+
+.btn-white:hover {
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+/* Asegurar que los gradientes funcionen */
+.bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+/* Animaciones suaves */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+</style>
+{% endblock %}

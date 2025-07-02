@@ -1,6 +1,5 @@
 {% extends './base.html' %}
-
-{% block title %}Perfil de Usuario{% endblock %}
+{% block title %}👤 {{ _('Mi Perfil') }} - MOPSolver{% endblock %}
 {% block tailwindcss %} {{super()}} {% endblock %}
 
 {% block nav %}
@@ -13,19 +12,17 @@
     
     <!-- Header del perfil -->
     <div class="text-center mb-8 animate-fade-in">
-      <div class="avatar online mb-4">
-        <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-          <img src="https://via.placeholder.com/150/6366f1/ffffff?text=U" alt="Avatar" />
-        </div>
-      </div>
       <h1 class="text-4xl md:text-5xl font-bold text-primary mb-2">
-        Mi Perfil
+        {% if user %}
+          {{ _('¡Hola, %(name)s!', name=user.name) }}
+        {% else %}
+          {{ _('Mi Perfil') }}
+        {% endif %}
       </h1>
       <p class="text-lg text-base-content/70">
-        Gestiona tu información y revisa tu historial
+        {{ _('Gestiona tu información y revisa tu historial') }}
       </p>
     </div>
-    <p>TEST: {{ url_for('main.index') }}</p>
     <!-- Grid principal responsivo -->
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
       
@@ -39,48 +36,48 @@
               <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <i class="fas fa-user text-primary"></i>
               </div>
-              <h2 class="card-title text-xl">Información Personal</h2>
+              <h2 class="card-title text-xl">{{ _('Información Personal') }}</h2>
             </div>
             
             <div class="space-y-4">
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text font-medium">Nombre completo</span>
+                  <span class="label-text font-medium">{{ _('Nombre completo') }}</span>
                 </label>
-                <input type="text" value="Juan Carlos Pérez" 
+                <input type="text" value="{{ user.name if user else _('No disponible') }}" 
                        class="input input-bordered input-primary w-full" readonly />
               </div>
               
-              <div class="form-control">
+              <!-- <div class="form-control">
                 <label class="label">
                   <span class="label-text font-medium">Correo electrónico</span>
                 </label>
                 <input type="email" value="juan.perez@email.com" 
                        class="input input-bordered input-primary w-full" readonly />
-              </div>
+              </div> -->
               
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text font-medium">Usuario</span>
+                  <span class="label-text font-medium">{{ _('Usuario') }}</span>
                 </label>
-                <input type="text" value="jperez123" 
+                <input type="text" value="{{ user.username if user else _('No disponible') }}" 
                        class="input input-bordered input-primary w-full" readonly />
               </div>
               
-              <div class="form-control">
+              <!-- <div class="form-control">
                 <label class="label">
                   <span class="label-text font-medium">Fecha de registro</span>
                 </label>
                 <input type="text" value="15 de Marzo, 2024" 
                        class="input input-bordered input-secondary w-full" readonly />
-              </div>
+              </div> -->
             </div>
             
             <div class="card-actions justify-end mt-6">
-              <button class="btn btn-outline btn-primary">
+              <label for="edit_profile_modal" class="btn btn-outline btn-primary cursor-pointer">
                 <i class="fas fa-edit"></i>
-                Editar perfil
-              </button>
+                {{ _('Editar perfil') }}
+              </label>
             </div>
           </div>
         </div>
@@ -92,27 +89,35 @@
               <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
                 <i class="fas fa-chart-bar text-secondary"></i>
               </div>
-              <h2 class="card-title text-xl">Estadísticas</h2>
+              <h2 class="card-title text-xl">{{ _('Estadísticas') }}</h2>
             </div>
             
             <div class="stats stats-vertical shadow">
               <div class="stat">
-                <div class="stat-title">Problemas resueltos</div>
-                <div class="stat-value text-primary">12</div>
-                <div class="stat-desc">En los últimos 30 días</div>
+                <div class="stat-title">{{ _('Problemas resueltos') }}</div>
+                <div class="stat-value text-primary">{{ total_problemas }}</div>
+                <div class="stat-desc">{{ _('Total histórico') }}</div>
               </div>
               
-              <div class="stat">
+              <!-- <div class="stat">
                 <div class="stat-title">Tiempo total</div>
                 <div class="stat-value text-secondary">45h</div>
                 <div class="stat-desc">Tiempo invertido</div>
-              </div>
+              </div> -->
               
-              <div class="stat">
+              <!-- <div class="stat">
                 <div class="stat-title">Promedio</div>
                 <div class="stat-value text-accent">3.8h</div>
                 <div class="stat-desc">Por problema</div>
-              </div>
+              </div> -->
+
+            </div>
+            
+            <div class="card-actions justify-center mt-6">
+              <a href="{{ url_for('main.historial') }}" class="btn btn-secondary">
+                <i class="fas fa-history"></i>
+                {{ _('Ver Historial Completo') }}
+              </a>
             </div>
           </div>
         </div>
@@ -127,125 +132,228 @@
             <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
               <i class="fas fa-history text-success"></i>
             </div>
-            <h2 class="text-2xl font-bold">Problemas Resueltos</h2>
+            <h2 class="text-2xl font-bold">{{ _('Problemas Resueltos') }}</h2>
           </div>
-          <div class="flex gap-2">
-            <select class="select select-bordered select-sm">
-              <option>Todos</option>
-              <option>Maximización</option>
-              <option>Minimización</option>
-            </select>
-            <button class="btn btn-sm btn-outline">
-              <i class="fas fa-filter"></i>
-            </button>
-          </div>
+          
         </div>
 
         <!-- Grid de problemas -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          <!-- Problema 1 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-success/20 hover:border-success/40"
-               onclick="document.getElementById('problema_modal_1').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-success badge-sm">Maximización</div>
-                <div class="text-xs text-base-content/60">2 días atrás</div>
-              </div>
-              <h3 class="card-title text-lg mb-2">Problema de Producción</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Optimización de producción con 3 variables y 4 restricciones
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">3 variables</div>
-                  <div class="badge badge-outline badge-xs">4 restricciones</div>
+          {% if problemas_recientes %}
+            {% for problema in problemas_recientes %}
+            <!-- Problema {{ problema.id }} -->
+            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-primary/20 hover:border-primary/40"
+                 onclick="window.location.href='{{ url_for('main.ver_problema_detalle', problema_id=problema.id) }}'">
+              <div class="card-body p-4">
+                <div class="flex items-start justify-between mb-3">
+                  {% if problema.resumen.tipo.lower().startswith('max') %}
+                    <div class="badge badge-success badge-sm">{{ problema.resumen.tipo }}</div>
+                  {% elif problema.resumen.tipo.lower().startswith('min') %}
+                    <div class="badge badge-info badge-sm">{{ problema.resumen.tipo }}</div>
+                  {% else %}
+                    <div class="badge badge-warning badge-sm">{{ problema.resumen.tipo }}</div>
+                  {% endif %}
+                  <div class="text-xs text-base-content/60">
+                    {{ problema.fecha.split('T')[0] }}
+                  </div>
                 </div>
-                <div class="text-success font-bold">Z = 450</div>
+                <h3 class="card-title text-lg mb-2">
+                  {% if problema.resumen.tipo.lower().startswith('max') %}
+                    {{ _('Problema de Maximización') }}
+                  {% elif problema.resumen.tipo.lower().startswith('min') %}
+                    {{ _('Problema de Minimización') }}
+                  {% else %}
+                    {{ _('Problema de Optimización') }}
+                  {% endif %}
+                </h3>
+                <p class="text-sm text-base-content/70 mb-3">
+                  {{ _('Función objetivo') }}: {{ problema.resumen.funcion_objetivo[:40] }}{% if problema.resumen.funcion_objetivo|length > 40 %}...{% endif %}
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-xs">
+                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_variables }} {{ ngettext('variable', 'variables', problema.resumen.num_variables) }}</div>
+                    <div class="badge badge-outline badge-xs">{{ problema.resumen.num_restricciones }} {{ ngettext('restricción', 'restricciones', problema.resumen.num_restricciones) }}</div>
+                  </div>
+                  <div class="text-primary font-bold text-sm">{{ problema.metodo_usado }}</div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Problema 2 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-info/20 hover:border-info/40"
-               onclick="document.getElementById('problema_modal_2').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-info badge-sm">Minimización</div>
-                <div class="text-xs text-base-content/60">5 días atrás</div>
+            {% endfor %}
+          {% else %}
+            <!-- Mensaje cuando no hay problemas -->
+            <div class="col-span-full text-center py-12">
+              <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-base-300 flex items-center justify-center">
+                <i class="fas fa-calculator text-3xl text-base-content/50"></i>
               </div>
-              <h3 class="card-title text-lg mb-2">Problema de Transporte</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Minimización de costos de transporte entre ciudades
+              <h3 class="text-xl font-semibold text-base-content/70 mb-2">
+                {{ _('No hay problemas resueltos aún') }}
+              </h3>
+              <p class="text-base-content/50 mb-6">
+                {{ _('Resuelve tu primer problema de programación lineal para verlo aquí') }}
               </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">2 variables</div>
-                  <div class="badge badge-outline badge-xs">3 restricciones</div>
-                </div>
-                <div class="text-info font-bold">Z = 120</div>
-              </div>
+              <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                {{ _('Resolver Problema') }}
+              </a>
             </div>
-          </div>
-
-          <!-- Problema 3 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-warning/20 hover:border-warning/40"
-               onclick="document.getElementById('problema_modal_3').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-warning badge-sm">Maximización</div>
-                <div class="text-xs text-base-content/60">1 semana atrás</div>
-              </div>
-              <h3 class="card-title text-lg mb-2">Problema de Dieta</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Maximización de nutrientes con restricciones presupuestarias
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">4 variables</div>
-                  <div class="badge badge-outline badge-xs">5 restricciones</div>
-                </div>
-                <div class="text-warning font-bold">Z = 85.5</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Problema 4 -->
-          <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-error/20 hover:border-error/40"
-               onclick="document.getElementById('problema_modal_4').showModal()">
-            <div class="card-body p-4">
-              <div class="flex items-start justify-between mb-3">
-                <div class="badge badge-error badge-sm">Minimización</div>
-                <div class="text-xs text-base-content/60">2 semanas atrás</div>
-              </div>
-              <h3 class="card-title text-lg mb-2">Problema de Inventario</h3>
-              <p class="text-sm text-base-content/70 mb-3">
-                Minimización de costos de almacenamiento y pedidos
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs">
-                  <div class="badge badge-outline badge-xs">2 variables</div>
-                  <div class="badge badge-outline badge-xs">4 restricciones</div>
-                </div>
-                <div class="text-error font-bold">Z = 75.2</div>
-              </div>
-            </div>
-          </div>
+          {% endif %}
 
         </div>
 
         <!-- Paginación -->
+        {% if pagination and pagination.total_pages > 1 %}
         <div class="flex justify-center mt-8">
           <div class="join">
-            <button class="join-item btn">«</button>
-            <button class="join-item btn btn-active">1</button>
-            <button class="join-item btn">2</button>
-            <button class="join-item btn">3</button>
-            <button class="join-item btn">»</button>
+            <!-- Botón anterior -->
+            {% if pagination.has_prev %}
+              <a href="{{ url_for('main.perfil', page=pagination.prev_page) }}" class="join-item btn">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            {% else %}
+              <button class="join-item btn btn-disabled">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            {% endif %}
+            
+            <!-- Páginas -->
+            {% set start_page = pagination.current_page - 2 if pagination.current_page > 3 else 1 %}
+            {% set end_page = pagination.current_page + 2 if pagination.current_page < pagination.total_pages - 2 else pagination.total_pages %}
+            
+            {% if start_page > 1 %}
+              <a href="{{ url_for('main.perfil', page=1) }}" class="join-item btn">1</a>
+              {% if start_page > 2 %}
+                <button class="join-item btn btn-disabled">...</button>
+              {% endif %}
+            {% endif %}
+            
+            {% for page_num in range(start_page, end_page + 1) %}
+              {% if page_num == pagination.current_page %}
+                <button class="join-item btn btn-active">{{ page_num }}</button>
+              {% else %}
+                <a href="{{ url_for('main.perfil', page=page_num) }}" class="join-item btn">{{ page_num }}</a>
+              {% endif %}
+            {% endfor %}
+            
+            {% if end_page < pagination.total_pages %}
+              {% if end_page < pagination.total_pages - 1 %}
+                <button class="join-item btn btn-disabled">...</button>
+              {% endif %}
+              <a href="{{ url_for('main.perfil', page=pagination.total_pages) }}" class="join-item btn">{{ pagination.total_pages }}</a>
+            {% endif %}
+            
+            <!-- Botón siguiente -->
+            {% if pagination.has_next %}
+              <a href="{{ url_for('main.perfil', page=pagination.next_page) }}" class="join-item btn">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            {% else %}
+              <button class="join-item btn btn-disabled">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            {% endif %}
           </div>
         </div>
+        
+        <!-- Información de paginación -->
+        <div class="text-center mt-4 text-sm text-base-content/60">
+          Mostrando {{ (pagination.current_page - 1) * pagination.per_page + 1 }} - 
+          {{ pagination.current_page * pagination.per_page if pagination.current_page * pagination.per_page <= total_problemas else total_problemas }} 
+          de {{ total_problemas }} problema{% if total_problemas != 1 %}s{% endif %}
+        </div>
+        {% endif %}
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal para editar perfil -->
+<input type="checkbox" id="edit_profile_modal" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <label for="edit_profile_modal" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+    
+    <h3 class="font-bold text-lg mb-6">
+      <i class="fas fa-user-edit text-primary mr-2"></i>
+      Editar Perfil
+    </h3>
+    
+    <form action="{{ url_for('main.actualizar_perfil') }}" method="POST" class="space-y-4">
+      <!-- Campo para nombre completo -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Nombre completo</span>
+        </label>
+        <input type="text" name="name" value="{{ user.name if user else '' }}" 
+               class="input input-bordered input-primary w-full" 
+               required maxlength="100"
+               placeholder="Ingresa tu nombre completo" />
+      </div>
+      
+      <!-- Campo para username -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Nombre de usuario</span>
+          <span class="label-text-alt text-warning">Debe ser único</span>
+        </label>
+        <input type="text" name="username" value="{{ user.username if user else '' }}" 
+               class="input input-bordered input-primary w-full" 
+               required maxlength="50" pattern="[a-zA-Z0-9_]+"
+               placeholder="Nombre de usuario único" />
+        <label class="label">
+          <span class="label-text-alt text-base-content/60">Solo letras, números y guiones bajos</span>
+        </label>
+      </div>
+      
+      <!-- Campo para contraseña actual (requerido para seguridad) -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Contraseña actual</span>
+          <span class="label-text-alt text-error">Requerida por seguridad</span>
+        </label>
+        <input type="password" name="current_password" 
+               class="input input-bordered input-secondary w-full" 
+               required placeholder="Confirma tu contraseña actual" />
+      </div>
+      
+      <!-- Opcional: Campo para nueva contraseña -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium block">Nueva contraseña</span>
+          <span class="label-text-alt text-base-content/60 block">Opcional</span>
+          <!-- <span class="label-text-alt text-base-content/60">déjalo vacío para mantener la actual</span> -->
+        </label>
+        <input type="password" name="new_password" 
+               class="input input-bordered input-accent w-full" 
+               minlength="4" placeholder="déjalo vacío para mantener la actual" />
+      </div>
+      
+      <!-- Confirmación de nueva contraseña -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-medium">Confirmar nueva contraseña</span>
+        </label>
+        <input type="password" name="confirm_password" 
+               class="input input-bordered input-accent w-full" 
+               placeholder="Confirma la nueva contraseña" />
+      </div>
+      
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <span class="text-sm">
+          Confirma tu contraseña actual para actualizar tu perfil. 
+          La nueva contraseña es opcional.
+        </span>
+      </div>
+      
+      <div class="modal-action">
+        <label for="edit_profile_modal" class="btn btn-ghost">Cancelar</label>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save mr-2"></i>
+          Actualizar perfil
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -600,6 +708,34 @@
 </style>
 
 <script>
+// Configurar Notyf para alertas (mismo que index.js)
+const alerta = new Notyf({
+  duration: 4000, // Un poco más de tiempo para leer mensajes de perfil
+  position: {
+    x: "right",
+    y: "top",
+  },
+  dismissible: true,
+  types: [
+    {
+      type: "warning",
+      background: "inherit",
+    },
+    {
+      type: "error", 
+      background: "inherit",
+    },
+    {
+      type: "success",
+      background: "inherit",
+    },
+    {
+      type: "info",
+      background: "inherit",
+    },
+  ],
+});
+
 // Script para mejorar la interactividad
 document.addEventListener('DOMContentLoaded', function() {
   // Animación de entrada escalonada para las cards
@@ -625,6 +761,136 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.transform = 'translateY(0) scale(1)';
     });
   });
+
+  // Validación simple de contraseñas en el modal de edición
+  const newPasswordInput = document.querySelector('input[name="new_password"]');
+  const confirmPasswordInput = document.querySelector('input[name="confirm_password"]');
+  
+  if (newPasswordInput && confirmPasswordInput) {
+    function validatePasswords() {
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      
+      if (newPassword && confirmPassword) {
+        if (newPassword !== confirmPassword) {
+          confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
+        } else {
+          confirmPasswordInput.setCustomValidity('');
+        }
+      } else {
+        confirmPasswordInput.setCustomValidity('');
+      }
+    }
+    
+    newPasswordInput.addEventListener('input', validatePasswords);
+    confirmPasswordInput.addEventListener('input', validatePasswords);
+  }
+
+  // Validación adicional en el formulario antes de enviar
+  const editForm = document.querySelector('form[action*="actualizar_perfil"]');
+  if (editForm) {
+    editForm.addEventListener('submit', function(e) {
+      const currentPassword = document.querySelector('input[name="current_password"]').value;
+      const newPassword = document.querySelector('input[name="new_password"]').value;
+      const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
+      const name = document.querySelector('input[name="name"]').value.trim();
+      const username = document.querySelector('input[name="username"]').value.trim();
+      
+      // Validación básica antes de enviar
+      if (!name || !username || !currentPassword) {
+        e.preventDefault();
+        // Usar window.alerta si está disponible, sino mostrar alert
+        if (window.alerta) {
+          window.alerta.open({
+            type: "warning",
+            message: "Por favor, completa todos los campos obligatorios"
+          });
+        } else {
+          alert("Por favor, completa todos los campos obligatorios");
+        }
+        return;
+      }
+      
+      // Validar contraseñas si se está cambiando
+      if (newPassword && newPassword !== confirmPassword) {
+        e.preventDefault();
+        if (window.alerta) {
+          window.alerta.open({
+            type: "error",
+            message: "Las contraseñas nuevas no coinciden"
+          });
+        } else {
+          alert("Las contraseñas nuevas no coinciden");
+        }
+        return;
+      }
+      
+      // Validar longitud de nueva contraseña
+      if (newPassword && newPassword.length < 4) {
+        e.preventDefault();
+        if (window.alerta) {
+          window.alerta.open({
+            type: "error", 
+            message: "La nueva contraseña debe tener al menos 4 caracteres"
+          });
+        } else {
+          alert("La nueva contraseña debe tener al menos 4 caracteres");
+        }
+        return;
+      }
+    });
+  }
 });
 </script>
+
+<!-- Script separado para manejar mensajes flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Función para esperar a que alerta esté disponible
+        function waitForAlerta(callback) {
+          if (typeof window.alerta !== 'undefined') {
+            callback();
+          } else {
+            setTimeout(() => waitForAlerta(callback), 50);
+          }
+        }
+        
+        // Esperar a que alerta esté disponible antes de mostrar mensajes
+        waitForAlerta(function() {
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              window.alerta.open({
+                type: "error",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'success' %}
+              window.alerta.open({
+                type: "success", 
+                message: `{{ message | safe }}`
+              });
+              // Cerrar modal de edición si hay mensaje de éxito
+              const editModal = document.getElementById('edit_profile_modal');
+              if (editModal) {
+                editModal.checked = false;
+              }
+            {% elif category == 'warning' %}
+              window.alerta.open({
+                type: "warning",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'info' %}
+              window.alerta.open({
+                type: "info",
+                message: `{{ message | safe }}`
+              });
+            {% endif %}
+          {% endfor %}
+        });
+      });
+    </script>
+  {% endif %}
+{% endwith %}
 {% endblock %}
+

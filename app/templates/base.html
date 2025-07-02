@@ -1,84 +1,241 @@
 <!DOCTYPE html>
 
-<html lang="en" data-act-class="ACTIVECLASS">
+<html lang="{{ get_locale() }}" data-theme="light" class="h-full">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} Veamos {% endblock %}</title>
+    
+    <!-- Favicon dinámico según la página -->
+    {% set favicon_map = {
+        'main.dashboard': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23667eea"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">🏠</text></svg>',
+        'main.index': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23f093fb"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">📊</text></svg>',
+        'main.ejemplos': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%2343e97b"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">📚</text></svg>',
+        'main.ayuda': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23f6ad55"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">❓</text></svg>',
+        'main.perfil': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%234facfe"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">👤</text></svg>',
+        'main.login': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%2338f9d7"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">�</text></svg>',
+        'main.register': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23fc466b"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">👤</text></svg>',
+        'main.historial': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%235f27cd"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">📋</text></svg>',
+        'main.problema_detalle': 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23ff6b6b"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">📊</text></svg>'
+    } %}
+    
+    {% set current_favicon = favicon_map.get(request.endpoint, 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23667eea"/><text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">🧮</text></svg>') %}
+    
+    <link rel="icon" type="image/svg+xml" href="{{ current_favicon }}">
+    <link rel="shortcut icon" type="image/svg+xml" href="{{ current_favicon }}">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
 
     {% block tailwindcss %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/tailwind.css')}}">
+    <!-- Tailwind CSS con DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.20/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
     {% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 
 <body>
     {% block nav %}
-    <nav class="navbar bg-accent text-white shadow-lg fixed top-0 z-10">
+    <nav class="navbar bg-base-100/80 backdrop-blur-lg border-b border-base-300/50 fixed top-0 z-50 shadow-sm">
         <div class="navbar-start">
+            <!-- Mobile menu -->
+            <!-- Mobile menu dropdown -->
+            {% set is_dashboard = request.endpoint == 'main.dashboard' %}
+            {% if not is_dashboard %}
             <div class="dropdown">
-                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h8m-8 6h16" />
+                <div tabindex="0" role="button" class="btn btn-ghost btn-square lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                     </svg>
                 </div>
-                <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-accent-content rounded-box w-52">
-                    <li><a href="{{ url_for('main.index') }}" >Nuevo Problema</a></li>
-                    <li><a href="#">Ejemplos</a></li>
-                    <li><a href="#">Ayuda</a></li>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-xl w-56 border border-base-300/50">
+                    <li><a href="{{ url_for('main.dashboard') }}" class="gap-3 font-medium">
+                        <i class="fas fa-home text-primary"></i>
+                        {{ _('Inicio') }}
+                    </a></li>
+                    <li><a href="{{ url_for('main.index') }}" class="gap-3 font-medium">
+                        <i class="fas fa-plus-circle text-secondary"></i>
+                        {{ _('Nuevo Problema') }}
+                    </a></li>
+                    <li><a href="{{ url_for('main.ejemplos') }}" class="gap-3 font-medium">
+                        <i class="fas fa-book-open text-accent"></i>
+                        {{ _('Ejemplos') }}
+                    </a></li>
+                    <li><a href="{{ url_for('main.ayuda') }}" class="gap-3 font-medium">
+                        <i class="fas fa-question-circle text-info"></i>
+                        {{ _('Ayuda') }}
+                    </a></li>
                 </ul>
             </div>
-            <a class="btn btn-ghost text-xl font-bold hover:bg-accent-content">
-                <i class="fas fa-calculator text-primary"></i>
-                LP Solver
+            {% endif %}
+            
+            <!-- Logo and brand -->
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-ghost text-xl font-bold gap-2 hover:bg-primary/10 transition-all duration-300">
+                <div class="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center shadow-sm">
+                    <i class="fas fa-calculator text-white text-sm"></i>
+                </div>
+                <span class="text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text">LP Solver</span>
             </a>
         </div>
+        
+        <!-- Desktop menu -->
+        {% set is_dashboard = request.endpoint == 'main.dashboard' %}
+        {% if not is_dashboard %}
         <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-                <li><a href="{{ url_for('main.index') }}" class="hover:text-primary transition-colors">Nuevo Problema</a></li>
-                <li><a class="hover:text-primary transition-colors">Ejemplos</a></li>
-                <li><a class="hover:text-primary transition-colors">Ayuda</a></li>
+            <ul class="menu menu-horizontal px-1 gap-1">
+                <li><a href="{{ url_for('main.dashboard') }}" class="btn btn-ghost btn-sm gap-2 font-medium hover:bg-primary/10 hover:text-primary transition-all duration-300">
+                    <i class="fas fa-home text-sm"></i>
+                    {{ _('Inicio') }}
+                </a></li>
+                <li><a href="{{ url_for('main.index') }}" class="btn btn-ghost btn-sm gap-2 font-medium hover:bg-secondary/10 hover:text-secondary transition-all duration-300">
+                    <i class="fas fa-plus-circle text-sm"></i>
+                    {{ _('Nuevo Problema') }}
+                </a></li>
+                <li><a href="{{ url_for('main.ejemplos') }}" class="btn btn-ghost btn-sm gap-2 font-medium hover:bg-accent/10 hover:text-accent transition-all duration-300">
+                    <i class="fas fa-book-open text-sm"></i>
+                    {{ _('Ejemplos') }}
+                </a></li>
+                <li><a href="{{ url_for('main.ayuda') }}" class="btn btn-ghost btn-sm gap-2 font-medium hover:bg-info/10 hover:text-info transition-all duration-300">
+                    <i class="fas fa-question-circle text-sm"></i>
+                    {{ _('Ayuda') }}
+                </a></li>
             </ul>
         </div>
-        <div class="navbar-end">
-
-            <div class="flex-none">
-                <ul class="menu menu-horizontal px-1">
-                    <li>
-                        <details>
-                            <summary>Tema</summary>
-                            <ul class="rounded-t-none p-2 bg-accent-content">
-                                <li><a class="" data-set-theme="light">Claro</a></li>
-                                <li><a data-set-theme="dark">Oscuro</a></li>
-                            </ul>
-                        </details>
+        {% endif %}
+        
+        <!-- Right side actions -->
+        <div class="navbar-end gap-2">
+            <!-- Theme selector -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm hover:bg-base-200 transition-all duration-300 tooltip tooltip-bottom" data-tip="{{ _('Cambiar tema') }}">
+                    <i class="fas fa-palette text-lg"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-xl w-52 border border-base-300/50">
+                    <li class="menu-title">
+                        <span class="text-primary font-semibold flex items-center gap-2">
+                            <i class="fas fa-palette"></i>
+                            {{ _('Seleccionar tema') }}
+                        </span>
                     </li>
+                    <div class="divider my-1"></div>
+                    <li><a data-set-theme="light" class="gap-3 font-medium hover:bg-warning/10">
+                        <i class="fas fa-sun text-warning"></i>
+                        {{ _('Tema Claro') }}
+                    </a></li>
+                    <li><a data-set-theme="dark" class="gap-3 font-medium hover:bg-info/10">
+                        <i class="fas fa-moon text-info"></i>
+                        {{ _('Tema Oscuro') }}
+                    </a></li>
+                    <li><a data-set-theme="cupcake" class="gap-3 font-medium hover:bg-success/10">
+                        <i class="fas fa-heart text-success"></i>
+                        {{ _('Tema Suave') }}
+                    </a></li>
+                    <li><a data-set-theme="business" class="gap-3 font-medium hover:bg-accent/10">
+                        <i class="fas fa-briefcase text-accent"></i>
+                        {{ _('Tema Empresarial') }}
+                    </a></li>
                 </ul>
             </div>
 
+            <!-- Language selector -->
             <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle hover:bg-accent-content">
-                    <i class="fas fa-user"></i>
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm hover:bg-base-200 transition-all duration-300 tooltip tooltip-bottom" data-tip="{{ _('Cambiar idioma') }}">
+                    <i class="fas fa-globe text-lg"></i>
                 </div>
-                <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-accent-content rounded-box w-52">
-                    <li><a href="{{ url_for('main.perfil') }}">Perfil</a></li>
-                    <li><a>Configuración</a></li>
-                    <li><a>Cerrar Sesión</a></li>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-xl w-52 border border-base-300/50">
+                    <li class="menu-title">
+                        <span class="text-secondary font-semibold flex items-center gap-2">
+                            <i class="fas fa-globe"></i>
+                            {{ _('Seleccionar idioma') }}
+                        </span>
+                    </li>
+                    <div class="divider my-1"></div>
+                    <li><a href="{{ url_for('main.cambiar_idioma', lang_code='es', next=request.url) }}" 
+                           class="gap-3 font-medium {% if session.get('lang', 'es') == 'es' %}bg-primary/10 text-primary{% endif %} hover:bg-primary/10">
+                        <div class="w-6 h-4 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 rounded-sm shadow-sm"></div>
+                        Español
+                    </a></li>
+                    <li><a href="{{ url_for('main.cambiar_idioma', lang_code='en', next=request.url) }}"
+                           class="gap-3 font-medium {% if session.get('lang', 'es') == 'en' %}bg-primary/10 text-primary{% endif %} hover:bg-primary/10">
+                        <div class="w-6 h-4 bg-gradient-to-r from-blue-500 via-white to-red-500 rounded-sm shadow-sm"></div>
+                        English
+                    </a></li>
                 </ul>
+            </div>
 
+            <!-- User menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm hover:bg-base-200 transition-all duration-300 tooltip tooltip-bottom" data-tip="{{ _('Cuenta de usuario') }}">
+                    {% if current_user.is_authenticated %}
+                        <div class="avatar placeholder">
+                            <div class="bg-gradient-to-br from-primary to-secondary text-primary-content rounded-full w-8">
+                                <span class="text-xs font-bold">{{ current_user.name[:2].upper() }}</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <i class="fas fa-user text-lg"></i>
+                    {% endif %}
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-xl w-56 border border-base-300/50">
+                    {% if current_user.is_authenticated %}
+                        <!-- Authenticated user -->
+                        <li class="menu-title">
+                            <span class="text-accent font-semibold flex items-center gap-2">
+                                <i class="fas fa-user-circle"></i>
+                                {{ current_user.name }}
+                            </span>
+                        </li>
+                        <div class="divider my-1"></div>
+                        <li><a href="{{ url_for('main.perfil') }}" class="gap-3 font-medium hover:bg-accent/10">
+                            <i class="fas fa-user-cog text-accent"></i>
+                            {{ _('Mi Perfil') }}
+                        </a></li>
+                        <li><a href="{{ url_for('main.historial') }}" class="gap-3 font-medium hover:bg-info/10">
+                            <i class="fas fa-history text-info"></i>
+                            {{ _('Historial') }}
+                        </a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="{{ url_for('main.logout') }}" class="gap-3 font-medium text-error hover:bg-error/10">
+                            <i class="fas fa-sign-out-alt"></i>
+                            {{ _('Cerrar Sesión') }}
+                        </a></li>
+                    {% else %}
+                        <!-- Non-authenticated user -->
+                        <li class="menu-title">
+                            <span class="text-base-content/70 font-semibold flex items-center gap-2">
+                                <i class="fas fa-user-plus"></i>
+                                {{ _('Accede a tu cuenta') }}
+                            </span>
+                        </li>
+                        <div class="divider my-1"></div>
+                        <li><a href="{{ url_for('main.login') }}" class="gap-3 font-medium hover:bg-success/10">
+                            <i class="fas fa-sign-in-alt text-success"></i>
+                            {{ _('Iniciar Sesión') }}
+                        </a></li>
+                        <li><a href="{{ url_for('main.register') }}" class="gap-3 font-medium hover:bg-primary/10">
+                            <i class="fas fa-user-plus text-primary"></i>
+                            {{ _('Crear Cuenta') }}
+                        </a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
     {% endblock %}
 
-    <main class="mt-[3rem]">{% block main %}{% endblock %}</main>
+    <main class="{% if request.endpoint not in ['main.login', 'main.register'] %}mt-[3rem]{% endif %}">{% block main %}{% endblock %}</main>
     <footer></footer>
 
     {% block modals %}
@@ -91,6 +248,57 @@
     <!-- <script src="{{ url_for('static', filename='js/base.js')}}"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+    
+    <!-- Script para mejorar la funcionalidad de los dropdowns -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cerrar dropdown cuando se hace clic en cualquier opción de tema
+            const themeLinks = document.querySelectorAll('[data-set-theme]');
+            themeLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Remover focus del dropdown para cerrarlo
+                    const dropdown = this.closest('.dropdown');
+                    if (dropdown) {
+                        dropdown.blur();
+                        // También remover focus de cualquier elemento enfocado dentro
+                        const focusedElement = dropdown.querySelector(':focus');
+                        if (focusedElement) {
+                            focusedElement.blur();
+                        }
+                    }
+                });
+            });
+            
+            // Cerrar dropdown de idioma cuando se hace clic en una opción
+            const languageLinks = document.querySelectorAll('a[href*="/idioma/"]');
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const dropdown = this.closest('.dropdown');
+                    if (dropdown) {
+                        dropdown.blur();
+                        const focusedElement = dropdown.querySelector(':focus');
+                        if (focusedElement) {
+                            focusedElement.blur();
+                        }
+                    }
+                });
+            });
+            
+            // Cerrar dropdown con Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const openDropdowns = document.querySelectorAll('.dropdown:focus-within');
+                    openDropdowns.forEach(dropdown => {
+                        dropdown.blur();
+                    });
+                }
+            });
+        });
+    </script>
+    
+    <!-- Script de internacionalización para el frontend -->
+    <script type="module" src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    
     {% block customScript %}
 
     {% endblock %}

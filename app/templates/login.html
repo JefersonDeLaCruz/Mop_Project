@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %} {{ _('Iniciar Sesión') }} - LP Solver{% endblock %}
 
 {% block tailwindcss %} {{super()}} {% endblock %}
 
@@ -17,18 +17,6 @@
     <!-- Columna Izquierda - Formulario -->
     <div data-theme="dark" class="login-container h-dvh bg-neutral flex flex-col items-center justify-center">
 
-      <div class="flex items-center justify-center">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-          <div role="alert" class="alert alert-{{ category }} alert-soft my-2">
-            <span> {{ message }}</span>
-          </div>
-          {% endfor %}
-        {% endif %}
-        {% endwith %}
-      </div>
-
       <!-- FORMULARIO INICIA AQUÍ -->
       <form action="{{ url_for('main.login') }}" method="post"
         class="fields-container flex flex-col gap-2.5 place-self-center items-center justify-center">
@@ -38,13 +26,13 @@
         <!-- campo para el username -->
         <label class="input input-secondary rounded-full">
           <i class="fas fa-user opacity-50 h-[1em] w-[1em]"></i>
-          <input id="username" name="username" type="text" placeholder="Usuario" />
+          <input id="username" name="username" type="text" placeholder="{{ _('Usuario') }}" />
         </label>
 
         <!-- campo para la contra -->
         <label class="input input-secondary rounded-full">
           <i class="fas fa-lock opacity-50 h-[1em] w-[1em]"></i>
-          <input id="password" name="password" type="password" placeholder="Contraseña" />
+          <input id="password" name="password" type="password" placeholder="{{ _('Contraseña') }}" />
         </label>
 
         <!-- boton para acceder -->
@@ -52,6 +40,16 @@
           <button type="submit" class="btn btn-outline btn-secondary rounded-full">
             {{ _("Iniciar sesion") }}
           </button>
+        </div>
+
+        <!-- Enlace para ir al registro -->
+        <div class="mt-4">
+          <p class="text-center text-sm text-gray-400">
+            {{ _("¿No tienes cuenta?") }}
+            <a href="{{ url_for('main.register') }}" class="link link-hover text-secondary hover:text-secondary-focus font-medium ml-1">
+              {{ _("Regístrate aquí") }}
+            </a>
+          </p>
         </div>
       </form>
       <!-- FORMULARIO TERMINA AQUÍ -->
@@ -69,7 +67,7 @@
             <i class="fas fa-chart-line text-4xl text-white"></i>
           </div>
           <h2 class="text-3xl font-bold mb-2">OptimizeFlow</h2>
-          <p class="text-xl opacity-90">Solver de Programación Lineal</p>
+          <p class="text-xl opacity-90">{{ _('Solver de Programación Lineal') }}</p>
         </div>
 
         <!-- Features destacados -->
@@ -78,19 +76,19 @@
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-bullseye text-sm"></i>
             </div>
-            <span class="text-lg">Optimización de funciones objetivo</span>
+            <span class="text-lg">{{ _('Optimización de funciones objetivo') }}</span>
           </div>
           <div class="flex items-center justify-center space-x-3 animate-fade-in" style="animation-delay: 1s;">
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-project-diagram text-sm"></i>
             </div>
-            <span class="text-lg">Análisis de restricciones</span>
+            <span class="text-lg">{{ _('Análisis de restricciones') }}</span>
           </div>
           <div class="flex items-center justify-center space-x-3 animate-fade-in" style="animation-delay: 1.5s;">
             <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-calculator text-sm"></i>
             </div>
-            <span class="text-lg">Soluciones matemáticas precisas</span>
+            <span class="text-lg">{{ _('Soluciones matemáticas precisas') }}</span>
           </div>
         </div>
 
@@ -185,5 +183,62 @@
   100% { background-position: 0% 50%; }
 }
 </style>
+
+<!-- Script para mostrar mensajes flash con Notyf -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Función para esperar a que alerta esté disponible
+        function waitForAlerta(callback) {
+          if (typeof window.alerta !== 'undefined') {
+            callback();
+          } else {
+            setTimeout(() => waitForAlerta(callback), 50);
+          }
+        }
+        
+        // Esperar a que alerta esté disponible antes de mostrar mensajes
+        waitForAlerta(function() {
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              window.alerta.open({
+                type: "error",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'success' %}
+              window.alerta.open({
+                type: "success", 
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'warning' %}
+              window.alerta.open({
+                type: "warning",
+                message: `{{ message | safe }}`
+              });
+            {% elif category == 'info' %}
+              window.alerta.open({
+                type: "info",
+                message: `{{ message | safe }}`
+              });
+            {% endif %}
+          {% endfor %}
+        });
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
+{% if login_success %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Esperar 2.5 segundos para que el usuario vea el mensaje de éxito
+    // antes de redirigir al dashboard
+    setTimeout(function() {
+      window.location.href = "{{ url_for('main.dashboard') }}";
+    }, 2500);
+  });
+</script>
+{% endif %}
 
 {% endblock %}
